@@ -1,0 +1,5 @@
+# Web generada por "mkdocs build"
+site/
+# Entornos de Python
+.venv/
+__pycache__/

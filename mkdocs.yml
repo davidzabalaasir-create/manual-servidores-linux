@@ -1,0 +1,83 @@
+# Configuración del sitio del manual (MkDocs + Material)
+site_name: Administración de Servidores Linux
+site_description: Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.
+# Dirección pública de la web y del repositorio en GitHub
+site_url: https://davidzabalaasir-create.github.io/manual-servidores-linux/
+repo_url: https://github.com/davidzabalaasir-create/manual-servidores-linux
+repo_name: manual-servidores-linux
+edit_uri: edit/main/docs/
+copyright: Manual de Administración de Servidores Linux · Edición 2026
+
+theme:
+  name: material
+  language: es
+  icon:
+    logo: material/server
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Cambiar a modo oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: light blue
+      toggle:
+        icon: material/weather-sunny
+        name: Cambiar a modo claro
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.footer
+    - navigation.sections
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+plugins:
+  - search:
+      lang: es
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+
+nav:
+  - Introducción: index.md
+  - Fundamentos y web:
+      - 1. Fundamentos de infraestructura: 01-fundamentos.md
+      - 2. Apache: 02-apache.md
+      - 3. Virtual Hosting: 03-virtualhosts.md
+  - Bases de datos y PHP:
+      - 4. MariaDB: 04-mariadb.md
+      - 5. PHP y MariaDB: 05-php-mariadb.md
+  - Correo electrónico:
+      - 6. Postfix: 06-postfix.md
+      - 7. Dovecot: 07-dovecot.md
+      - 8. Cuentas de correo: 08-cuentas-correo.md
+      - 9. DNS del correo: 09-dns-correo.md
+  - Seguridad y operación:
+      - 10. Certificados SSL/TLS: 10-ssl-tls.md
+      - 11. Integración completa: 11-integracion.md
+      - 12. Seguridad y mantenimiento: 12-seguridad.md
+      - 13. Pruebas y diagnóstico: 13-pruebas.md
+  - 14. Proyecto final: 14-proyecto-final.md
+  - Glosario: glosario.md
+  - Anexos: anexos.md
