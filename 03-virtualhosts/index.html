@@ -1,0 +1,2467 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/03-virtualhosts/">
+      
+      
+        <link rel="prev" href="../02-apache/">
+      
+      
+        <link rel="next" href="../04-mariadb/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>3. Virtual Hosting - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-3-configuracion-de-virtual-hosting" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3. Virtual Hosting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-que-es-un-virtualhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Qué es un VirtualHost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-diseno-de-carpetas-y-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Diseño de carpetas y usuarios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Diseño de carpetas y usuarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-31-crear-los-usuarios-de-sistema-de-cada-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.1 – Crear los usuarios de sistema de cada web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-32-crear-las-carpetas-y-asignar-propietarios-y-permisos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.2 – Crear las carpetas y asignar propietarios y permisos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-33-crear-una-pagina-de-prueba-en-cada-sitio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.3 – Crear una página de prueba en cada sitio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-34-preparar-el-sitio-por-defecto-como-comodin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.4 – Preparar el sitio por defecto como comodín
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-los-archivos-de-configuracion-de-los-virtualhosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Los archivos de configuración de los VirtualHosts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 Los archivos de configuración de los VirtualHosts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-35-crear-el-virtualhost-de-ejemplo1com-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.5 – Crear el VirtualHost de ejemplo1.com (HTTP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-36-crear-el-virtualhost-de-ejemplo2com-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.6 – Crear el VirtualHost de ejemplo2.com (HTTP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-37-habilitar-los-sitios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.7 – Habilitar los sitios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-probar-los-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Probar los dominios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 Probar los dominios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-38-probar-desde-el-propio-servidor-con-curl-sin-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.8 – Probar desde el propio servidor con curl (sin DNS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-39-probar-desde-tu-navegador-con-el-archivo-hosts-sin-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.9 – Probar desde tu navegador con el archivo hosts (sin DNS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-310-crear-los-registros-dns-de-las-webs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.10 – Crear los registros DNS de las webs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-solucionar-conflictos-entre-virtualhosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Solucionar conflictos entre VirtualHosts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-https-para-cada-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 HTTPS para cada dominio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.6 HTTPS para cada dominio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-311-instalar-certbot-y-obtener-los-certificados-de-las-webs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.11 – Instalar Certbot y obtener los certificados de las webs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-312-configurar-https-en-el-virtualhost-de-ejemplo1com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.12 – Configurar HTTPS en el VirtualHost de ejemplo1.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-313-configurar-https-en-el-virtualhost-de-ejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.13 – Configurar HTTPS en el VirtualHost de ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-314-activar-el-comodin-https-y-aplicar-los-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.14 – Activar el comodín HTTPS y aplicar los cambios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-ejercicios-practicos-del-modulo-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Ejercicios prácticos del Módulo 3
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-que-es-un-virtualhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Qué es un VirtualHost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-diseno-de-carpetas-y-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Diseño de carpetas y usuarios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Diseño de carpetas y usuarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-31-crear-los-usuarios-de-sistema-de-cada-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.1 – Crear los usuarios de sistema de cada web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-32-crear-las-carpetas-y-asignar-propietarios-y-permisos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.2 – Crear las carpetas y asignar propietarios y permisos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-33-crear-una-pagina-de-prueba-en-cada-sitio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.3 – Crear una página de prueba en cada sitio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-34-preparar-el-sitio-por-defecto-como-comodin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.4 – Preparar el sitio por defecto como comodín
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-los-archivos-de-configuracion-de-los-virtualhosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Los archivos de configuración de los VirtualHosts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 Los archivos de configuración de los VirtualHosts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-35-crear-el-virtualhost-de-ejemplo1com-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.5 – Crear el VirtualHost de ejemplo1.com (HTTP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-36-crear-el-virtualhost-de-ejemplo2com-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.6 – Crear el VirtualHost de ejemplo2.com (HTTP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-37-habilitar-los-sitios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.7 – Habilitar los sitios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-probar-los-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Probar los dominios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 Probar los dominios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-38-probar-desde-el-propio-servidor-con-curl-sin-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.8 – Probar desde el propio servidor con curl (sin DNS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-39-probar-desde-tu-navegador-con-el-archivo-hosts-sin-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.9 – Probar desde tu navegador con el archivo hosts (sin DNS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-310-crear-los-registros-dns-de-las-webs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.10 – Crear los registros DNS de las webs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-solucionar-conflictos-entre-virtualhosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Solucionar conflictos entre VirtualHosts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-https-para-cada-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 HTTPS para cada dominio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.6 HTTPS para cada dominio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-311-instalar-certbot-y-obtener-los-certificados-de-las-webs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.11 – Instalar Certbot y obtener los certificados de las webs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-312-configurar-https-en-el-virtualhost-de-ejemplo1com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.12 – Configurar HTTPS en el VirtualHost de ejemplo1.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-313-configurar-https-en-el-virtualhost-de-ejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.13 – Configurar HTTPS en el VirtualHost de ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-314-activar-el-comodin-https-y-aplicar-los-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 3.14 – Activar el comodín HTTPS y aplicar los cambios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-ejercicios-practicos-del-modulo-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Ejercicios prácticos del Módulo 3
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/03-virtualhosts.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-3-configuracion-de-virtual-hosting">Módulo 3. Configuración de Virtual Hosting<a class="headerlink" href="#modulo-3-configuracion-de-virtual-hosting" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Entender qué es un VirtualHost y cómo un solo servidor aloja muchos dominios.</li>
+<li>Crear para cada dominio un usuario Linux, una carpeta y un archivo de configuración independientes.</li>
+<li>Configurar <code>ServerName</code>, <code>ServerAlias</code>, <code>DocumentRoot</code>, permisos y logs propios.</li>
+<li>Habilitar los sitios, probarlos antes y después de configurar el DNS y resolver conflictos.</li>
+<li>Proteger cada dominio con HTTPS mediante un certificado de Let's Encrypt.</li>
+</ul>
+<h2 id="31-que-es-un-virtualhost">3.1 Qué es un VirtualHost<a class="headerlink" href="#31-que-es-un-virtualhost" title="Permanent link">&para;</a></h2>
+<p>Un <strong>VirtualHost</strong> (anfitrión virtual) es un bloque de configuración que le dice a Apache: «cuando llegue una petición para <strong>este</strong> nombre, sírvela desde <strong>esta</strong> carpeta, con <strong>estas</strong> opciones y guarda los logs <strong>aquí</strong>».</p>
+<p>Apache admite dos tipos:</p>
+<ul>
+<li><strong>Por IP</strong>: cada web tiene una IP distinta. Hoy apenas se usa porque las IPv4 son escasas.</li>
+<li><strong>Por nombre</strong> (<em>name-based</em>): todas las webs comparten IP y Apache las distingue por la cabecera <code>Host</code> de la petición. Es lo que usaremos.</li>
+</ul>
+<p>Cómo elige Apache el VirtualHost:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> Petición:  GET / HTTP/1.1   Host: www.ejemplo2.com      (llega a 203.0.113.10:443)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                     ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>   1. Apache busca los VirtualHost definidos para la IP y el puerto (*:443)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   2. Compara el Host con ServerName y ServerAlias de cada uno, por orden:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        ┌────────────────────────┬────────────────────────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        │ default-ssl (comodín)  │ ServerName mail.ejemplo1.com        │ ✗
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        │ ejemplo1.com           │ www.ejemplo1.com / ejemplo1.com     │ ✗
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │ ejemplo2.com           │ www.ejemplo2.com / ejemplo2.com     │ ✓  ← este
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        └────────────────────────┴────────────────────────────────────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   3. Si ninguno coincide, usa el PRIMERO de la lista (el «vhost por defecto»)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   4. Sirve /var/www/ejemplo2.com/public_html/index.php
+</code></pre></div>
+<p>En HTTPS existe un detalle adicional: la cabecera <code>Host</code> va cifrada, así que Apache no puede leerla hasta después de elegir el certificado. Para resolverlo, el navegador envía el nombre en claro al iniciar la conexión TLS mediante una extensión llamada <strong>SNI</strong> (<em>Server Name Indication</em>). Todos los navegadores actuales la usan.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>El punto 3 es la fuente de confusión número uno: si un VirtualHost tiene un error en <code>ServerName</code> o el visitante llega con un nombre desconocido (o directamente con la IP), verá <strong>el primer VirtualHost</strong> cargado. Por eso dejaremos el sitio por defecto (<code>000-default</code>) como «comodín» neutro en primer lugar, para que nadie vea la web de ejemplo1 por accidente al visitar ejemplo2 mal configurado.</p>
+</div>
+<h2 id="32-diseno-de-carpetas-y-usuarios">3.2 Diseño de carpetas y usuarios<a class="headerlink" href="#32-diseno-de-carpetas-y-usuarios" title="Permanent link">&para;</a></h2>
+<p>Cada web tendrá su propio usuario de sistema. PHP-FPM (Módulo 5) ejecutará el código de cada web con ese usuario, de modo que una web no pueda leer los archivos de la otra.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/var/www/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── html/                         ← sitio comodín (000-default), propietario root
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── ejemplo1.com/                 ← propietario web1, grupo www-data, 750
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── public_html/              ← DocumentRoot  (web1:www-data, 2750)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │   ├── index.html / index.php
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │   └── .well-known/acme-challenge/   ← validación de Let's Encrypt (temporal)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   ├── config/                   ← credenciales, FUERA del DocumentRoot (web1:web1, 700)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └── tmp/                      ← temporales y sesiones de PHP (web1:web1, 700)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>└── ejemplo2.com/                 ← misma estructura con el usuario web2
+</code></pre></div>
+<p>¿Por qué <code>config/</code> está <strong>fuera</strong> de <code>public_html/</code>? Porque todo lo que está dentro de <code>public_html</code> puede pedirse por URL. Si un fallo de configuración hiciera que Apache sirviera el PHP como texto, las contraseñas de la base de datos quedarían a la vista. Fuera del DocumentRoot, eso es imposible.</p>
+<h3 id="paso-31-crear-los-usuarios-de-sistema-de-cada-web">PASO 3.1 – Crear los usuarios de sistema de cada web<a class="headerlink" href="#paso-31-crear-los-usuarios-de-sistema-de-cada-web" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear <code>web1</code> y <code>web2</code>, usuarios sin contraseña ni acceso por terminal, que serán dueños de los archivos de cada web.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--user-group<span class="w"> </span>--home-dir<span class="w"> </span>/var/www/ejemplo1.com<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>web1
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--user-group<span class="w"> </span>--home-dir<span class="w"> </span>/var/www/ejemplo2.com<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>web2
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>useradd</code>: herramienta de bajo nivel para crear usuarios (no hace preguntas, ideal para cuentas de servicio).</li>
+<li><code>--system</code>: cuenta de sistema (UID bajo, sin caducidad de contraseña, no aparece en la pantalla de inicio).</li>
+<li><code>--user-group</code>: crea también un grupo con el mismo nombre.</li>
+<li><code>--home-dir</code>: carpeta personal del usuario (la crearemos en el paso siguiente).</li>
+<li><code>--shell /usr/sbin/nologin</code>: impide iniciar sesión con este usuario. Si alguien lo intentara, recibiría «This account is currently not available».</li>
+</ul>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>id<span class="w"> </span>web1
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>id<span class="w"> </span>web2
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uid=998(web1) gid=998(web1) groups=998(web1)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uid=997(web2) gid=997(web2) groups=997(web2)
+</code></pre></div>
+<p>(Los números pueden ser distintos.)</p>
+<p><strong>Errores habituales:</strong> <code>useradd: user 'web1' already exists</code>: ya lo habías creado; continúa.</p>
+<p><strong>Siguiente paso:</strong> crear la estructura de carpetas.</p>
+<h3 id="paso-32-crear-las-carpetas-y-asignar-propietarios-y-permisos">PASO 3.2 – Crear las carpetas y asignar propietarios y permisos<a class="headerlink" href="#paso-32-crear-las-carpetas-y-asignar-propietarios-y-permisos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear la estructura de cada web con los permisos correctos.</p>
+<p><strong>Comando (para ejemplo1.com):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/www/ejemplo1.com/<span class="o">{</span>public_html,config,tmp<span class="o">}</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>chown<span class="w"> </span>web1:www-data<span class="w"> </span>/var/www/ejemplo1.com<span class="w"> </span>/var/www/ejemplo1.com/public_html
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>chown<span class="w"> </span>web1:web1<span class="w"> </span>/var/www/ejemplo1.com/config<span class="w"> </span>/var/www/ejemplo1.com/tmp
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/www/ejemplo1.com
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">2750</span><span class="w"> </span>/var/www/ejemplo1.com/public_html
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/www/ejemplo1.com/config<span class="w"> </span>/var/www/ejemplo1.com/tmp
+</code></pre></div>
+<p>Repite lo mismo para ejemplo2.com con el usuario <code>web2</code>:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/www/ejemplo2.com/<span class="o">{</span>public_html,config,tmp<span class="o">}</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>chown<span class="w"> </span>web2:www-data<span class="w"> </span>/var/www/ejemplo2.com<span class="w"> </span>/var/www/ejemplo2.com/public_html
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sudo<span class="w"> </span>chown<span class="w"> </span>web2:web2<span class="w"> </span>/var/www/ejemplo2.com/config<span class="w"> </span>/var/www/ejemplo2.com/tmp
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/www/ejemplo2.com
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">2750</span><span class="w"> </span>/var/www/ejemplo2.com/public_html
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/www/ejemplo2.com/config<span class="w"> </span>/var/www/ejemplo2.com/tmp
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>mkdir -p</code>: crea carpetas, incluidas las intermedias, sin error si ya existen. Las llaves <code>{a,b,c}</code> son una abreviatura del shell que genera tres rutas.</li>
+<li><code>chown web1:www-data</code>: el dueño es <code>web1</code> (podrá escribir) y el grupo <code>www-data</code> (Apache podrá entrar y leer).</li>
+<li><code>chmod 750</code> en la carpeta del sitio: dueño todo, grupo (Apache) entrar y listar, el resto nada. Así <code>web2</code> no puede entrar en la carpeta de <code>web1</code>.</li>
+<li><code>chmod 2750</code> en <code>public_html</code>: el <code>2</code> inicial activa el bit <strong>setgid</strong>: todo archivo nuevo creado dentro heredará el grupo <code>www-data</code> automáticamente, en vez del grupo de quien lo cree.</li>
+<li><code>chmod 700</code> en <code>config</code> y <code>tmp</code>: solo <code>web1</code> puede entrar. Apache no los necesita.</li>
+</ul>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/var/www/ejemplo1.com/
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>drwxr-x---  5 web1 www-data 4096 nov  8 22:20 .
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>drwxr-xr-x  5 root root     4096 nov  8 22:20 ..
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>drwx------  2 web1 web1     4096 nov  8 22:20 config
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>drwxr-s---  2 web1 www-data 4096 nov  8 22:20 public_html
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>drwx------  2 web1 web1     4096 nov  8 22:20 tmp
+</code></pre></div>
+<p>La <code>s</code> en <code>drwxr-s---</code> es el bit setgid.</p>
+<p><strong>Siguiente paso:</strong> crear una página de bienvenida distinta para cada dominio.</p>
+<h3 id="paso-33-crear-una-pagina-de-prueba-en-cada-sitio">PASO 3.3 – Crear una página de prueba en cada sitio<a class="headerlink" href="#paso-33-crear-una-pagina-de-prueba-en-cada-sitio" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> tener contenido distinto en cada web para comprobar que cada dominio carga la suya.</p>
+<p><strong>Comando:</strong> creamos el archivo con el usuario <code>web1</code> (para que sea su dueño) usando <code>sudo -u</code>:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>tee<span class="w"> </span>/var/www/ejemplo1.com/public_html/index.html<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="s">&lt;!DOCTYPE html&gt;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s">&lt;html lang="es"&gt;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s">&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;ejemplo1.com&lt;/title&gt;&lt;/head&gt;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s">&lt;body style="font-family: sans-serif; background: #e8f1fb;"&gt;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s">  &lt;h1&gt;Bienvenido a ejemplo1.com&lt;/h1&gt;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s">  &lt;p&gt;Este contenido se sirve desde /var/www/ejemplo1.com/public_html&lt;/p&gt;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s">&lt;/body&gt;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s">&lt;/html&gt;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s">EOF</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>web2<span class="w"> </span>tee<span class="w"> </span>/var/www/ejemplo2.com/public_html/index.html<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="s">&lt;!DOCTYPE html&gt;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">&lt;html lang="es"&gt;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;ejemplo2.com&lt;/title&gt;&lt;/head&gt;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">&lt;body style="font-family: sans-serif; background: #eaf5ea;"&gt;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s">  &lt;h1&gt;Bienvenido a ejemplo2.com&lt;/h1&gt;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s">  &lt;p&gt;Este contenido se sirve desde /var/www/ejemplo2.com/public_html&lt;/p&gt;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s">&lt;/body&gt;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">&lt;/html&gt;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>sudo -u web1 tee archivo</code>: escribe el archivo como el usuario <code>web1</code>.</li>
+<li><code>&lt;&lt;'EOF' ... EOF</code>: un <em>here-document</em>: todo lo que hay entre las dos marcas se envía como entrada al comando. Las comillas en <code>'EOF'</code> impiden que el shell interprete caracteres especiales como <code>$</code>.</li>
+<li><code>&gt; /dev/null</code>: descarta la copia que <code>tee</code> muestra por pantalla.</li>
+</ul>
+<p>Ajustamos permisos de los archivos (640: dueño lee y escribe, grupo www-data lee):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>/var/www/ejemplo1.com/public_html/index.html<span class="w"> </span>/var/www/ejemplo2.com/public_html/index.html
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/var/www/ejemplo1.com/public_html/
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>-rw-r----- 1 web1 www-data 287 nov  8 22:25 index.html
+</code></pre></div>
+<p>Fíjate en que el grupo es <code>www-data</code> gracias al bit setgid.</p>
+<p><strong>Siguiente paso:</strong> preparar el sitio comodín.</p>
+<h3 id="paso-34-preparar-el-sitio-por-defecto-como-comodin">PASO 3.4 – Preparar el sitio por defecto como comodín<a class="headerlink" href="#paso-34-preparar-el-sitio-por-defecto-como-comodin" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que quien visite el servidor por IP o con un nombre desconocido vea una página neutra.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Servidor&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;Servidor en funcionamiento.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/var/www/html/index.html<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/apache2/sites-available/000-default.conf</code>. Sustituye todo su contenido por:</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Sitio comodín: atiende peticiones por IP o con nombres no configurados.
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a># Debe ser el PRIMER VirtualHost en *:80 (por eso se llama 000-...).
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a># También sirve los desafíos de Let's Encrypt para mail.ejemplo1.com y mail.ejemplo2.com.
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>&lt;VirtualHost *:80&gt;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    ServerName mail.ejemplo1.com
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    ServerAlias mail.ejemplo2.com
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    ServerAdmin administracion@ejemplo1.com
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    DocumentRoot /var/www/html
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    &lt;Directory /var/www/html&gt;
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        Options -Indexes
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        AllowOverride None
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>        Require all granted
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    &lt;/Directory&gt;
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    ErrorLog ${APACHE_LOG_DIR}/error.log
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>    CustomLog ${APACHE_LOG_DIR}/access.log combined
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>&lt;/VirtualHost&gt;
+</code></pre></div>
+<p>Análisis: <code>${APACHE_LOG_DIR}</code> es una variable definida en <code>/etc/apache2/envvars</code> que vale <code>/var/log/apache2</code>. <code>ServerName mail.ejemplo1.com</code> y su alias permitirán, en el Módulo 6, obtener el certificado del servidor de correo usando esta misma carpeta.</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+</code></pre></div>
+<p>El operador <code>&amp;&amp;</code> ejecuta la recarga <strong>solo si</strong> la comprobación termina bien. Acostúmbrate a esta combinación.</p>
+<p><strong>Siguiente paso:</strong> crear el VirtualHost de cada dominio.</p>
+<h2 id="33-los-archivos-de-configuracion-de-los-virtualhosts">3.3 Los archivos de configuración de los VirtualHosts<a class="headerlink" href="#33-los-archivos-de-configuracion-de-los-virtualhosts" title="Permanent link">&para;</a></h2>
+<h3 id="paso-35-crear-el-virtualhost-de-ejemplo1com-http">PASO 3.5 – Crear el VirtualHost de ejemplo1.com (HTTP)<a class="headerlink" href="#paso-35-crear-el-virtualhost-de-ejemplo1com-http" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> decirle a Apache que <code>www.ejemplo1.com</code> y <code>ejemplo1.com</code> se sirven desde <code>/var/www/ejemplo1.com/public_html</code>.</p>
+<p><strong>Explicación:</strong> de momento solo configuramos HTTP (puerto 80). Lo necesitamos así para obtener el certificado; en el PASO 3.11 ampliaremos el archivo con HTTPS.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/apache2/sites-available/ejemplo1.com.conf
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/apache2/sites-available/ejemplo1.com.conf</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&lt;VirtualHost *:80&gt;
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    # Nombre principal del sitio
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    ServerName www.ejemplo1.com
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    # Otros nombres que deben servir este mismo sitio
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    ServerAlias ejemplo1.com
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    # Correo del responsable (aparece en algunas páginas de error)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    ServerAdmin administracion@ejemplo1.com
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    # Carpeta que se publica
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    DocumentRoot /var/www/ejemplo1.com/public_html
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    &lt;Directory /var/www/ejemplo1.com/public_html&gt;
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        # Sin listados de carpetas; se permiten enlaces simbólicos
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>        Options -Indexes +FollowSymLinks
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>        # No se procesan archivos .htaccess (más rápido y más seguro)
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>        AllowOverride None
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>        # Cualquiera puede ver el contenido
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>        Require all granted
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>    &lt;/Directory&gt;
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    # Logs propios de este sitio
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    ErrorLog ${APACHE_LOG_DIR}/ejemplo1.com-error.log
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>    CustomLog ${APACHE_LOG_DIR}/ejemplo1.com-access.log combined
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>&lt;/VirtualHost&gt;
+</code></pre></div>
+<p>Análisis de cada directiva:</p>
+<table>
+<thead>
+<tr>
+<th>Directiva</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;VirtualHost *:80&gt;</code></td>
+<td>Este bloque atiende peticiones en cualquier IP (<code>*</code>) del servidor, puerto 80.</td>
+</tr>
+<tr>
+<td><code>ServerName</code></td>
+<td>Nombre principal. Debe ser único entre todos los VirtualHosts del mismo puerto.</td>
+</tr>
+<tr>
+<td><code>ServerAlias</code></td>
+<td>Nombres adicionales (varios separados por espacio; admite comodines como <code>*.ejemplo1.com</code>).</td>
+</tr>
+<tr>
+<td><code>ServerAdmin</code></td>
+<td>Dirección de contacto.</td>
+</tr>
+<tr>
+<td><code>DocumentRoot</code></td>
+<td>Carpeta publicada. Sin barra final.</td>
+</tr>
+<tr>
+<td><code>&lt;Directory ruta&gt;</code></td>
+<td>Opciones que se aplican a esa carpeta y sus subcarpetas.</td>
+</tr>
+<tr>
+<td><code>Options -Indexes</code></td>
+<td>Desactiva el listado automático de carpetas.</td>
+</tr>
+<tr>
+<td><code>AllowOverride None</code></td>
+<td>Ignora los archivos <code>.htaccess</code>. Toda la configuración está en este archivo.</td>
+</tr>
+<tr>
+<td><code>Require all granted</code></td>
+<td>Concede acceso a todo el mundo.</td>
+</tr>
+<tr>
+<td><code>ErrorLog</code> / <code>CustomLog</code></td>
+<td>Rutas de los logs de errores y de accesos; <code>combined</code> es el formato.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Muchas aplicaciones (WordPress, Laravel...) traen un <code>.htaccess</code> con reglas de reescritura. Si las usas, cambia <code>AllowOverride None</code> por <code>AllowOverride All</code> (o mejor, copia esas reglas dentro de este bloque <code>&lt;Directory&gt;</code>).</p>
+</div>
+<p><strong>Siguiente paso:</strong> el mismo archivo para ejemplo2.com.</p>
+<h3 id="paso-36-crear-el-virtualhost-de-ejemplo2com-http">PASO 3.6 – Crear el VirtualHost de ejemplo2.com (HTTP)<a class="headerlink" href="#paso-36-crear-el-virtualhost-de-ejemplo2com-http" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/etc/apache2/sites-available/ejemplo2.com.conf</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>&lt;VirtualHost *:80&gt;
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    ServerName www.ejemplo2.com
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    ServerAlias ejemplo2.com
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    ServerAdmin soporte@ejemplo2.com
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    DocumentRoot /var/www/ejemplo2.com/public_html
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    &lt;Directory /var/www/ejemplo2.com/public_html&gt;
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>        Options -Indexes +FollowSymLinks
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>        AllowOverride None
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>        Require all granted
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    &lt;/Directory&gt;
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    ErrorLog ${APACHE_LOG_DIR}/ejemplo2.com-error.log
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>    CustomLog ${APACHE_LOG_DIR}/ejemplo2.com-access.log combined
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>&lt;/VirtualHost&gt;
+</code></pre></div>
+<p><strong>Siguiente paso:</strong> habilitar ambos sitios.</p>
+<h3 id="paso-37-habilitar-los-sitios">PASO 3.7 – Habilitar los sitios<a class="headerlink" href="#paso-37-habilitar-los-sitios" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> activar los dos VirtualHosts.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>a2ensite<span class="w"> </span>ejemplo1.com<span class="w"> </span>ejemplo2.com
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>a2ensite</code> admite el nombre del archivo sin <code>.conf</code>. Crea <code>/etc/apache2/sites-enabled/ejemplo1.com.conf</code> como enlace al de <code>sites-available</code>.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Enabling site ejemplo1.com.
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Enabling site ejemplo2.com.
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>To activate the new configuration, you need to run:
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  systemctl reload apache2
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Syntax OK
+</code></pre></div>
+<p><strong>Comprobación:</strong> la herramienta más importante de este módulo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>-S
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>VirtualHost configuration:
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>*:80                   is a NameVirtualHost
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>         default server mail.ejemplo1.com (/etc/apache2/sites-enabled/000-default.conf:4)
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>         port 80 namevhost mail.ejemplo1.com (/etc/apache2/sites-enabled/000-default.conf:4)
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>                 alias mail.ejemplo2.com
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>         port 80 namevhost www.ejemplo1.com (/etc/apache2/sites-enabled/ejemplo1.com.conf:1)
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>                 alias ejemplo1.com
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>         port 80 namevhost www.ejemplo2.com (/etc/apache2/sites-enabled/ejemplo2.com.conf:1)
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>                 alias ejemplo2.com
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>ServerRoot: "/etc/apache2"
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>Main DocumentRoot: "/var/www/html"
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>...
+</code></pre></div>
+<p>Interpretación: en el puerto 80 hay tres VirtualHosts por nombre; el <strong>default server</strong> (el que atiende nombres desconocidos) es el comodín de <code>000-default.conf</code>. Cada línea indica el archivo y la línea donde está definido: muy útil cuando algo no cuadra.</p>
+<p><strong>Siguiente paso:</strong> probar los dominios.</p>
+<h2 id="34-probar-los-dominios">3.4 Probar los dominios<a class="headerlink" href="#34-probar-los-dominios" title="Permanent link">&para;</a></h2>
+<p>Hay tres formas de probar, de la más rápida a la definitiva.</p>
+<h3 id="paso-38-probar-desde-el-propio-servidor-con-curl-sin-dns">PASO 3.8 – Probar desde el propio servidor con curl (sin DNS)<a class="headerlink" href="#paso-38-probar-desde-el-propio-servidor-con-curl-sin-dns" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> verificar que Apache elige el VirtualHost correcto aunque el DNS aún no esté configurado.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Host: www.ejemplo1.com"</span><span class="w"> </span>http://127.0.0.1/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'&lt;h1&gt;'</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Host: ejemplo2.com"</span><span class="w"> </span>http://127.0.0.1/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'&lt;h1&gt;'</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Host: desconocido.com"</span><span class="w"> </span>http://127.0.0.1/
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>-H "Host: ..."</code> envía la cabecera Host que queramos, simulando que el visitante escribió ese nombre. <code>-s</code> (silencioso) oculta la barra de progreso.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>  &lt;h1&gt;Bienvenido a ejemplo1.com&lt;/h1&gt;
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  &lt;h1&gt;Bienvenido a ejemplo2.com&lt;/h1&gt;
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Servidor&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;Servidor en funcionamiento.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre></div>
+<p>El tercer caso demuestra que los nombres desconocidos caen en el comodín.</p>
+<h3 id="paso-39-probar-desde-tu-navegador-con-el-archivo-hosts-sin-dns">PASO 3.9 – Probar desde tu navegador con el archivo hosts (sin DNS)<a class="headerlink" href="#paso-39-probar-desde-tu-navegador-con-el-archivo-hosts-sin-dns" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> ver las webs en tu navegador antes de tocar el DNS (o en un laboratorio sin dominio real).</p>
+<p><strong>Explicación:</strong> el archivo <code>hosts</code> de tu ordenador tiene prioridad sobre el DNS. Añadiendo líneas, tu equipo creerá que esos nombres apuntan a tu servidor.</p>
+<ul>
+<li>En <strong>Windows</strong>: abre el Bloc de notas <strong>como administrador</strong> y edita <code>C:\Windows\System32\drivers\etc\hosts</code>.</li>
+<li>En <strong>macOS / Linux</strong>: <code>sudo nano /etc/hosts</code>.</li>
+</ul>
+<p><strong>Archivo:</strong> <code>hosts</code> de <strong>tu ordenador</strong> (añade al final):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>203.0.113.10   ejemplo1.com www.ejemplo1.com mail.ejemplo1.com
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>203.0.113.10   ejemplo2.com www.ejemplo2.com mail.ejemplo2.com
+</code></pre></div>
+<p><strong>Comprobación:</strong> visita <code>http://www.ejemplo1.com</code> y <code>http://www.ejemplo2.com</code>. Cada uno debe mostrar su página con su color de fondo.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Cuando configures el DNS real, <strong>borra estas líneas</strong>. Si no, tu equipo seguirá usándolas y podrías no darte cuenta de que el DNS está mal.</p>
+</div>
+<h3 id="paso-310-crear-los-registros-dns-de-las-webs">PASO 3.10 – Crear los registros DNS de las webs<a class="headerlink" href="#paso-310-crear-los-registros-dns-de-las-webs" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que cualquier persona del mundo llegue a tus webs.</p>
+<p><strong>Explicación:</strong> entra en el panel de tu proveedor DNS y crea, para <strong>cada</strong> dominio, los registros siguientes. Creamos también ahora los nombres <code>mail</code> porque los necesitaremos para el certificado del correo (el resto de registros de correo se crean en el Módulo 9).</p>
+<p>Registros de <code>ejemplo1.com</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Valor</th>
+<th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>@</td>
+<td>203.0.113.10</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>A</td>
+<td>www</td>
+<td>203.0.113.10</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>A</td>
+<td>mail</td>
+<td>203.0.113.10</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>AAAA (si tienes IPv6)</td>
+<td>@, www y mail</td>
+<td>2001:db8:10::10</td>
+<td>3600</td>
+</tr>
+</tbody>
+</table>
+<p>Registros de <code>ejemplo2.com</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Valor</th>
+<th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>@</td>
+<td>203.0.113.10</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>A</td>
+<td>www</td>
+<td>203.0.113.10</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>A</td>
+<td>mail</td>
+<td>203.0.113.10</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>AAAA (si tienes IPv6)</td>
+<td>@, www y mail</td>
+<td>2001:db8:10::10</td>
+<td>3600</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Crea registros <strong>AAAA</strong> solo si tu servidor tiene IPv6 configurada <strong>y funcionando</strong>. Un AAAA que apunta a una IPv6 que no responde hace que muchos visitantes (y Let's Encrypt) fallen, porque prefieren IPv6. Comprueba la IPv6 del servidor con <code>ip -6 addr show scope global</code>.</p>
+</div>
+<p><strong>Comprobación (desde el servidor o desde tu ordenador):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>www.ejemplo1.com
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>ejemplo2.com
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>mail.ejemplo2.com<span class="w"> </span>@1.1.1.1
+</code></pre></div>
+<p>Cada consulta debe devolver <code>203.0.113.10</code>. La opción <code>@1.1.1.1</code> pregunta directamente al resolvedor de Cloudflare, útil para saltarte cachés locales.</p>
+<p><strong>Errores habituales:</strong> si no devuelve nada, espera unos minutos (propagación) y revisa que no hayas escrito el dominio completo en el campo «Nombre» (algunos paneles añaden el dominio automáticamente y acabarías creando <code>www.ejemplo1.com.ejemplo1.com</code>).</p>
+<h2 id="35-solucionar-conflictos-entre-virtualhosts">3.5 Solucionar conflictos entre VirtualHosts<a class="headerlink" href="#35-solucionar-conflictos-entre-virtualhosts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa probable</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Todos los dominios muestran la misma web.</td>
+<td>El navegador cae en el vhost por defecto porque ningún <code>ServerName</code>/<code>ServerAlias</code> coincide, o los sitios no están habilitados.</td>
+<td><code>sudo apachectl -S</code>: comprueba que cada nombre aparece como <code>namevhost</code> o <code>alias</code>.</td>
+</tr>
+<tr>
+<td><code>ejemplo2.com</code> muestra la web de ejemplo1.</td>
+<td>Falta <code>ServerAlias ejemplo2.com</code> o está en el archivo equivocado.</td>
+<td>Corrige el alias y recarga.</td>
+</tr>
+<tr>
+<td>Aviso <code>AH01630</code> o <code>AH00548: NameVirtualHost has no effect</code>.</td>
+<td>Directiva obsoleta de Apache 2.2.</td>
+<td>Bórrala: en 2.4 no hace falta.</td>
+</tr>
+<tr>
+<td>Dos sitios con el mismo <code>ServerName</code>.</td>
+<td>Gana el primero que se carga (orden alfabético de archivos).</td>
+<td>Cada <code>ServerName</code> debe ser único; revisa <code>apachectl -S</code>.</td>
+</tr>
+<tr>
+<td>403 Forbidden en un dominio.</td>
+<td>Permisos de carpeta (falta <code>x</code> para www-data) o falta el bloque <code>&lt;Directory&gt;</code>.</td>
+<td><code>sudo -u www-data ls /var/www/ejemplo1.com/public_html</code> debe funcionar.</td>
+</tr>
+<tr>
+<td>El cambio no se aplica.</td>
+<td>No recargaste Apache o editaste el archivo en <code>sites-available</code> de otro sitio.</td>
+<td><code>sudo systemctl reload apache2</code> y revisa el archivo indicado en <code>apachectl -S</code>.</td>
+</tr>
+<tr>
+<td><code>Could not open configuration file ... No such file or directory</code>.</td>
+<td>Un enlace en <code>sites-enabled</code> apunta a un archivo borrado.</td>
+<td><code>sudo a2dissite nombre</code> o borra el enlace roto.</td>
+</tr>
+</tbody>
+</table>
+<p>Una herramienta muy útil para comprobar permisos de toda una ruta de golpe:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>namei<span class="w"> </span>-l<span class="w"> </span>/var/www/ejemplo1.com/public_html/index.html
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>f: /var/www/ejemplo1.com/public_html/index.html
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>drwxr-xr-x root root     /
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>drwxr-xr-x root root     var
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>drwxr-xr-x root root     www
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>drwxr-x--- web1 www-data ejemplo1.com
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>drwxr-s--- web1 www-data public_html
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>-rw-r----- web1 www-data index.html
+</code></pre></div>
+<h2 id="36-https-para-cada-dominio">3.6 HTTPS para cada dominio<a class="headerlink" href="#36-https-para-cada-dominio" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora todo viaja <strong>sin cifrar</strong>: cualquiera en la red podría leer o modificar lo que se envía. HTTPS cifra la conexión con <strong>TLS</strong> y además demuestra, mediante un <strong>certificado</strong>, que el servidor es realmente quien dice ser.</p>
+<p>Usaremos <strong>Let's Encrypt</strong>, una autoridad de certificación gratuita y automatizada, a través de su cliente oficial <strong>Certbot</strong>. El funcionamiento interno y la renovación se explican a fondo en el Módulo 10; aquí lo usamos para dejar las webs seguras desde ya.</p>
+<p>Cómo demuestra Certbot que el dominio es tuyo (desafío <strong>HTTP-01</strong>):</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a> 1. Certbot pide un certificado para ejemplo1.com y www.ejemplo1.com
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a> 2. Let's Encrypt responde: "publica este token en
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>        http://ejemplo1.com/.well-known/acme-challenge/&lt;token&gt;"
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a> 3. Certbot escribe el archivo en /var/www/ejemplo1.com/public_html/.well-known/acme-challenge/
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a> 4. Los servidores de Let's Encrypt descargan esa URL desde Internet (puerto 80)
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a> 5. Si coincide → emiten el certificado (válido 90 días). Certbot borra el token.
+</code></pre></div>
+<p>Por eso es imprescindible que el DNS apunte ya a tu servidor y que el puerto 80 esté abierto.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Usaremos el modo <code>certonly --webroot</code>: Certbot solo obtiene el certificado y <strong>no toca</strong> tus archivos de Apache. Así controlas al cien por cien tu configuración y la entiendes línea por línea. (El modo <code>certbot --apache</code> modifica tus VirtualHosts automáticamente; es cómodo, pero genera archivos <code>-le-ssl.conf</code> duplicados que confunden cuando más adelante añades PHP.)</p>
+</div>
+<h3 id="paso-311-instalar-certbot-y-obtener-los-certificados-de-las-webs">PASO 3.11 – Instalar Certbot y obtener los certificados de las webs<a class="headerlink" href="#paso-311-instalar-certbot-y-obtener-los-certificados-de-las-webs" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> obtener un certificado para cada dominio.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>certbot
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/ejemplo1.com/public_html<span class="w"> </span>-d<span class="w"> </span>ejemplo1.com<span class="w"> </span>-d<span class="w"> </span>www.ejemplo1.com<span class="w"> </span>--email<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>--agree-tos<span class="w"> </span>--no-eff-email
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>certonly</code>: solo obtener el certificado, sin instalarlo.</li>
+<li><code>--webroot -w carpeta</code>: método de validación: escribir el token en esa carpeta (el DocumentRoot del sitio).</li>
+<li><code>-d ejemplo1.com -d www.ejemplo1.com</code>: los nombres que cubrirá el certificado. El primero da nombre a la carpeta del certificado.</li>
+<li><code>--email</code>: dirección a la que Let's Encrypt avisará si algo va mal con la renovación.</li>
+<li><code>--agree-tos</code>: aceptas los términos del servicio de Let's Encrypt (léelos en su web).</li>
+<li><code>--no-eff-email</code>: no compartir tu correo con la EFF para boletines.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Successfully received certificate.
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>Certificate is saved at: /etc/letsencrypt/live/ejemplo1.com/fullchain.pem
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Key is saved at:         /etc/letsencrypt/live/ejemplo1.com/privkey.pem
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>This certificate expires on 2027-02-06.
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Certbot has set up a scheduled task to automatically renew this certificate in the background.
+</code></pre></div>
+<p>Repite para el segundo dominio:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/ejemplo2.com/public_html<span class="w"> </span>-d<span class="w"> </span>ejemplo2.com<span class="w"> </span>-d<span class="w"> </span>www.ejemplo2.com<span class="w"> </span>--email<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span>--agree-tos<span class="w"> </span>--no-eff-email
+</code></pre></div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certificates
+</code></pre></div>
+<p>Debe listar los dos certificados con sus dominios y la fecha de caducidad.</p>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li><code>Timeout during connect (likely firewall problem)</code>: el puerto 80 está cerrado en UFW o en el cortafuegos del proveedor.</li>
+<li><code>DNS problem: NXDOMAIN looking up A for www.ejemplo1.com</code>: el registro DNS aún no existe o no se ha propagado.</li>
+<li><code>Invalid response from http://.../.well-known/acme-challenge/...: 404</code>: el DNS apunta a otro servidor, o el <code>-w</code> no coincide con el DocumentRoot del VirtualHost que atiende ese nombre.</li>
+<li><code>too many certificates already issued</code>: has superado los límites de Let's Encrypt por hacer muchas pruebas. Para practicar, añade <code>--test-cert</code> (entorno de pruebas sin límites) y repite sin él cuando todo funcione.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Laboratorio sin dominio real:</strong> omite este paso y, en el archivo del PASO 3.12, sustituye las rutas del certificado por las del certificado autofirmado de Ubuntu: <code>SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem</code> y <code>SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key</code>. El navegador mostrará un aviso de seguridad que podrás aceptar.</p>
+</div>
+<p><strong>Siguiente paso:</strong> configurar el VirtualHost HTTPS.</p>
+<h3 id="paso-312-configurar-https-en-el-virtualhost-de-ejemplo1com">PASO 3.12 – Configurar HTTPS en el VirtualHost de ejemplo1.com<a class="headerlink" href="#paso-312-configurar-https-en-el-virtualhost-de-ejemplo1com" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> servir la web por HTTPS y redirigir automáticamente todo el tráfico HTTP a <code>https://www.ejemplo1.com</code>.</p>
+<p><strong>Explicación:</strong> ampliamos el archivo con un segundo bloque <code>&lt;VirtualHost *:443&gt;</code>. El bloque del puerto 80 pasa a tener una única función: redirigir a HTTPS (excepto las peticiones de validación de Let's Encrypt). También redirigimos <code>ejemplo1.com</code> a <code>www.ejemplo1.com</code> para que la web tenga una única dirección canónica.</p>
+<p><strong>Comando:</strong> activa los módulos necesarios:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>sudo<span class="w"> </span>a2enmod<span class="w"> </span>ssl<span class="w"> </span>rewrite<span class="w"> </span>headers
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/apache2/sites-available/ejemplo1.com.conf</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a># ---------------------------------------------------------------
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a># ejemplo1.com - HTTP: solo redirige a HTTPS
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a># ---------------------------------------------------------------
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>&lt;VirtualHost *:80&gt;
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>    ServerName www.ejemplo1.com
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>    ServerAlias ejemplo1.com
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>    ServerAdmin administracion@ejemplo1.com
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>    DocumentRoot /var/www/ejemplo1.com/public_html
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>    RewriteEngine On
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>    # Las validaciones de Let's Encrypt se sirven por HTTP sin redirigir
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>    RewriteRule ^ https://www.ejemplo1.com%{REQUEST_URI} [L,R=301]
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a>
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>    ErrorLog ${APACHE_LOG_DIR}/ejemplo1.com-error.log
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>    CustomLog ${APACHE_LOG_DIR}/ejemplo1.com-access.log combined
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a>&lt;/VirtualHost&gt;
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a>
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a># ---------------------------------------------------------------
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a># ejemplo1.com - HTTPS: el sitio real
+<a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a># ---------------------------------------------------------------
+<a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>&lt;VirtualHost *:443&gt;
+<a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a>    ServerName www.ejemplo1.com
+<a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a>    ServerAlias ejemplo1.com
+<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>    ServerAdmin administracion@ejemplo1.com
+<a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a>    DocumentRoot /var/www/ejemplo1.com/public_html
+<a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a>
+<a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a>    # Cifrado TLS con el certificado de Let's Encrypt
+<a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a>    SSLEngine on
+<a id="__codelineno-35-30" name="__codelineno-35-30" href="#__codelineno-35-30"></a>    SSLCertificateFile    /etc/letsencrypt/live/ejemplo1.com/fullchain.pem
+<a id="__codelineno-35-31" name="__codelineno-35-31" href="#__codelineno-35-31"></a>    SSLCertificateKeyFile /etc/letsencrypt/live/ejemplo1.com/privkey.pem
+<a id="__codelineno-35-32" name="__codelineno-35-32" href="#__codelineno-35-32"></a>    Protocols h2 http/1.1
+<a id="__codelineno-35-33" name="__codelineno-35-33" href="#__codelineno-35-33"></a>
+<a id="__codelineno-35-34" name="__codelineno-35-34" href="#__codelineno-35-34"></a>    # Dirección canónica: ejemplo1.com -&gt; www.ejemplo1.com
+<a id="__codelineno-35-35" name="__codelineno-35-35" href="#__codelineno-35-35"></a>    RewriteEngine On
+<a id="__codelineno-35-36" name="__codelineno-35-36" href="#__codelineno-35-36"></a>    RewriteCond %{HTTP_HOST} !^www\.ejemplo1\.com$ [NC]
+<a id="__codelineno-35-37" name="__codelineno-35-37" href="#__codelineno-35-37"></a>    RewriteRule ^ https://www.ejemplo1.com%{REQUEST_URI} [L,R=301]
+<a id="__codelineno-35-38" name="__codelineno-35-38" href="#__codelineno-35-38"></a>
+<a id="__codelineno-35-39" name="__codelineno-35-39" href="#__codelineno-35-39"></a>    # Indica a los navegadores que usen siempre HTTPS durante 6 meses
+<a id="__codelineno-35-40" name="__codelineno-35-40" href="#__codelineno-35-40"></a>    Header always set Strict-Transport-Security "max-age=15552000"
+<a id="__codelineno-35-41" name="__codelineno-35-41" href="#__codelineno-35-41"></a>
+<a id="__codelineno-35-42" name="__codelineno-35-42" href="#__codelineno-35-42"></a>    &lt;Directory /var/www/ejemplo1.com/public_html&gt;
+<a id="__codelineno-35-43" name="__codelineno-35-43" href="#__codelineno-35-43"></a>        Options -Indexes +FollowSymLinks
+<a id="__codelineno-35-44" name="__codelineno-35-44" href="#__codelineno-35-44"></a>        AllowOverride None
+<a id="__codelineno-35-45" name="__codelineno-35-45" href="#__codelineno-35-45"></a>        Require all granted
+<a id="__codelineno-35-46" name="__codelineno-35-46" href="#__codelineno-35-46"></a>    &lt;/Directory&gt;
+<a id="__codelineno-35-47" name="__codelineno-35-47" href="#__codelineno-35-47"></a>
+<a id="__codelineno-35-48" name="__codelineno-35-48" href="#__codelineno-35-48"></a>    ErrorLog ${APACHE_LOG_DIR}/ejemplo1.com-error.log
+<a id="__codelineno-35-49" name="__codelineno-35-49" href="#__codelineno-35-49"></a>    CustomLog ${APACHE_LOG_DIR}/ejemplo1.com-access.log combined
+<a id="__codelineno-35-50" name="__codelineno-35-50" href="#__codelineno-35-50"></a>&lt;/VirtualHost&gt;
+</code></pre></div>
+<p>Análisis de las directivas nuevas:</p>
+<table>
+<thead>
+<tr>
+<th>Directiva</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RewriteEngine On</code></td>
+<td>Activa el motor de reescritura en este VirtualHost.</td>
+</tr>
+<tr>
+<td><code>RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/</code></td>
+<td>Condición: la ruta pedida <strong>no</strong> (<code>!</code>) empieza por la carpeta de validación.</td>
+</tr>
+<tr>
+<td><code>RewriteRule ^ https://www.ejemplo1.com%{REQUEST_URI} [L,R=301]</code></td>
+<td>Para cualquier ruta (<code>^</code>), redirige a la misma ruta en HTTPS. <code>R=301</code>: redirección permanente; <code>L</code>: última regla.</td>
+</tr>
+<tr>
+<td><code>SSLEngine on</code></td>
+<td>Activa TLS en este VirtualHost.</td>
+</tr>
+<tr>
+<td><code>SSLCertificateFile</code></td>
+<td>Certificado más la cadena de certificados intermedios (<code>fullchain.pem</code>).</td>
+</tr>
+<tr>
+<td><code>SSLCertificateKeyFile</code></td>
+<td>Clave privada (solo root puede leerla).</td>
+</tr>
+<tr>
+<td><code>Protocols h2 http/1.1</code></td>
+<td>Ofrece HTTP/2 y, si el cliente no lo soporta, HTTP/1.1.</td>
+</tr>
+<tr>
+<td><code>RewriteCond %{HTTP_HOST} !^www\.ejemplo1\.com$ [NC]</code></td>
+<td>Si el nombre pedido no es exactamente <code>www.ejemplo1.com</code> (sin distinguir mayúsculas, <code>NC</code>)...</td>
+</tr>
+<tr>
+<td><code>Header always set Strict-Transport-Security</code></td>
+<td>Cabecera HSTS: el navegador recordará usar solo HTTPS. Actívala cuando estés seguro de que HTTPS funciona bien.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Los protocolos y cifrados TLS globales están definidos en <code>/etc/apache2/mods-available/ssl.conf</code> (Ubuntu 24.04 ya desactiva SSLv3, TLS 1.0 y 1.1 con <code>SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1</code>). Compruébalo con <code>grep -E '^\s*SSLProtocol' /etc/apache2/mods-available/ssl.conf</code>.</p>
+</div>
+<p><strong>Siguiente paso:</strong> lo mismo para ejemplo2.com.</p>
+<h3 id="paso-313-configurar-https-en-el-virtualhost-de-ejemplo2com">PASO 3.13 – Configurar HTTPS en el VirtualHost de ejemplo2.com<a class="headerlink" href="#paso-313-configurar-https-en-el-virtualhost-de-ejemplo2com" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/etc/apache2/sites-available/ejemplo2.com.conf</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>&lt;VirtualHost *:80&gt;
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>    ServerName www.ejemplo2.com
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>    ServerAlias ejemplo2.com
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>    ServerAdmin soporte@ejemplo2.com
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>    DocumentRoot /var/www/ejemplo2.com/public_html
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>    RewriteEngine On
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>    RewriteRule ^ https://www.ejemplo2.com%{REQUEST_URI} [L,R=301]
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>    ErrorLog ${APACHE_LOG_DIR}/ejemplo2.com-error.log
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>    CustomLog ${APACHE_LOG_DIR}/ejemplo2.com-access.log combined
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a>&lt;/VirtualHost&gt;
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a>
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>&lt;VirtualHost *:443&gt;
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a>    ServerName www.ejemplo2.com
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a>    ServerAlias ejemplo2.com
+<a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a>    ServerAdmin soporte@ejemplo2.com
+<a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a>    DocumentRoot /var/www/ejemplo2.com/public_html
+<a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a>
+<a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a>    SSLEngine on
+<a id="__codelineno-36-22" name="__codelineno-36-22" href="#__codelineno-36-22"></a>    SSLCertificateFile    /etc/letsencrypt/live/ejemplo2.com/fullchain.pem
+<a id="__codelineno-36-23" name="__codelineno-36-23" href="#__codelineno-36-23"></a>    SSLCertificateKeyFile /etc/letsencrypt/live/ejemplo2.com/privkey.pem
+<a id="__codelineno-36-24" name="__codelineno-36-24" href="#__codelineno-36-24"></a>    Protocols h2 http/1.1
+<a id="__codelineno-36-25" name="__codelineno-36-25" href="#__codelineno-36-25"></a>
+<a id="__codelineno-36-26" name="__codelineno-36-26" href="#__codelineno-36-26"></a>    RewriteEngine On
+<a id="__codelineno-36-27" name="__codelineno-36-27" href="#__codelineno-36-27"></a>    RewriteCond %{HTTP_HOST} !^www\.ejemplo2\.com$ [NC]
+<a id="__codelineno-36-28" name="__codelineno-36-28" href="#__codelineno-36-28"></a>    RewriteRule ^ https://www.ejemplo2.com%{REQUEST_URI} [L,R=301]
+<a id="__codelineno-36-29" name="__codelineno-36-29" href="#__codelineno-36-29"></a>
+<a id="__codelineno-36-30" name="__codelineno-36-30" href="#__codelineno-36-30"></a>    Header always set Strict-Transport-Security "max-age=15552000"
+<a id="__codelineno-36-31" name="__codelineno-36-31" href="#__codelineno-36-31"></a>
+<a id="__codelineno-36-32" name="__codelineno-36-32" href="#__codelineno-36-32"></a>    &lt;Directory /var/www/ejemplo2.com/public_html&gt;
+<a id="__codelineno-36-33" name="__codelineno-36-33" href="#__codelineno-36-33"></a>        Options -Indexes +FollowSymLinks
+<a id="__codelineno-36-34" name="__codelineno-36-34" href="#__codelineno-36-34"></a>        AllowOverride None
+<a id="__codelineno-36-35" name="__codelineno-36-35" href="#__codelineno-36-35"></a>        Require all granted
+<a id="__codelineno-36-36" name="__codelineno-36-36" href="#__codelineno-36-36"></a>    &lt;/Directory&gt;
+<a id="__codelineno-36-37" name="__codelineno-36-37" href="#__codelineno-36-37"></a>
+<a id="__codelineno-36-38" name="__codelineno-36-38" href="#__codelineno-36-38"></a>    ErrorLog ${APACHE_LOG_DIR}/ejemplo2.com-error.log
+<a id="__codelineno-36-39" name="__codelineno-36-39" href="#__codelineno-36-39"></a>    CustomLog ${APACHE_LOG_DIR}/ejemplo2.com-access.log combined
+<a id="__codelineno-36-40" name="__codelineno-36-40" href="#__codelineno-36-40"></a>&lt;/VirtualHost&gt;
+</code></pre></div>
+<h3 id="paso-314-activar-el-comodin-https-y-aplicar-los-cambios">PASO 3.14 – Activar el comodín HTTPS y aplicar los cambios<a class="headerlink" href="#paso-314-activar-el-comodin-https-y-aplicar-los-cambios" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que las peticiones HTTPS con nombres desconocidos no caigan en ejemplo1.com.</p>
+<p><strong>Explicación:</strong> Ubuntu incluye el sitio <code>default-ssl</code>, que usa el certificado autofirmado. Como su nombre empieza por «d», se carga antes que «ejemplo1.com» y será el comodín del puerto 443.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>sudo<span class="w"> </span>a2ensite<span class="w"> </span>default-ssl
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>apache2
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>-S
+</code></pre></div>
+<p><strong>Resultado esperado (fragmento):</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>*:443                  is a NameVirtualHost
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>         default server mail.ejemplo1.com (/etc/apache2/sites-enabled/default-ssl.conf:2)
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>         port 443 namevhost mail.ejemplo1.com (/etc/apache2/sites-enabled/default-ssl.conf:2)
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>         port 443 namevhost www.ejemplo1.com (/etc/apache2/sites-enabled/ejemplo1.com.conf:22)
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>                 alias ejemplo1.com
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>         port 443 namevhost www.ejemplo2.com (/etc/apache2/sites-enabled/ejemplo2.com.conf:16)
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>                 alias ejemplo2.com
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>*:80                   is a NameVirtualHost
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>...
+</code></pre></div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://ejemplo1.com
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://ejemplo1.com
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://www.ejemplo1.com
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>curl<span class="w"> </span>-sI<span class="w"> </span>https://www.ejemplo2.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>HTTP/1.1 301 Moved Permanently
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>Location: https://www.ejemplo1.com/
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>...
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>HTTP/2 301
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>location: https://www.ejemplo1.com/
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>...
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a>HTTP/2 200
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>strict-transport-security: max-age=15552000
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>...
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a>HTTP/2 200
+</code></pre></div>
+<p>En el navegador, <code>http://ejemplo1.com</code> debe acabar en <code>https://www.ejemplo1.com</code> con el candado cerrado.</p>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li><code>SSLCertificateFile: file '/etc/letsencrypt/live/...' does not exist or is empty</code>: la ruta no coincide con la que dio Certbot (consulta <code>sudo certbot certificates</code>).</li>
+<li><code>Invalid command 'RewriteEngine'</code> o <code>Invalid command 'Header'</code>: falta <code>a2enmod rewrite headers</code>.</li>
+<li><code>Invalid command 'SSLEngine'</code>: falta <code>a2enmod ssl</code>.</li>
+<li>Bucle de redirecciones (<code>ERR_TOO_MANY_REDIRECTS</code>): tienes un proxy o CDN (por ejemplo Cloudflare en modo «Flexible») que habla con tu servidor por HTTP. Cambia el modo a «Full (strict)».</li>
+</ul>
+<p><strong>Siguiente paso:</strong> Módulo 4, la base de datos MariaDB.</p>
+<h2 id="37-ejercicios-practicos-del-modulo-3">3.7 Ejercicios prácticos del Módulo 3<a class="headerlink" href="#37-ejercicios-practicos-del-modulo-3" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Deshabilita <code>ejemplo2.com</code> con <code>a2dissite</code>, recarga y visita <code>https://www.ejemplo2.com</code>. ¿Qué web aparece y por qué? Vuelve a habilitarlo.</li>
+<li>Crea un tercer sitio <code>pruebas.ejemplo1.com</code> (usuario <code>web3</code>, carpeta propia, solo HTTP) y verifica con <code>curl -H "Host: ..."</code> que funciona. Después elimínalo por completo (sitio, carpeta y usuario).</li>
+<li>Usa <code>namei -l</code> para encontrar por qué un archivo con permisos <code>600</code> da un error 403.</li>
+<li>Revisa <code>/var/log/apache2/ejemplo1.com-access.log</code> y localiza las peticiones de validación de Let's Encrypt (<code>acme-challenge</code>).</li>
+<li>Comprueba con <code>openssl s_client -connect www.ejemplo2.com:443 -servername www.ejemplo2.com &lt;/dev/null | head -20</code> qué certificado se presenta. Repite sin <code>-servername</code>. ¿Qué cambia y por qué? (Pista: SNI.)</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../02-apache/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 2. Apache">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                2. Apache
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04-mariadb/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 4. MariaDB">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                4. MariaDB
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2469 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/01-fundamentos/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../02-apache/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>1. Fundamentos de infraestructura - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-1-fundamentos-de-infraestructura" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1. Fundamentos de infraestructura
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-que-es-un-servidor-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Qué es un servidor Linux
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-servidor-local-y-servidor-publico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Servidor local y servidor público
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-direcciones-ip-publicas-y-privadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Direcciones IP públicas y privadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-que-es-un-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Qué es un dominio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-que-es-el-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Qué es el DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-tipos-de-registros-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Tipos de registros DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-que-es-un-puerto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Qué es un puerto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-tcp-y-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 TCP y UDP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-como-se-comunican-los-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Cómo se comunican los servicios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-que-es-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Qué es SSH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.10 Qué es SSH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-conectarte-al-servidor-por-primera-vez" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.1 – Conectarte al servidor por primera vez
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-preparar-el-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 Preparar el sistema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.11 Preparar el sistema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.2 – Actualizar el sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-configurar-el-nombre-del-servidor-hostname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.3 – Configurar el nombre del servidor (hostname)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-configurar-la-zona-horaria-y-la-sincronizacion-de-hora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.4 – Configurar la zona horaria y la sincronización de hora
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-usuarios-administrativos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 Usuarios administrativos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.12 Usuarios administrativos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-crear-el-usuario-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.5 – Crear el usuario administrador
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-un-par-de-claves-ssh-y-copiar-la-publica-al-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.6 – Crear un par de claves SSH y copiar la pública al servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-desactivar-el-acceso-de-root-y-por-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.7 – Desactivar el acceso de root y por contraseña
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-permisos-y-privilegios-en-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.13 Permisos y privilegios en Linux
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.13 Permisos y privilegios en Linux">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-instalar-herramientas-basicas-de-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.8 – Instalar herramientas básicas de administración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-activar-el-cortafuegos-basico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.9 – Activar el cortafuegos básico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-ejercicios-practicos-del-modulo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.14 Ejercicios prácticos del Módulo 1
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-que-es-un-servidor-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Qué es un servidor Linux
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-servidor-local-y-servidor-publico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Servidor local y servidor público
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-direcciones-ip-publicas-y-privadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Direcciones IP públicas y privadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-que-es-un-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Qué es un dominio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-que-es-el-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Qué es el DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-tipos-de-registros-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Tipos de registros DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-que-es-un-puerto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Qué es un puerto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-tcp-y-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 TCP y UDP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-como-se-comunican-los-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Cómo se comunican los servicios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-que-es-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Qué es SSH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.10 Qué es SSH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-conectarte-al-servidor-por-primera-vez" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.1 – Conectarte al servidor por primera vez
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-preparar-el-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 Preparar el sistema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.11 Preparar el sistema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.2 – Actualizar el sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-configurar-el-nombre-del-servidor-hostname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.3 – Configurar el nombre del servidor (hostname)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-configurar-la-zona-horaria-y-la-sincronizacion-de-hora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.4 – Configurar la zona horaria y la sincronización de hora
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-usuarios-administrativos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 Usuarios administrativos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.12 Usuarios administrativos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-crear-el-usuario-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.5 – Crear el usuario administrador
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-un-par-de-claves-ssh-y-copiar-la-publica-al-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.6 – Crear un par de claves SSH y copiar la pública al servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-desactivar-el-acceso-de-root-y-por-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.7 – Desactivar el acceso de root y por contraseña
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-permisos-y-privilegios-en-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.13 Permisos y privilegios en Linux
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.13 Permisos y privilegios en Linux">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-instalar-herramientas-basicas-de-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.8 – Instalar herramientas básicas de administración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-activar-el-cortafuegos-basico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 1.9 – Activar el cortafuegos básico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-ejercicios-practicos-del-modulo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.14 Ejercicios prácticos del Módulo 1
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/01-fundamentos.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-1-fundamentos-de-infraestructura">Módulo 1. Fundamentos de infraestructura<a class="headerlink" href="#modulo-1-fundamentos-de-infraestructura" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Entender qué es un servidor Linux y qué diferencia un servidor local de uno público.</li>
+<li>Comprender las direcciones IP, los dominios, el DNS y sus tipos de registro.</li>
+<li>Saber qué son los puertos, TCP y UDP, y cómo se comunican los servicios.</li>
+<li>Conectarte a tu servidor por SSH de forma segura con claves.</li>
+<li>Dejar el sistema actualizado, con nombre, zona horaria y un usuario administrador propio.</li>
+<li>Dominar lo básico de usuarios, grupos y permisos en Linux.</li>
+</ul>
+<h2 id="11-que-es-un-servidor-linux">1.1 Qué es un servidor Linux<a class="headerlink" href="#11-que-es-un-servidor-linux" title="Permanent link">&para;</a></h2>
+<p>Un <strong>servidor</strong> es un ordenador cuya función es ofrecer servicios a otros ordenadores, llamados <strong>clientes</strong>. Cuando abres <code>https://www.ejemplo1.com</code> en tu navegador, tu navegador es el cliente y el ordenador que te entrega la página es el servidor.</p>
+<p>Un servidor Linux es simplemente un ordenador con el sistema operativo Linux, normalmente <strong>sin entorno gráfico</strong>: se administra escribiendo comandos en un terminal. No tener escritorio no es una limitación, es una ventaja: consume menos memoria, tiene menos programas que actualizar y menos puntos débiles para un atacante.</p>
+<p>Dentro del servidor, cada servicio es un programa que se queda funcionando en segundo plano (un <strong>demonio</strong> o <em>daemon</em>) esperando peticiones:</p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Programa (demonio)</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web</td>
+<td><code>apache2</code></td>
+<td>Entrega páginas web por HTTP/HTTPS.</td>
+</tr>
+<tr>
+<td>Intérprete PHP</td>
+<td><code>php8.3-fpm</code></td>
+<td>Ejecuta el código PHP que Apache le pasa.</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td><code>mariadbd</code></td>
+<td>Guarda y entrega datos estructurados.</td>
+</tr>
+<tr>
+<td>Correo SMTP</td>
+<td><code>master</code> (Postfix)</td>
+<td>Recibe correo de Internet y envía el de tus usuarios.</td>
+</tr>
+<tr>
+<td>Buzones</td>
+<td><code>dovecot</code></td>
+<td>Permite a los usuarios leer su correo (IMAP/POP3).</td>
+</tr>
+<tr>
+<td>Firma DKIM</td>
+<td><code>opendkim</code></td>
+<td>Firma criptográficamente los correos salientes.</td>
+</tr>
+<tr>
+<td>Acceso remoto</td>
+<td><code>sshd</code></td>
+<td>Te permite administrar el servidor a distancia.</td>
+</tr>
+</tbody>
+</table>
+<p>En Ubuntu, todos estos demonios los arranca, detiene y vigila <strong>systemd</strong>, el gestor de servicios del sistema. La herramienta para hablar con systemd es <code>systemctl</code>, que usarás constantemente.</p>
+<h2 id="12-servidor-local-y-servidor-publico">1.2 Servidor local y servidor público<a class="headerlink" href="#12-servidor-local-y-servidor-publico" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Servidor local (laboratorio)</th>
+<th>Servidor público (producción)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dónde está</td>
+<td>Tu casa, tu empresa, una máquina virtual.</td>
+<td>Un centro de datos (VPS, servidor dedicado, nube).</td>
+</tr>
+<tr>
+<td>Dirección IP</td>
+<td>Privada (192.168.x.x, 10.x.x.x).</td>
+<td>Pública, accesible desde todo Internet.</td>
+</tr>
+<tr>
+<td>Quién puede acceder</td>
+<td>Solo los equipos de tu red.</td>
+<td>Cualquiera en el mundo (también atacantes).</td>
+</tr>
+<tr>
+<td>Dominios</td>
+<td>Simulados con el archivo <code>hosts</code>.</td>
+<td>Reales, resueltos por DNS público.</td>
+</tr>
+<tr>
+<td>Certificados</td>
+<td>Autofirmados.</td>
+<td>Let's Encrypt u otra autoridad.</td>
+</tr>
+<tr>
+<td>Correo</td>
+<td>Solo entre cuentas internas.</td>
+<td>Intercambio con todo Internet.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Un servidor público empieza a recibir intentos de intrusión <strong>minutos</strong> después de encenderse. Bots automáticos prueban contraseñas en SSH las 24 horas del día. Por eso en este módulo aseguraremos el acceso antes de instalar ningún servicio.</p>
+</div>
+<h2 id="13-direcciones-ip-publicas-y-privadas">1.3 Direcciones IP públicas y privadas<a class="headerlink" href="#13-direcciones-ip-publicas-y-privadas" title="Permanent link">&para;</a></h2>
+<p>Una <strong>dirección IP</strong> identifica a un equipo en una red, como el número de un portal en una calle. Hay dos versiones:</p>
+<ul>
+<li><strong>IPv4</strong>: cuatro números de 0 a 255 separados por puntos, por ejemplo <code>203.0.113.10</code>. Hay unos 4.300 millones y están prácticamente agotadas.</li>
+<li><strong>IPv6</strong>: ocho grupos hexadecimales separados por dos puntos, por ejemplo <code>2001:db8:10::10</code> (<code>::</code> abrevia grupos de ceros). Hay muchísimas más.</li>
+</ul>
+<p>Las IP <strong>privadas</strong> solo valen dentro de una red local y no se pueden alcanzar directamente desde Internet. Los rangos reservados son:</p>
+<table>
+<thead>
+<tr>
+<th>Rango privado IPv4</th>
+<th>Uso típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.0.0.0 – 10.255.255.255 (10.0.0.0/8)</td>
+<td>Redes de empresa, nubes internas.</td>
+</tr>
+<tr>
+<td>172.16.0.0 – 172.31.255.255 (172.16.0.0/12)</td>
+<td>Redes de empresa, Docker.</td>
+</tr>
+<tr>
+<td>192.168.0.0 – 192.168.255.255 (192.168.0.0/16)</td>
+<td>Redes domésticas.</td>
+</tr>
+<tr>
+<td>127.0.0.0/8 (sobre todo 127.0.0.1)</td>
+<td><em>Loopback</em>: el propio equipo hablándose a sí mismo.</td>
+</tr>
+</tbody>
+</table>
+<p>Una IP <strong>pública</strong> es única en todo Internet. Tu servidor necesita una IP pública para que el mundo pueda llegar a tu web y a tu correo.</p>
+<p>La notación <code>/24</code>, <code>/8</code>, etc. (llamada CIDR) indica cuántos bits de la dirección son fijos. <code>192.168.1.0/24</code> significa «todas las direcciones de 192.168.1.0 a 192.168.1.255».</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>La dirección <code>127.0.0.1</code> (y su equivalente IPv6 <code>::1</code>) es muy importante en este manual: los servicios que solo deben ser usados desde dentro del servidor (MariaDB, OpenDKIM) escucharán <strong>solo</strong> en esa dirección, de modo que sean invisibles desde Internet.</p>
+</div>
+<h2 id="14-que-es-un-dominio">1.4 Qué es un dominio<a class="headerlink" href="#14-que-es-un-dominio" title="Permanent link">&para;</a></h2>
+<p>Recordar <code>203.0.113.10</code> es incómodo; recordar <code>ejemplo1.com</code> es fácil. Un <strong>dominio</strong> es un nombre legible que se traduce a una dirección IP.</p>
+<p>Los dominios se leen de derecha a izquierda, de lo general a lo particular:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>          www . ejemplo1 . com .
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           │       │        │   └─ raíz (normalmente invisible)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           │       │        └───── dominio de nivel superior (TLD)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>           │       └────────────── dominio que tú registras
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>           └────────────────────── subdominio (lo creas tú, gratis)
+</code></pre></div>
+<p>Tú <strong>alquilas</strong> <code>ejemplo1.com</code> a un <strong>registrador</strong> (por un año o varios). A partir de ahí puedes crear todos los subdominios que quieras: <code>www.ejemplo1.com</code>, <code>mail.ejemplo1.com</code>, <code>tienda.ejemplo1.com</code>...</p>
+<h2 id="15-que-es-el-dns">1.5 Qué es el DNS<a class="headerlink" href="#15-que-es-el-dns" title="Permanent link">&para;</a></h2>
+<p>El <strong>DNS</strong> (<em>Domain Name System</em>) es la «guía telefónica» de Internet: un sistema distribuido de servidores que responde a preguntas como «¿qué IP tiene www.ejemplo1.com?» o «¿qué servidor recibe el correo de ejemplo1.com?».</p>
+<p>Cuando tu navegador visita <code>www.ejemplo1.com</code> ocurre esto:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a> Navegador ──1──► Resolvedor DNS (de tu operador, 1.1.1.1, 8.8.8.8...)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                       ├──2──► Servidores raíz:      "¿.com?"        → pregunta a los de .com
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                       ├──3──► Servidores de .com:   "¿ejemplo1.com?" → pregunta a ns1.tuproveedor
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                       └──4──► Servidor autoritativo de ejemplo1.com:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                                "www.ejemplo1.com tiene la IP 203.0.113.10"
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> Navegador ◄──5── 203.0.113.10   (la respuesta se guarda en caché durante el TTL)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> Navegador ──6──► Conecta con 203.0.113.10 puerto 443 y pide la página
+</code></pre></div>
+<p>El <strong>servidor autoritativo</strong> es el que tiene la última palabra sobre tu dominio. Normalmente es el de tu registrador o el de un servicio DNS como Cloudflare. Ahí es donde <strong>tú</strong> crearás los registros. En este manual no montaremos un servidor DNS propio (sería un riesgo y una complicación innecesaria): usaremos el panel de tu proveedor DNS.</p>
+<p>El <strong>TTL</strong> (<em>Time To Live</em>) de cada registro indica cuántos segundos pueden guardar la respuesta en caché los resolvedores. Un TTL de 3600 significa que un cambio puede tardar hasta una hora en verse en todo el mundo. Antes de hacer cambios importantes, conviene bajar el TTL a 300 (5 minutos).</p>
+<h2 id="16-tipos-de-registros-dns">1.6 Tipos de registros DNS<a class="headerlink" href="#16-tipos-de-registros-dns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Registro</th>
+<th>Para qué sirve</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>Asocia un nombre a una IPv4.</td>
+<td><code>www.ejemplo1.com. A 203.0.113.10</code></td>
+</tr>
+<tr>
+<td><strong>AAAA</strong></td>
+<td>Asocia un nombre a una IPv6.</td>
+<td><code>www.ejemplo1.com. AAAA 2001:db8:10::10</code></td>
+</tr>
+<tr>
+<td><strong>CNAME</strong></td>
+<td>Hace que un nombre sea alias de otro nombre.</td>
+<td><code>blog.ejemplo1.com. CNAME www.ejemplo1.com.</code></td>
+</tr>
+<tr>
+<td><strong>MX</strong></td>
+<td>Indica qué servidor recibe el correo del dominio, con una prioridad.</td>
+<td><code>ejemplo1.com. MX 10 mail.ejemplo1.com.</code></td>
+</tr>
+<tr>
+<td><strong>TXT</strong></td>
+<td>Texto libre; se usa para SPF, DKIM, DMARC y verificaciones.</td>
+<td><code>ejemplo1.com. TXT "v=spf1 mx -all"</code></td>
+</tr>
+<tr>
+<td><strong>PTR</strong></td>
+<td>DNS inverso: asocia una IP a un nombre. Lo gestiona el dueño de la IP.</td>
+<td><code>10.113.0.203.in-addr.arpa. PTR mail.ejemplo1.com.</code></td>
+</tr>
+<tr>
+<td>NS</td>
+<td>Indica qué servidores son autoritativos para el dominio.</td>
+<td><code>ejemplo1.com. NS ns1.proveedor.net.</code></td>
+</tr>
+<tr>
+<td>CAA</td>
+<td>Indica qué autoridades pueden emitir certificados para el dominio.</td>
+<td><code>ejemplo1.com. CAA 0 issue "letsencrypt.org"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Detalles importantes:</p>
+<ul>
+<li>El <strong>@</strong> en los paneles DNS significa «el propio dominio» (<code>ejemplo1.com</code> sin nada delante).</li>
+<li>Un <strong>CNAME</strong> no puede coexistir con otros registros del mismo nombre, por eso nunca se pone CNAME en <code>@</code>.</li>
+<li>Un <strong>MX</strong> debe apuntar a un <strong>nombre</strong> que tenga registro A/AAAA, <strong>nunca</strong> a una IP ni a un CNAME.</li>
+<li>En el <strong>MX</strong>, el número es la prioridad: cuanto más bajo, más preferido. Con un solo servidor, el valor da igual (usaremos 10).</li>
+<li>El <strong>PTR</strong> lo verás en detalle en el Módulo 9. Es crucial para el correo.</li>
+</ul>
+<h2 id="17-que-es-un-puerto">1.7 Qué es un puerto<a class="headerlink" href="#17-que-es-un-puerto" title="Permanent link">&para;</a></h2>
+<p>La IP lleva el paquete hasta el servidor; el <strong>puerto</strong> indica a qué programa dentro del servidor va dirigido. Si la IP es el portal, el puerto es el número de piso. Hay 65.535 puertos; los inferiores a 1024 están reservados para servicios conocidos y solo root puede abrirlos.</p>
+<table>
+<thead>
+<tr>
+<th>Puerto</th>
+<th>Protocolo</th>
+<th>Servicio</th>
+<th>¿Abierto a Internet en este manual?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22</td>
+<td>TCP</td>
+<td>SSH (administración remota)</td>
+<td>Sí (protegido con claves y Fail2ban)</td>
+</tr>
+<tr>
+<td>25</td>
+<td>TCP</td>
+<td>SMTP entre servidores (recepción de correo)</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>53</td>
+<td>UDP/TCP</td>
+<td>DNS</td>
+<td>No (no montamos DNS propio)</td>
+</tr>
+<tr>
+<td>80</td>
+<td>TCP</td>
+<td>HTTP (web sin cifrar; redirige a 443)</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>110</td>
+<td>TCP</td>
+<td>POP3 sin cifrar</td>
+<td>No (deshabilitado)</td>
+</tr>
+<tr>
+<td>143</td>
+<td>TCP</td>
+<td>IMAP sin cifrar / STARTTLS</td>
+<td>No (deshabilitado)</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>HTTPS (web cifrada)</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>465</td>
+<td>TCP</td>
+<td>SMTPS: envío autenticado con TLS implícito</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>587</td>
+<td>TCP</td>
+<td>Submission: envío autenticado con STARTTLS</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>993</td>
+<td>TCP</td>
+<td>IMAPS: IMAP cifrado</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>995</td>
+<td>TCP</td>
+<td>POP3S: POP3 cifrado</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>3306</td>
+<td>TCP</td>
+<td>MariaDB</td>
+<td><strong>No, nunca</strong> (solo 127.0.0.1)</td>
+</tr>
+<tr>
+<td>8891</td>
+<td>TCP</td>
+<td>OpenDKIM (milter)</td>
+<td><strong>No</strong> (solo 127.0.0.1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="18-tcp-y-udp">1.8 TCP y UDP<a class="headerlink" href="#18-tcp-y-udp" title="Permanent link">&para;</a></h2>
+<p>Ambos son protocolos de transporte: la forma en que viajan los datos entre dos puertos.</p>
+<ul>
+<li><strong>TCP</strong> (<em>Transmission Control Protocol</em>) es orientado a conexión. Antes de enviar datos, cliente y servidor se saludan (el «saludo en tres pasos»: SYN, SYN-ACK, ACK). TCP garantiza que los datos llegan completos y en orden, y reenvía lo que se pierda. Lo usan la web, el correo, SSH y MariaDB.</li>
+<li><strong>UDP</strong> (<em>User Datagram Protocol</em>) envía paquetes sueltos sin conexión ni garantías. Es más rápido y ligero. Lo usan el DNS (consultas cortas), la voz sobre IP, los juegos y el streaming.</li>
+</ul>
+<p>Todos los servicios de este manual usan TCP, salvo las consultas DNS que tu servidor hace hacia fuera.</p>
+<h2 id="19-como-se-comunican-los-servicios">1.9 Cómo se comunican los servicios<a class="headerlink" href="#19-como-se-comunican-los-servicios" title="Permanent link">&para;</a></h2>
+<p>Los servicios hablan entre sí de dos maneras:</p>
+<ol>
+<li><strong>Por red (TCP/IP)</strong>: un servicio escucha en <code>IP:puerto</code> y otro se conecta. Ejemplo: Postfix se conecta a OpenDKIM en <code>127.0.0.1:8891</code>.</li>
+<li><strong>Por socket Unix</strong>: un archivo especial del sistema por el que dos programas del <strong>mismo</strong> servidor se comunican sin pasar por la red. Es más rápido y se protege con permisos de archivo. Ejemplos: Apache habla con PHP-FPM por <code>/run/php/php8.3-fpm-web1.sock</code>; PHP habla con MariaDB por <code>/run/mysqld/mysqld.sock</code>; Postfix entrega el correo a Dovecot por <code>/var/spool/postfix/private/dovecot-lmtp</code>.</li>
+</ol>
+<p>Esta es la infraestructura que vamos a construir:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>                               INTERNET
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                                   │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        ┌──────────────────────────┼───────────────────────────┐
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        │  Cortafuegos UFW: abre 22, 25, 80, 443, 465, 587, 993, 995  │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        └──────────────────────────┼───────────────────────────┘
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                                   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   ┌───────────────── SERVIDOR mail.ejemplo1.com (203.0.113.10) ──────────────────┐
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   │                                                                              │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   │   :80 / :443                          :25 / :465 / :587       :993 / :995    │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   │  ┌──────────┐                         ┌──────────┐           ┌──────────┐    │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   │  │  APACHE  │                         │ POSTFIX  │──LMTP────►│ DOVECOT  │    │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   │  │ vhost 1  │                         │  (SMTP)  │◄──SASL────│(IMAP/POP)│    │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   │  │ vhost 2  │                         └────┬─────┘  socket   └────┬─────┘    │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>   │  └────┬─────┘                              │ milter               │          │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   │       │ socket FastCGI                ┌────▼─────┐          ┌─────▼──────┐   │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>   │  ┌────▼─────────────────┐             │ OPENDKIM │          │  Buzones   │   │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>   │  │ PHP-FPM pool web1    │──sendmail──►│ :8891    │          │  Maildir   │   │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>   │  │ PHP-FPM pool web2    │  (correo    │ (local)  │          │ /var/mail/ │   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>   │  └────┬─────────────────┘   de la     └──────────┘          │  vhosts/   │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>   │       │ socket Unix         web)                            └────────────┘   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>   │  ┌────▼─────────────────┐                                                    │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>   │  │ MARIADB (127.0.0.1)  │   web1_db ◄─ web1_user    web2_db ◄─ web2_user     │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>   │  └──────────────────────┘                                                    │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>   │                                                                              │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>   │   Certbot (Let's Encrypt) → certificados para Apache, Postfix y Dovecot      │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>   │   Fail2ban → vigila logs de SSH, Postfix y Dovecot y bloquea atacantes       │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>   └──────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="110-que-es-ssh">1.10 Qué es SSH<a class="headerlink" href="#110-que-es-ssh" title="Permanent link">&para;</a></h2>
+<p><strong>SSH</strong> (<em>Secure Shell</em>) es el protocolo que te permite abrir un terminal en el servidor desde tu ordenador, con todo el tráfico cifrado. En el servidor funciona el demonio <code>sshd</code> (puerto 22); en tu ordenador usas un cliente <code>ssh</code>.</p>
+<p>SSH admite dos formas de autenticarte:</p>
+<ul>
+<li><strong>Contraseña</strong>: cómoda, pero vulnerable a ataques de fuerza bruta.</li>
+<li><strong>Par de claves</strong>: generas en tu ordenador una clave <strong>privada</strong> (que nunca sale de tu equipo) y una <strong>pública</strong> (que copias al servidor). El servidor comprueba matemáticamente que tienes la privada sin que esta viaje nunca por la red. Es muchísimo más segura.</li>
+</ul>
+<p>Tu objetivo en este módulo: entrar por primera vez con contraseña, instalar tu clave pública y, después, desactivar el acceso por contraseña.</p>
+<h3 id="paso-11-conectarte-al-servidor-por-primera-vez">PASO 1.1 – Conectarte al servidor por primera vez<a class="headerlink" href="#paso-11-conectarte-al-servidor-por-primera-vez" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> abrir un terminal remoto en el servidor.</p>
+<p><strong>Explicación:</strong> tu proveedor te habrá dado una IP, un usuario (a menudo <code>root</code> o <code>ubuntu</code>) y una contraseña o una clave. Windows 10/11, macOS y Linux incluyen el cliente <code>ssh</code> de serie. En Windows ábrelo desde «Terminal» o «PowerShell».</p>
+<p><strong>Comando:</strong> escríbelo en <strong>tu ordenador</strong> (no en el servidor):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@203.0.113.10
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>ssh</code>: el programa cliente de SSH.</li>
+<li><code>root</code>: el usuario con el que entras. Si tu proveedor te dio <code>ubuntu</code>, escribe <code>ubuntu@203.0.113.10</code>.</li>
+<li><code>@203.0.113.10</code>: la IP de tu servidor (sustitúyela por la tuya).</li>
+</ul>
+<p><strong>Resultado esperado:</strong> la primera vez verás un aviso de huella digital:</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>The authenticity of host '203.0.113.10 (203.0.113.10)' can't be established.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ED25519 key fingerprint is SHA256:k3Zr6c0f0yP1G0qkU8JxwO7V4p9k2aQ1Zb8s5m3Lq2E.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Are you sure you want to continue connecting (yes/no/[fingerprint])?
+</code></pre></div>
+<p>Escribe <code>yes</code> y pulsa Intro. Después introduce la contraseña (no verás nada mientras escribes: es normal). Llegarás a un indicador similar a <code>root@nombre-servidor:~#</code>.</p>
+<p><strong>Comprobación:</strong> ejecuta <code>whoami</code> (debe responder <code>root</code> o tu usuario) y <code>hostname</code> (el nombre actual del servidor).</p>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li><code>Connection timed out</code>: la IP es incorrecta, el servidor está apagado o un cortafuegos del proveedor bloquea el puerto 22. Revisa el panel del proveedor.</li>
+<li><code>Permission denied (publickey)</code>: el servidor no admite contraseñas, solo claves. Usa la clave que te dio el proveedor: <code>ssh -i ruta/a/clave root@IP</code>.</li>
+<li><code>WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</code>: la huella del servidor cambió (por ejemplo, reinstalaste el sistema). Si sabes por qué, borra la huella antigua con <code>ssh-keygen -R 203.0.113.10</code> y reconecta. Si no sabes por qué, <strong>no continúes</strong>: podría ser un ataque.</li>
+</ul>
+<p><strong>Siguiente paso:</strong> actualizar el sistema.</p>
+<h2 id="111-preparar-el-sistema">1.11 Preparar el sistema<a class="headerlink" href="#111-preparar-el-sistema" title="Permanent link">&para;</a></h2>
+<h3 id="paso-12-actualizar-el-sistema">PASO 1.2 – Actualizar el sistema<a class="headerlink" href="#paso-12-actualizar-el-sistema" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> instalar todas las correcciones de seguridad publicadas desde que se creó la imagen del servidor.</p>
+<p><strong>Explicación:</strong> Ubuntu instala software con <strong>APT</strong> a partir de repositorios oficiales. <code>apt update</code> descarga la lista actualizada de paquetes disponibles (no instala nada); <code>apt full-upgrade</code> instala las versiones nuevas, incluyendo las que necesitan añadir o quitar dependencias.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>full-upgrade<span class="w"> </span>-y
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>sudo</code>: ejecuta como administrador (si ya eres root no hace falta, pero no molesta).</li>
+<li><code>apt update</code>: refresca el índice de paquetes.</li>
+<li><code>apt full-upgrade</code>: actualiza todo lo instalado.</li>
+<li><code>-y</code>: responde «sí» automáticamente a la confirmación.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> una lista de paquetes descargados e instalados que termina sin errores. Si aparece una pantalla morada preguntando qué hacer con un archivo de configuración modificado, elige la opción por defecto («keep the local version currently installed»).</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Hay que reiniciar"</span>
+</code></pre></div>
+<p>La primera orden no debe listar nada. Si la segunda muestra «Hay que reiniciar», ejecuta <code>sudo reboot</code>, espera un minuto y vuelve a conectarte.</p>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li><code>Could not get lock /var/lib/dpkg/lock-frontend</code>: otro proceso (normalmente las actualizaciones automáticas al arrancar) está usando APT. Espera unos minutos y repite.</li>
+<li><code>Temporary failure resolving 'archive.ubuntu.com'</code>: el servidor no tiene DNS o red. Comprueba con <code>ping -c 3 1.1.1.1</code> y <code>resolvectl status</code>.</li>
+</ul>
+<p><strong>Siguiente paso:</strong> dar al servidor su nombre definitivo.</p>
+<h3 id="paso-13-configurar-el-nombre-del-servidor-hostname">PASO 1.3 – Configurar el nombre del servidor (hostname)<a class="headerlink" href="#paso-13-configurar-el-nombre-del-servidor-hostname" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que el servidor se llame <code>mail.ejemplo1.com</code> y sepa resolver su propio nombre.</p>
+<p><strong>Explicación:</strong> el nombre del servidor es fundamental para el correo: Postfix lo usa para presentarse ante otros servidores, y debe coincidir con el registro A y con el DNS inverso (PTR). Hay dos partes: el nombre corto (<code>mail</code>) y el nombre completo o <strong>FQDN</strong> (<code>mail.ejemplo1.com</code>).</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>hostnamectl<span class="w"> </span>set-hostname<span class="w"> </span>mail.ejemplo1.com
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>hostnamectl</code> es la herramienta de systemd para gestionar el nombre; <code>set-hostname</code> lo fija de forma permanente (lo guarda en <code>/etc/hostname</code>).</p>
+<p>Ahora edita el archivo <code>/etc/hosts</code>, que el sistema consulta antes que el DNS:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts
+</code></pre></div>
+<p><code>nano</code> es un editor de texto sencillo. Te mueves con las flechas, escribes normalmente, guardas con <strong>Ctrl+O</strong> seguido de Intro y sales con <strong>Ctrl+X</strong>.</p>
+<p><strong>Archivo:</strong> <code>/etc/hosts</code>. Deja su contenido así (conserva las líneas IPv6 que ya hubiera debajo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>127.0.0.1       localhost
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>203.0.113.10    mail.ejemplo1.com mail
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Las siguientes líneas son las de IPv6 que trae el sistema; consérvalas
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>::1             localhost ip6-localhost ip6-loopback
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ff02::1         ip6-allnodes
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>ff02::2         ip6-allrouters
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Si tu proveedor usa <strong>cloud-init</strong>, puede sobrescribir <code>/etc/hosts</code> al reiniciar. Si al reiniciar tus cambios desaparecen, edita <code>/etc/cloud/cloud.cfg</code> y cambia <code>manage_etc_hosts: true</code> por <code>manage_etc_hosts: false</code> (o añade la línea <code>preserve_hostname: true</code>).</p>
+</div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>hostname
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>hostname<span class="w"> </span>-f
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>mail.ejemplo1.com
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>mail.ejemplo1.com
+</code></pre></div>
+<p><strong>Errores habituales:</strong> si <code>hostname -f</code> muestra solo <code>mail</code> o da error, revisa que la línea de <code>/etc/hosts</code> tenga primero el FQDN y luego el nombre corto.</p>
+<p><strong>Siguiente paso:</strong> configurar la hora.</p>
+<h3 id="paso-14-configurar-la-zona-horaria-y-la-sincronizacion-de-hora">PASO 1.4 – Configurar la zona horaria y la sincronización de hora<a class="headerlink" href="#paso-14-configurar-la-zona-horaria-y-la-sincronizacion-de-hora" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que los registros (logs) muestren tu hora local y que el reloj sea exacto.</p>
+<p><strong>Explicación:</strong> una hora incorrecta rompe los certificados TLS, confunde los logs y hace que otros servidores desconfíen de tus correos. Ubuntu sincroniza el reloj con <code>systemd-timesyncd</code>.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>Europe/Madrid
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>timedatectl
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>set-timezone</code> fija la zona horaria (lista todas con <code>timedatectl list-timezones</code>; por ejemplo <code>America/Mexico_City</code> o <code>America/Argentina/Buenos_Aires</code>).</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>               Local time: dom 2026-11-08 21:40:12 CET
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>           Universal time: dom 2026-11-08 20:40:12 UTC
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>                Time zone: Europe/Madrid (CET, +0100)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>System clock synchronized: yes
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>              NTP service: active
+</code></pre></div>
+<p><strong>Comprobación:</strong> las líneas <code>System clock synchronized: yes</code> y <code>NTP service: active</code> deben aparecer así.</p>
+<p><strong>Errores habituales:</strong> si <code>NTP service</code> aparece <code>inactive</code>, actívalo con <code>sudo timedatectl set-ntp true</code>.</p>
+<p><strong>Siguiente paso:</strong> crear tu usuario administrador.</p>
+<h2 id="112-usuarios-administrativos">1.12 Usuarios administrativos<a class="headerlink" href="#112-usuarios-administrativos" title="Permanent link">&para;</a></h2>
+<p>Trabajar siempre como <code>root</code> es peligroso: un error de escritura puede destruir el sistema y, si alguien roba la sesión, tiene control total. La práctica profesional es usar un usuario normal que pide privilegios <strong>solo cuando los necesita</strong>, mediante <code>sudo</code>. Así cada acción administrativa queda registrada en <code>/var/log/auth.log</code>.</p>
+<h3 id="paso-15-crear-el-usuario-administrador">PASO 1.5 – Crear el usuario administrador<a class="headerlink" href="#paso-15-crear-el-usuario-administrador" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear el usuario <code>sysadmin</code> con permiso para usar <code>sudo</code>.</p>
+<p><strong>Comando (ejecútalo como root o con sudo):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>adduser<span class="w"> </span>sysadmin
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>sudo<span class="w"> </span>sysadmin
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>adduser sysadmin</code>: crea el usuario, su grupo del mismo nombre y su carpeta <code>/home/sysadmin</code>. Te pedirá una contraseña (elige una larga) y datos opcionales (pulsa Intro para dejarlos vacíos).</li>
+<li><code>usermod -aG sudo sysadmin</code>: añade (<code>-a</code>, <em>append</em>) el usuario al grupo (<code>-G</code>) <code>sudo</code>. En Ubuntu, los miembros de este grupo pueden usar <code>sudo</code>. Sin la <code>-a</code> el usuario sería <strong>expulsado</strong> de sus otros grupos: no la olvides.</li>
+</ul>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>groups<span class="w"> </span>sysadmin
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sysadmin : sysadmin sudo users
+</code></pre></div>
+<p>(<code>users</code> puede aparecer o no; lo importante es <code>sudo</code>.)</p>
+<p>Ahora, <strong>sin cerrar la sesión actual</strong>, abre otro terminal en tu ordenador y entra con el nuevo usuario:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ssh<span class="w"> </span>sysadmin@203.0.113.10
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>whoami
+</code></pre></div>
+<p><code>sudo whoami</code> debe pedirte la contraseña de <code>sysadmin</code> y responder <code>root</code>.</p>
+<p><strong>Errores habituales:</strong> <code>sysadmin is not in the sudoers file</code> significa que el <code>usermod</code> no se aplicó; repítelo y vuelve a iniciar sesión (los grupos se cargan al iniciar sesión).</p>
+<p><strong>Siguiente paso:</strong> configurar el acceso por clave.</p>
+<h3 id="paso-16-crear-un-par-de-claves-ssh-y-copiar-la-publica-al-servidor">PASO 1.6 – Crear un par de claves SSH y copiar la pública al servidor<a class="headerlink" href="#paso-16-crear-un-par-de-claves-ssh-y-copiar-la-publica-al-servidor" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> entrar al servidor sin contraseña, con una clave criptográfica.</p>
+<p><strong>Explicación:</strong> generarás las claves en <strong>tu ordenador</strong>. El algoritmo Ed25519 es moderno, rápido y seguro. La clave privada se puede proteger con una frase de paso: si alguien te roba el archivo, no podrá usarlo sin ella.</p>
+<p><strong>Comando (en <strong>tu ordenador</strong>, Windows, macOS o Linux):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">"sysadmin@portatil"</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>-t ed25519</code>: tipo de clave.</li>
+<li><code>-C "..."</code>: comentario para identificarla (por ejemplo, desde qué equipo se usa).</li>
+</ul>
+<p>Acepta la ruta por defecto pulsando Intro y escribe una frase de paso. Se crean dos archivos en la carpeta <code>.ssh</code> de tu usuario: <code>id_ed25519</code> (privada, <strong>no la compartas nunca</strong>) y <code>id_ed25519.pub</code> (pública).</p>
+<p>Para copiar la clave pública al servidor desde <strong>macOS o Linux</strong>:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ssh-copy-id<span class="w"> </span>sysadmin@203.0.113.10
+</code></pre></div>
+<p>Desde <strong>Windows (PowerShell)</strong>, que no incluye <code>ssh-copy-id</code>:</p>
+<div class="highlight"><span class="filename">PowerShell (Windows)</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">type </span><span class="nv">$env:USERPROFILE</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">id_ed25519</span><span class="p">.</span><span class="n">pub</span> <span class="p">|</span> <span class="n">ssh</span> <span class="n">sysadmin</span><span class="nv">@203</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">113</span><span class="p">.</span><span class="n">10</span> <span class="s2">"mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</span>
+</code></pre></div>
+<p>Análisis del comando de Windows: <code>type</code> muestra el contenido de la clave pública; <code>|</code> lo envía como entrada al comando remoto, que crea la carpeta <code>~/.ssh</code> con permisos <code>700</code> (solo el dueño), añade la clave al final de <code>authorized_keys</code> y deja ese archivo con permisos <code>600</code>. SSH <strong>rechaza</strong> las claves si estos permisos son más abiertos.</p>
+<p><strong>Comprobación:</strong> cierra la sesión y vuelve a entrar con <code>ssh sysadmin@203.0.113.10</code>. Ahora te pedirá la <strong>frase de paso de la clave</strong> (o nada, si no pusiste) en lugar de la contraseña del servidor.</p>
+<p><strong>Errores habituales:</strong> si sigue pidiendo la contraseña del servidor, en el servidor revisa permisos con <code>ls -ld ~/.ssh &amp;&amp; ls -l ~/.ssh/authorized_keys</code> (deben ser <code>drwx------</code> y <code>-rw-------</code>) y que el propietario sea <code>sysadmin</code>.</p>
+<p><strong>Siguiente paso:</strong> endurecer la configuración de SSH.</p>
+<h3 id="paso-17-desactivar-el-acceso-de-root-y-por-contrasena">PASO 1.7 – Desactivar el acceso de root y por contraseña<a class="headerlink" href="#paso-17-desactivar-el-acceso-de-root-y-por-contrasena" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que solo se pueda entrar con clave y nunca directamente como root.</p>
+<p><strong>Explicación:</strong> en Ubuntu 24.04, el archivo principal <code>/etc/ssh/sshd_config</code> incluye al principio todos los archivos de <code>/etc/ssh/sshd_config.d/*.conf</code> por orden alfabético, y <strong>para cada opción gana el primer valor que se lee</strong>. Algunos proveedores dejan un archivo <code>50-cloud-init.conf</code> con <code>PasswordAuthentication yes</code>. Por eso nuestro archivo debe empezar por <code>00-</code>, para leerse antes.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p><strong>Antes de este paso</strong>, confirma que puedes entrar como <code>sysadmin</code> con tu clave y usar <code>sudo</code>. Mantén abierta una sesión mientras haces el cambio: si algo sale mal, podrás corregirlo desde ella.</p>
+</div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/ssh/sshd_config.d/00-endurecimiento.conf
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/ssh/sshd_config.d/00-endurecimiento.conf</code> (archivo nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a># Endurecimiento de SSH - se lee antes que el resto de archivos .conf
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a># Prohíbe entrar directamente como root
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>PermitRootLogin no
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a># Solo autenticación por clave pública
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>PubkeyAuthentication yes
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>PasswordAuthentication no
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>KbdInteractiveAuthentication no
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a># Número máximo de intentos por conexión
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>MaxAuthTries 3
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a># Tiempo máximo para completar el inicio de sesión
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>LoginGraceTime 30
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a># Solo este usuario puede entrar por SSH (añade otros separados por espacios)
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>AllowUsers sysadmin
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a># Sin reenvío gráfico
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>X11Forwarding no
+</code></pre></div>
+<p>Comprueba la sintaxis y aplica:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-t
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ssh
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>sshd -t</code> (<em>test</em>) revisa la configuración sin aplicarla; si no muestra nada, está bien. <code>systemctl restart ssh</code> reinicia el servicio (en Ubuntu se llama <code>ssh</code>, no <code>sshd</code>).</p>
+<p><strong>Comprobación:</strong> desde <strong>otro</strong> terminal de tu ordenador:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ssh<span class="w"> </span>root@203.0.113.10
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">PubkeyAuthentication</span><span class="o">=</span>no<span class="w"> </span>sysadmin@203.0.113.10
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>ssh<span class="w"> </span>sysadmin@203.0.113.10
+</code></pre></div>
+<p>Las dos primeras deben fallar con <code>Permission denied</code>; la tercera debe funcionar. También puedes consultar el valor efectivo de cada opción en el servidor:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ei<span class="w"> </span><span class="s1">'permitrootlogin|passwordauthentication'</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>permitrootlogin no
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>passwordauthentication no
+</code></pre></div>
+<p><strong>Errores habituales:</strong> si <code>sshd -t</code> muestra <code>Bad configuration option</code>, hay una errata en el archivo. Si te quedas fuera, usa la <strong>consola web</strong> del proveedor (todos la ofrecen) para entrar y borrar el archivo.</p>
+<p><strong>Siguiente paso:</strong> entender usuarios, grupos y permisos.</p>
+<h2 id="113-permisos-y-privilegios-en-linux">1.13 Permisos y privilegios en Linux<a class="headerlink" href="#113-permisos-y-privilegios-en-linux" title="Permanent link">&para;</a></h2>
+<p>Cada archivo y carpeta tiene un <strong>propietario</strong> (un usuario), un <strong>grupo</strong> y tres juegos de permisos: para el propietario (<em>u</em>), para el grupo (<em>g</em>) y para el resto (<em>o</em>). Cada juego puede tener lectura (<strong>r</strong>), escritura (<strong>w</strong>) y ejecución (<strong>x</strong>).</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ls<span class="w"> </span>-l<span class="w"> </span>/etc/passwd
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>-rw-r--r-- 1 root root 1932 nov  8 21:45 /etc/passwd
+</code></pre></div>
+<p>Cómo se lee <code>-rw-r--r--</code>:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>  -    rw-    r--    r--
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>  │     │      │      └── otros: solo lectura
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>  │     │      └───────── grupo (root): solo lectura
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  │     └──────────────── propietario (root): lectura y escritura
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>  └────────────────────── tipo: - archivo, d directorio, l enlace
+</code></pre></div>
+<p>En una <strong>carpeta</strong>, <code>r</code> permite listar su contenido, <code>w</code> crear o borrar archivos dentro y <code>x</code> entrar en ella (atravesarla). Sin <code>x</code> en una carpeta no puedes acceder a nada de lo que contiene, aunque tengas permiso sobre los archivos.</p>
+<p>Los permisos se expresan también en <strong>octal</strong>: r = 4, w = 2, x = 1, y se suman por cada juego.</p>
+<table>
+<thead>
+<tr>
+<th>Octal</th>
+<th>Simbólico</th>
+<th>Uso típico en este manual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>755</td>
+<td>rwxr-xr-x</td>
+<td>Carpetas públicas genéricas.</td>
+</tr>
+<tr>
+<td>750</td>
+<td>rwxr-x---</td>
+<td>Carpetas web: dueño todo, grupo (www-data) entra y lee, otros nada.</td>
+</tr>
+<tr>
+<td>700</td>
+<td>rwx------</td>
+<td>Carpetas privadas (~/.ssh, configuración con contraseñas).</td>
+</tr>
+<tr>
+<td>644</td>
+<td>rw-r--r--</td>
+<td>Archivos de lectura pública.</td>
+</tr>
+<tr>
+<td>640</td>
+<td>rw-r-----</td>
+<td>Archivos web: dueño escribe, grupo lee, otros nada.</td>
+</tr>
+<tr>
+<td>600</td>
+<td>rw-------</td>
+<td>Secretos: claves privadas, archivos con contraseñas.</td>
+</tr>
+</tbody>
+</table>
+<p>Comandos esenciales:</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chmod</code></td>
+<td>Cambia permisos.</td>
+<td><code>chmod 640 index.php</code></td>
+</tr>
+<tr>
+<td><code>chown</code></td>
+<td>Cambia propietario y grupo.</td>
+<td><code>sudo chown web1:www-data index.php</code></td>
+</tr>
+<tr>
+<td><code>chown -R</code> / <code>chmod -R</code></td>
+<td>Lo mismo, recursivamente.</td>
+<td><code>sudo chown -R web1:www-data /var/www/ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>Muestra UID, GID y grupos de un usuario.</td>
+<td><code>id web1</code></td>
+</tr>
+<tr>
+<td><code>useradd</code> / <code>adduser</code></td>
+<td>Crea usuarios (bajo nivel / interactivo).</td>
+<td><code>sudo adduser sysadmin</code></td>
+</tr>
+<tr>
+<td><code>usermod -aG</code></td>
+<td>Añade un usuario a un grupo.</td>
+<td><code>sudo usermod -aG www-data sysadmin</code></td>
+</tr>
+<tr>
+<td><code>sudo -u</code></td>
+<td>Ejecuta un comando como otro usuario.</td>
+<td><code>sudo -u web1 ls /var/www/ejemplo1.com</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Principio de mínimo privilegio:</strong> cada programa y cada persona debe tener exactamente los permisos que necesita y ninguno más. Es la idea que guía todo el diseño de este manual: cada web tendrá su propio usuario Linux, su propio usuario de base de datos y su propio proceso PHP, de modo que si una web es atacada, el atacante no pueda tocar la otra.</p>
+</div>
+<h3 id="paso-18-instalar-herramientas-basicas-de-administracion">PASO 1.8 – Instalar herramientas básicas de administración<a class="headerlink" href="#paso-18-instalar-herramientas-basicas-de-administracion" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> disponer de las utilidades que usaremos en los diagnósticos.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>wget<span class="w"> </span>dnsutils<span class="w"> </span>net-tools<span class="w"> </span>htop<span class="w"> </span>unzip<span class="w"> </span>ca-certificates<span class="w"> </span>rsyslog
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>curl</code> y <code>wget</code> hacen peticiones web; <code>dnsutils</code> aporta <code>dig</code> para consultar el DNS; <code>net-tools</code> aporta comandos clásicos de red; <code>htop</code> muestra procesos y consumo; <code>unzip</code> descomprime; <code>ca-certificates</code> contiene las autoridades de certificación de confianza; <code>rsyslog</code> escribe los logs clásicos en <code>/var/log</code> (<code>mail.log</code>, <code>auth.log</code>), que Fail2ban leerá más adelante (en Ubuntu 24.04 ya suele venir instalado).</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>ubuntu.com
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>ls<span class="w"> </span>/var/log/auth.log
+</code></pre></div>
+<p>Debe mostrar una o varias IP y existir el archivo <code>auth.log</code>.</p>
+<p><strong>Siguiente paso:</strong> activar un cortafuegos mínimo antes de exponer servicios.</p>
+<h3 id="paso-19-activar-el-cortafuegos-basico">PASO 1.9 – Activar el cortafuegos básico<a class="headerlink" href="#paso-19-activar-el-cortafuegos-basico" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> bloquear todo el tráfico entrante salvo SSH. Iremos abriendo puertos a medida que instalemos servicios (el Módulo 12 lo trata en profundidad).</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span>OpenSSH
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>sudo<span class="w"> </span>ufw<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>status<span class="w"> </span>verbose
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>ufw allow OpenSSH</code> permite el perfil de aplicación de SSH (puerto 22/tcp). <code>ufw enable</code> activa el cortafuegos (te avisará de que puede cortar conexiones SSH; responde <code>y</code>: ya has permitido SSH). <code>status verbose</code> muestra las reglas.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Status: active
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Logging: on (low)
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Default: deny (incoming), allow (outgoing), deny (routed)
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>New profiles: skip
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>To                         Action      From
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>--                         ------      ----
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>22/tcp (OpenSSH)           ALLOW IN    Anywhere
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>22/tcp (OpenSSH (v6))      ALLOW IN    Anywhere (v6)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p><strong>Nunca</strong> ejecutes <code>ufw enable</code> sin haber permitido antes SSH: te quedarías fuera del servidor.</p>
+</div>
+<p><strong>Siguiente paso:</strong> Módulo 2, instalación de Apache.</p>
+<h2 id="114-ejercicios-practicos-del-modulo-1">1.14 Ejercicios prácticos del Módulo 1<a class="headerlink" href="#114-ejercicios-practicos-del-modulo-1" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Consulta con <code>dig</code> los registros A, MX y TXT de un dominio conocido (<code>dig A google.com +short</code>, <code>dig MX google.com +short</code>, <code>dig TXT google.com +short</code>) y explica qué significa cada respuesta.</li>
+<li>Averigua qué puertos están escuchando en tu servidor con <code>sudo ss -tlnp</code>. Identifica el proceso de cada uno.</li>
+<li>Crea un usuario <code>prueba</code>, crea en su carpeta un archivo y ponle permisos <code>600</code>. Comprueba con <code>sudo -u sysadmin cat /home/prueba/archivo</code> que otro usuario no puede leerlo. Después elimina el usuario con <code>sudo deluser --remove-home prueba</code>.</li>
+<li>Explica con tus palabras por qué un MX no puede apuntar a una IP y por qué el nombre del servidor debe coincidir con su PTR.</li>
+<li>Calcula los permisos octales de <code>rwxr-x---</code> y de <code>rw-r-----</code>.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Anterior: Introducción">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Introducción
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../02-apache/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 2. Apache">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                2. Apache
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

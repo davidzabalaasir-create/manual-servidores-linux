@@ -1,0 +1,2463 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/09-dns-correo/">
+      
+      
+        <link rel="prev" href="../08-cuentas-correo/">
+      
+      
+        <link rel="next" href="../10-ssl-tls/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>9. DNS del correo - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-9-configuracion-dns-del-servidor-de-correo" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              9. DNS del correo
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#91-por-que-el-dns-es-critico-para-el-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Por qué el DNS es crítico para el correo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-registros-a-y-mx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Registros A y MX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 Registros A y MX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-91-verificar-los-registros-a-y-crear-los-registros-mx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.1 – Verificar los registros A y crear los registros MX
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-el-dns-inverso-ptr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 El DNS inverso (PTR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 El DNS inverso (PTR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-92-configurar-el-ptr-en-el-panel-de-tu-proveedor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.2 – Configurar el PTR en el panel de tu proveedor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-spf-sender-policy-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 SPF (Sender Policy Framework)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.4 SPF (Sender Policy Framework)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-93-crear-los-registros-spf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.3 – Crear los registros SPF
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-dkim-y-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 DKIM y OpenDKIM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 DKIM y OpenDKIM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-94-instalar-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.4 – Instalar OpenDKIM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-95-generar-las-claves-de-cada-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.5 – Generar las claves de cada dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-96-configurar-las-tablas-de-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.6 – Configurar las tablas de OpenDKIM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-97-configurar-opendkim-opendkimconf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.7 – Configurar OpenDKIM (opendkim.conf)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-98-asegurar-que-el-servicio-usa-el-socket-configurado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.8 – Asegurar que el servicio usa el socket configurado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-99-conectar-postfix-con-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.9 – Conectar Postfix con OpenDKIM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-910-publicar-las-claves-dkim-en-el-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.10 – Publicar las claves DKIM en el DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 DMARC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.6 DMARC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-911-crear-los-registros-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.11 – Crear los registros DMARC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#97-comprobar-la-propagacion-de-los-registros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.7 Comprobar la propagación de los registros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#98-verificacion-final-de-la-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.8 Verificación final de la autenticación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.8 Verificación final de la autenticación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-912-verificar-spf-dkim-y-dmarc-con-un-correo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.12 – Verificar SPF, DKIM y DMARC con un correo real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#99-reputacion-de-la-ip-y-entregabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.9 Reputación de la IP y entregabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#910-ejercicios-practicos-del-modulo-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.10 Ejercicios prácticos del Módulo 9
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#91-por-que-el-dns-es-critico-para-el-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Por qué el DNS es crítico para el correo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-registros-a-y-mx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Registros A y MX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 Registros A y MX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-91-verificar-los-registros-a-y-crear-los-registros-mx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.1 – Verificar los registros A y crear los registros MX
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-el-dns-inverso-ptr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 El DNS inverso (PTR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 El DNS inverso (PTR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-92-configurar-el-ptr-en-el-panel-de-tu-proveedor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.2 – Configurar el PTR en el panel de tu proveedor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-spf-sender-policy-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 SPF (Sender Policy Framework)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.4 SPF (Sender Policy Framework)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-93-crear-los-registros-spf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.3 – Crear los registros SPF
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-dkim-y-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 DKIM y OpenDKIM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 DKIM y OpenDKIM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-94-instalar-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.4 – Instalar OpenDKIM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-95-generar-las-claves-de-cada-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.5 – Generar las claves de cada dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-96-configurar-las-tablas-de-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.6 – Configurar las tablas de OpenDKIM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-97-configurar-opendkim-opendkimconf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.7 – Configurar OpenDKIM (opendkim.conf)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-98-asegurar-que-el-servicio-usa-el-socket-configurado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.8 – Asegurar que el servicio usa el socket configurado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-99-conectar-postfix-con-opendkim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.9 – Conectar Postfix con OpenDKIM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-910-publicar-las-claves-dkim-en-el-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.10 – Publicar las claves DKIM en el DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 DMARC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.6 DMARC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-911-crear-los-registros-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.11 – Crear los registros DMARC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#97-comprobar-la-propagacion-de-los-registros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.7 Comprobar la propagación de los registros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#98-verificacion-final-de-la-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.8 Verificación final de la autenticación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.8 Verificación final de la autenticación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-912-verificar-spf-dkim-y-dmarc-con-un-correo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 9.12 – Verificar SPF, DKIM y DMARC con un correo real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#99-reputacion-de-la-ip-y-entregabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.9 Reputación de la IP y entregabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#910-ejercicios-practicos-del-modulo-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.10 Ejercicios prácticos del Módulo 9
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/09-dns-correo.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-9-configuracion-dns-del-servidor-de-correo">Módulo 9. Configuración DNS del servidor de correo<a class="headerlink" href="#modulo-9-configuracion-dns-del-servidor-de-correo" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Entender por qué el DNS determina si tus correos llegan a la bandeja de entrada o al spam.</li>
+<li>Configurar los registros A, MX, SPF, DKIM y DMARC de cada dominio y el DNS inverso (PTR).</li>
+<li>Instalar y configurar OpenDKIM, generar las claves y conectarlo con Postfix.</li>
+<li>Comprobar la propagación de los registros y verificar la autenticación con servidores reales.</li>
+<li>Conocer los factores de reputación de la IP y las buenas prácticas de entregabilidad.</li>
+</ul>
+<h2 id="91-por-que-el-dns-es-critico-para-el-correo">9.1 Por qué el DNS es crítico para el correo<a class="headerlink" href="#91-por-que-el-dns-es-critico-para-el-correo" title="Permanent link">&para;</a></h2>
+<p>El protocolo SMTP se diseñó en 1982, cuando Internet era una red de confianza: cualquiera puede escribir <code>MAIL FROM:&lt;presidente@banco.com&gt;</code>. Para combatir la suplantación y el spam, los grandes proveedores (Gmail, Outlook, Yahoo...) comprueban varias cosas antes de aceptar un mensaje. Desde 2024, Gmail y Yahoo <strong>exigen</strong> SPF, DKIM, DMARC y DNS inverso a quien envía a sus usuarios.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> Nuestro servidor (203.0.113.10) envía a Gmail un correo From: info@ejemplo1.com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                         │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                         ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> ┌──────────────────── Servidor de Gmail comprueba ─────────────────────┐
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> │ 1. PTR:  ¿203.0.113.10 tiene nombre? → mail.ejemplo1.com             │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a> │          ¿y mail.ejemplo1.com apunta a 203.0.113.10? (FCrDNS)        │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a> │ 2. SPF:  ¿203.0.113.10 está autorizada en el TXT de ejemplo1.com?    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a> │ 3. DKIM: ¿la firma de la cabecera DKIM-Signature es válida con la    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a> │          clave pública publicada en mail._domainkey.ejemplo1.com?    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a> │ 4. DMARC: ¿SPF o DKIM pasan Y su dominio coincide con el del From:?  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a> │          ¿qué política pide _dmarc.ejemplo1.com si no coincide?      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a> │ 5. Reputación de la IP y del dominio, listas negras, contenido...    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a> └──────────────────────────────┬───────────────────────────────────────┘
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                ▼
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>              Bandeja de entrada · Spam · Rechazo
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mecanismo</th>
+<th>Qué demuestra</th>
+<th>Dónde se publica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PTR</strong> (DNS inverso)</td>
+<td>Que la IP pertenece a un servidor de correo identificado y bien configurado.</td>
+<td>En la zona inversa de la IP (la gestiona tu proveedor del servidor).</td>
+</tr>
+<tr>
+<td><strong>SPF</strong></td>
+<td>Qué IP están autorizadas a enviar correo con ese dominio en el sobre (<code>MAIL FROM</code>).</td>
+<td>TXT en el dominio.</td>
+</tr>
+<tr>
+<td><strong>DKIM</strong></td>
+<td>Que el mensaje no ha sido alterado y que lo firmó el dominio.</td>
+<td>TXT en <code>selector._domainkey.dominio</code>.</td>
+</tr>
+<tr>
+<td><strong>DMARC</strong></td>
+<td>Qué hacer si SPF/DKIM fallan o no coinciden con el <code>From:</code> visible, y a dónde enviar informes.</td>
+<td>TXT en <code>_dmarc.dominio</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="92-registros-a-y-mx">9.2 Registros A y MX<a class="headerlink" href="#92-registros-a-y-mx" title="Permanent link">&para;</a></h2>
+<h3 id="paso-91-verificar-los-registros-a-y-crear-los-registros-mx">PASO 9.1 – Verificar los registros A y crear los registros MX<a class="headerlink" href="#paso-91-verificar-los-registros-a-y-crear-los-registros-mx" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> indicar a Internet qué servidor recibe el correo de cada dominio.</p>
+<p><strong>Explicación:</strong> los registros A de <code>mail.ejemplo1.com</code> y <code>mail.ejemplo2.com</code> los creaste en el PASO 3.10. Ahora añade los MX en el panel de tu proveedor DNS. Cada dominio apunta a «su» nombre de servidor de correo, aunque ambos resuelvan a la misma IP: así cada cliente ve un nombre coherente con su dominio.</p>
+<p>Registros de <code>ejemplo1.com</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Prioridad</th>
+<th>Valor</th>
+<th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MX</td>
+<td>@</td>
+<td>10</td>
+<td>mail.ejemplo1.com</td>
+<td>3600</td>
+</tr>
+</tbody>
+</table>
+<p>Registros de <code>ejemplo2.com</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Prioridad</th>
+<th>Valor</th>
+<th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MX</td>
+<td>@</td>
+<td>10</td>
+<td>mail.ejemplo2.com</td>
+<td>3600</td>
+</tr>
+</tbody>
+</table>
+<p>En formato de archivo de zona (por si tu proveedor permite importarlo), los registros completos de correo de ejemplo1.com quedarán así al final del módulo:</p>
+<div class="highlight"><span class="filename">Registros DNS</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ejemplo1.com.                  3600 IN MX   10 mail.ejemplo1.com.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mail.ejemplo1.com.             3600 IN A    203.0.113.10
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mail.ejemplo1.com.             3600 IN AAAA 2001:db8:10::10
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ejemplo1.com.                  3600 IN TXT  "v=spf1 mx ~all"
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mail.ejemplo1.com.             3600 IN TXT  "v=spf1 a -all"
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mail._domainkey.ejemplo1.com.  3600 IN TXT  "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq...(clave pública)..."
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>_dmarc.ejemplo1.com.           3600 IN TXT  "v=DMARC1; p=none; rua=mailto:dmarc@ejemplo1.com; adkim=r; aspf=r"
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>El valor del MX es un <strong>nombre</strong>, nunca una IP, y ese nombre debe tener registro A (o AAAA) propio; no puede ser un CNAME. Algunos paneles exigen escribir el punto final (<code>mail.ejemplo1.com.</code>); otros lo añaden solos. Si escribes el nombre sin punto en un panel que no lo añade, acabarás con <code>mail.ejemplo1.com.ejemplo1.com</code>.</p>
+</div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>MX<span class="w"> </span>ejemplo1.com
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>MX<span class="w"> </span>ejemplo2.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>mail.ejemplo2.com
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>10 mail.ejemplo1.com.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>10 mail.ejemplo2.com.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>203.0.113.10
+</code></pre></div>
+<p>Ahora ya puedes enviar desde Gmail a <code>info@ejemplo1.com</code> y a <code>soporte@ejemplo2.com</code>: Gmail buscará el MX y entregará en tu servidor.</p>
+<h2 id="93-el-dns-inverso-ptr">9.3 El DNS inverso (PTR)<a class="headerlink" href="#93-el-dns-inverso-ptr" title="Permanent link">&para;</a></h2>
+<p>El registro <strong>PTR</strong> traduce una IP a un nombre. A diferencia del resto de registros, <strong>no</strong> lo configuras en el panel de tu dominio, porque la «zona inversa» de una IP pertenece a quien la posee: tu proveedor del servidor.</p>
+<p>Los servidores receptores comprueban el <strong>FCrDNS</strong> (<em>Forward-Confirmed reverse DNS</em>):</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>  203.0.113.10 ──PTR──► mail.ejemplo1.com ──A──► 203.0.113.10    ✓ coinciden
+</code></pre></div>
+<p>Además, ese nombre debería coincidir con el <code>myhostname</code> de Postfix (que se presenta en el <code>EHLO</code>).</p>
+<h3 id="paso-92-configurar-el-ptr-en-el-panel-de-tu-proveedor">PASO 9.2 – Configurar el PTR en el panel de tu proveedor<a class="headerlink" href="#paso-92-configurar-el-ptr-en-el-panel-de-tu-proveedor" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que la IP del servidor tenga como nombre inverso <code>mail.ejemplo1.com</code>.</p>
+<p><strong>Explicación:</strong> busca en el panel de tu proveedor una opción llamada «Reverse DNS», «rDNS», «PTR» o similar, normalmente en la sección de red o de IPs del servidor. Escribe <code>mail.ejemplo1.com</code> para la IPv4 y, si la tienes, también para la IPv6. Algunos proveedores lo configuran automáticamente con el nombre que des al servidor; otros requieren abrir una incidencia.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Una IP solo puede tener un PTR. No pasa nada por que <code>ejemplo2.com</code> use un servidor cuyo PTR es <code>mail.ejemplo1.com</code>: es lo normal en cualquier proveedor de alojamiento. Lo que importa es que el PTR exista, resuelva de vuelta a la misma IP y no sea genérico (como <code>203-0-113-10.static.proveedor.net</code>).</p>
+</div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>-x<span class="w"> </span><span class="m">203</span>.0.113.10
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>-x<span class="w"> </span><span class="m">2001</span>:db8:10::10
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>mail.ejemplo1.com
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mail.ejemplo1.com.
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mail.ejemplo1.com.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>203.0.113.10
+</code></pre></div>
+<p><strong>Errores habituales:</strong> si devuelve un nombre genérico del proveedor, el cambio aún no se ha aplicado o no se ha hecho. Si tu proveedor no permite cambiar el PTR (algo habitual en conexiones domésticas), no podrás tener buena entregabilidad desde esa IP: usa un relayhost (sección 6.8).</p>
+<h2 id="94-spf-sender-policy-framework">9.4 SPF (Sender Policy Framework)<a class="headerlink" href="#94-spf-sender-policy-framework" title="Permanent link">&para;</a></h2>
+<p>SPF es un registro TXT que enumera qué servidores pueden enviar correo con tu dominio en el <strong>remitente del sobre</strong> (<code>MAIL FROM</code> / <code>Return-Path</code>).</p>
+<p>Sintaxis:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v=spf1</code></td>
+<td>Versión. Obligatorio al principio.</td>
+</tr>
+<tr>
+<td><code>mx</code></td>
+<td>Autoriza las IP de los servidores MX del dominio.</td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>Autoriza la IP del registro A del dominio.</td>
+</tr>
+<tr>
+<td><code>a:mail.ejemplo1.com</code></td>
+<td>Autoriza la IP de ese nombre concreto.</td>
+</tr>
+<tr>
+<td><code>ip4:203.0.113.10</code> / <code>ip6:2001:db8:10::10</code></td>
+<td>Autoriza IP concretas.</td>
+</tr>
+<tr>
+<td><code>include:dominio</code></td>
+<td>Autoriza también los servidores que autorice el SPF de otro dominio (servicios externos).</td>
+</tr>
+<tr>
+<td><code>-all</code></td>
+<td><strong>Fallo</strong>: el resto de IP no están autorizadas; el receptor debería rechazar.</td>
+</tr>
+<tr>
+<td><code>~all</code></td>
+<td><strong>Fallo suave</strong>: no autorizadas, pero se aceptan marcadas como sospechosas.</td>
+</tr>
+<tr>
+<td><code>?all</code></td>
+<td>Neutral (no aporta nada).</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Solo puede haber <strong>un</strong> registro SPF (TXT que empieza por <code>v=spf1</code>) por nombre. Si añades servicios, se combinan en la misma línea. El SPF admite como máximo 10 consultas DNS (<code>mx</code>, <code>a</code>, <code>include</code>...) en total.</p>
+</div>
+<h3 id="paso-93-crear-los-registros-spf">PASO 9.3 – Crear los registros SPF<a class="headerlink" href="#paso-93-crear-los-registros-spf" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> autorizar a nuestro servidor (y solo a él) a enviar correo de cada dominio.</p>
+<p>Registros:</p>
+<table>
+<thead>
+<tr>
+<th>Dominio</th>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ejemplo1.com</td>
+<td>TXT</td>
+<td>@</td>
+<td><code>v=spf1 mx ~all</code></td>
+</tr>
+<tr>
+<td>ejemplo1.com</td>
+<td>TXT</td>
+<td>mail</td>
+<td><code>v=spf1 a -all</code></td>
+</tr>
+<tr>
+<td>ejemplo2.com</td>
+<td>TXT</td>
+<td>@</td>
+<td><code>v=spf1 mx ~all</code></td>
+</tr>
+<tr>
+<td>ejemplo2.com</td>
+<td>TXT</td>
+<td>mail</td>
+<td><code>v=spf1 a -all</code></td>
+</tr>
+</tbody>
+</table>
+<p>Análisis:</p>
+<ul>
+<li><code>v=spf1 mx ~all</code> en el dominio: autoriza a los servidores MX (<code>mail.ejemplo1.com</code> → 203.0.113.10, y su IPv6 si tiene AAAA). Empezamos con <code>~all</code> mientras verificamos que todo funciona; cuando DMARC confirme que todo pasa, puedes endurecerlo a <code>-all</code>.</li>
+<li><code>v=spf1 a -all</code> en <code>mail</code>: protege el nombre del propio servidor, que se usa en el <code>EHLO</code> y en los correos del sistema (<code>@mail.ejemplo1.com</code>).</li>
+</ul>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>ejemplo1.com
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>mail.ejemplo1.com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>ejemplo2.com
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>"v=spf1 mx ~all"
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>"v=spf1 a -all"
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>"v=spf1 mx ~all"
+</code></pre></div>
+<h2 id="95-dkim-y-opendkim">9.5 DKIM y OpenDKIM<a class="headerlink" href="#95-dkim-y-opendkim" title="Permanent link">&para;</a></h2>
+<p><strong>DKIM</strong> (<em>DomainKeys Identified Mail</em>) añade a cada correo saliente una <strong>firma digital</strong> en la cabecera <code>DKIM-Signature</code>. El servidor firma con una clave <strong>privada</strong> que solo él tiene, y publica la clave <strong>pública</strong> en el DNS. El receptor descarga la clave pública y verifica la firma: si alguien modificó el mensaje por el camino, o lo envió otro servidor, la firma no cuadra.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>  Postfix ──milter──► OpenDKIM firma con /etc/opendkim/keys/ejemplo1.com/mail.private
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>                          │
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>                          ▼   DKIM-Signature: v=1; a=rsa-sha256; d=ejemplo1.com; s=mail; bh=...; b=...
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Gmail recibe ── lee d=ejemplo1.com y s=mail ── consulta TXT mail._domainkey.ejemplo1.com
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>                          │
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>                          └── verifica la firma con la clave pública → dkim=pass
+</code></pre></div>
+<ul>
+<li><strong>Selector</strong> (<code>s=mail</code>): nombre que identifica la clave. Permite tener varias claves (por ejemplo, para rotarlas). Usaremos el selector <code>mail</code>.</li>
+<li><strong>Milter</strong> (<em>mail filter</em>): protocolo con el que Postfix pasa cada mensaje a un programa externo (OpenDKIM) antes de enviarlo.</li>
+</ul>
+<h3 id="paso-94-instalar-opendkim">PASO 9.4 – Instalar OpenDKIM<a class="headerlink" href="#paso-94-instalar-opendkim" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>opendkim<span class="w"> </span>opendkim-tools
+</code></pre></div>
+<p>Análisis: <code>opendkim</code> es el servicio que firma y verifica; <code>opendkim-tools</code> incluye <code>opendkim-genkey</code> (generar claves) y <code>opendkim-testkey</code> (comprobar el DNS).</p>
+<h3 id="paso-95-generar-las-claves-de-cada-dominio">PASO 9.5 – Generar las claves de cada dominio<a class="headerlink" href="#paso-95-generar-las-claves-de-cada-dominio" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear un par de claves RSA de 2048 bits para cada dominio.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/opendkim/keys/ejemplo1.com<span class="w"> </span>/etc/opendkim/keys/ejemplo2.com
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>opendkim-genkey<span class="w"> </span>-b<span class="w"> </span><span class="m">2048</span><span class="w"> </span>-d<span class="w"> </span>ejemplo1.com<span class="w"> </span>-D<span class="w"> </span>/etc/opendkim/keys/ejemplo1.com<span class="w"> </span>-s<span class="w"> </span>mail<span class="w"> </span>-v
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>sudo<span class="w"> </span>opendkim-genkey<span class="w"> </span>-b<span class="w"> </span><span class="m">2048</span><span class="w"> </span>-d<span class="w"> </span>ejemplo2.com<span class="w"> </span>-D<span class="w"> </span>/etc/opendkim/keys/ejemplo2.com<span class="w"> </span>-s<span class="w"> </span>mail<span class="w"> </span>-v
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>opendkim:opendkim<span class="w"> </span>/etc/opendkim
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/etc/opendkim/keys<span class="w"> </span>/etc/opendkim/keys/*
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/opendkim/keys/*/mail.private
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/etc/opendkim/keys/ejemplo1.com/
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-b 2048</code></td>
+<td>Longitud de la clave. 2048 bits es el estándar actual (1024 se considera débil).</td>
+</tr>
+<tr>
+<td><code>-d ejemplo1.com</code></td>
+<td>Dominio que firmará.</td>
+</tr>
+<tr>
+<td><code>-D carpeta</code></td>
+<td>Dónde guardar los archivos.</td>
+</tr>
+<tr>
+<td><code>-s mail</code></td>
+<td>Selector.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Muestra lo que hace.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>-rw------- 1 opendkim opendkim 1679 nov  9 03:00 mail.private
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>-rw------- 1 opendkim opendkim  503 nov  9 03:00 mail.txt
+</code></pre></div>
+<p><code>mail.private</code> es la clave privada (<strong>nunca</strong> la compartas ni la copies fuera del servidor salvo en copias de seguridad cifradas). <code>mail.txt</code> contiene el registro DNS que debes publicar.</p>
+<h3 id="paso-96-configurar-las-tablas-de-opendkim">PASO 9.6 – Configurar las tablas de OpenDKIM<a class="headerlink" href="#paso-96-configurar-las-tablas-de-opendkim" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> indicar qué clave usar para cada dominio y qué hosts son de confianza.</p>
+<p><strong>Archivo:</strong> <code>/etc/opendkim/key.table</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># nombre_de_la_clave                 dominio:selector:ruta_clave_privada
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>mail._domainkey.ejemplo1.com         ejemplo1.com:mail:/etc/opendkim/keys/ejemplo1.com/mail.private
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>mail._domainkey.ejemplo2.com         ejemplo2.com:mail:/etc/opendkim/keys/ejemplo2.com/mail.private
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/opendkim/signing.table</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># remitente                          clave con la que se firma
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>*@ejemplo1.com                       mail._domainkey.ejemplo1.com
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>*@ejemplo2.com                       mail._domainkey.ejemplo2.com
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/opendkim/trusted.hosts</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Hosts cuyo correo se firma (correo saliente generado en el propio servidor)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>127.0.0.1
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>::1
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>localhost
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>mail.ejemplo1.com
+</code></pre></div>
+<p>Análisis:</p>
+<table>
+<thead>
+<tr>
+<th>Tabla</th>
+<th>Para qué sirve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key.table</code></td>
+<td>Asocia un nombre de clave con su dominio, selector y archivo de clave privada.</td>
+</tr>
+<tr>
+<td><code>signing.table</code></td>
+<td>Decide, según el remitente del mensaje, qué clave usar. <code>*@ejemplo1.com</code> = cualquier dirección del dominio.</td>
+</tr>
+<tr>
+<td><code>trusted.hosts</code></td>
+<td>El correo procedente de estas direcciones se considera <strong>saliente</strong> y se firma; el resto se considera entrante y se <strong>verifica</strong>. El correo de usuarios autenticados por SMTP (587/465) también se firma.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>chown<span class="w"> </span>opendkim:opendkim<span class="w"> </span>/etc/opendkim/*.table<span class="w"> </span>/etc/opendkim/trusted.hosts
+</code></pre></div>
+<h3 id="paso-97-configurar-opendkim-opendkimconf">PASO 9.7 – Configurar OpenDKIM (opendkim.conf)<a class="headerlink" href="#paso-97-configurar-opendkim-opendkimconf" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/opendkim.conf<span class="w"> </span>/etc/opendkim.conf.original
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/opendkim.conf
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/opendkim.conf</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a># =====================================================================
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>#  /etc/opendkim.conf - Firma DKIM para ejemplo1.com y ejemplo2.com
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a># =====================================================================
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a># Registro en syslog (/var/log/mail.log)
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Syslog                  yes
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>SyslogSuccess           yes
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>LogWhy                  yes
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a># Permisos de los archivos que crea y usuario del servicio
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>UMask                   007
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>UserID                  opendkim
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>PidFile                 /run/opendkim/opendkim.pid
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a># s = firmar el correo saliente, v = verificar el entrante
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>Mode                    sv
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a># Normalización de cabeceras/cuerpo antes de firmar (tolerante a cambios menores)
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>Canonicalization        relaxed/simple
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>SignatureAlgorithm      rsa-sha256
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a># Impide que se añada una segunda cabecera From: tras la firma
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>OversignHeaders         From
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a># Tablas de claves, de firma y de hosts de confianza
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>KeyTable                /etc/opendkim/key.table
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>SigningTable            refile:/etc/opendkim/signing.table
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>ExternalIgnoreList      refile:/etc/opendkim/trusted.hosts
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>InternalHosts           refile:/etc/opendkim/trusted.hosts
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a># El correo que Postfix marca como ORIGINATING (puertos 587/465) también se firma
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>MTA                     ORIGINATING
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a>
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a># Socket TCP solo local (Postfix funciona en chroot y no ve /run)
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a>Socket                  inet:8891@localhost
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a>
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a># Raíz de confianza DNSSEC para validar las consultas DNS
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a>TrustAnchorFile         /usr/share/dns/root.key
+</code></pre></div>
+<p>Análisis de las directivas principales:</p>
+<table>
+<thead>
+<tr>
+<th>Directiva</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Mode sv</code></td>
+<td>Firma (<em>sign</em>) y verifica (<em>verify</em>).</td>
+</tr>
+<tr>
+<td><code>Canonicalization relaxed/simple</code></td>
+<td><code>relaxed</code> en cabeceras (tolera cambios de espacios o mayúsculas que hacen algunos servidores), <code>simple</code> en el cuerpo.</td>
+</tr>
+<tr>
+<td><code>OversignHeaders From</code></td>
+<td>Protege contra la inserción de un segundo <code>From:</code> falso.</td>
+</tr>
+<tr>
+<td><code>refile:</code></td>
+<td>El archivo admite expresiones con comodines (<code>*@ejemplo1.com</code>).</td>
+</tr>
+<tr>
+<td><code>MTA ORIGINATING</code></td>
+<td>Firma el correo que llega por los servicios de Postfix con <code>milter_macro_daemon_name=ORIGINATING</code> (los puertos de envío).</td>
+</tr>
+<tr>
+<td><code>Socket inet:8891@localhost</code></td>
+<td>Escucha en <code>127.0.0.1:8891</code>, inaccesible desde fuera.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-98-asegurar-que-el-servicio-usa-el-socket-configurado">PASO 9.8 – Asegurar que el servicio usa el socket configurado<a class="headerlink" href="#paso-98-asegurar-que-el-servicio-usa-el-socket-configurado" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> evitar que el arranque del servicio imponga otro socket distinto del de <code>opendkim.conf</code>.</p>
+<p><strong>Explicación:</strong> en Ubuntu, la unidad de systemd de OpenDKIM arranca el programa pasando el socket por línea de comandos (opción <code>-p</code>), y la línea de comandos <strong>tiene prioridad</strong> sobre <code>opendkim.conf</code>. Lo comprobamos y, para no depender de ello, creamos una configuración adicional (<em>drop-in</em>) de systemd que fija nuestro socket.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>systemctl<span class="w"> </span>cat<span class="w"> </span>opendkim<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ExecStart
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/systemd/system/opendkim.service.d
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/systemd/system/opendkim.service.d/override.conf<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="s">[Service]</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="s">ExecStart=</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="s">ExecStart=/usr/sbin/opendkim -P /run/opendkim/opendkim.pid -p inet:8891@localhost</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="s">EOF</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>opendkim
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>opendkim
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">8891</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>systemctl cat opendkim</code>: muestra la unidad del servicio; verás si incluye <code>-p local:/run/opendkim/opendkim.sock</code>.</li>
+<li>En el <em>drop-in</em>, la primera línea <code>ExecStart=</code> (vacía) <strong>borra</strong> el comando original; la segunda define el nuestro.</li>
+<li><code>daemon-reload</code> hace que systemd relea las unidades.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>LISTEN 0  4096  127.0.0.1:8891  0.0.0.0:*  users:(("opendkim",pid=8120,fd=3))
+</code></pre></div>
+<p><strong>Errores habituales:</strong> si OpenDKIM no arranca, mira <code>sudo journalctl -u opendkim -n 30 --no-pager</code>. Mensajes típicos: <code>opendkim: /etc/opendkim/key.table: ... Permission denied</code> (revisa propietarios del PASO 9.5) o <code>can't load key from /etc/opendkim/keys/...: Permission denied</code>.</p>
+<h3 id="paso-99-conectar-postfix-con-opendkim">PASO 9.9 – Conectar Postfix con OpenDKIM<a class="headerlink" href="#paso-99-conectar-postfix-con-opendkim" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/etc/postfix/main.cf</code>. Conserva todo y <strong>añade al final</strong>:</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a># --- Firma DKIM con OpenDKIM (Módulo 9) ---------------------------------
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>milter_default_action = accept
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>milter_protocol = 6
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>smtpd_milters = inet:localhost:8891
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>non_smtpd_milters = $smtpd_milters
+</code></pre></div>
+<p>Análisis:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>milter_default_action = accept</code></td>
+<td>Si OpenDKIM no responde, el correo se acepta igualmente (sin firma) en lugar de bloquear todo el servidor.</td>
+</tr>
+<tr>
+<td><code>milter_protocol = 6</code></td>
+<td>Versión del protocolo milter.</td>
+</tr>
+<tr>
+<td><code>smtpd_milters</code></td>
+<td>Milters para el correo que llega por SMTP (puertos 25, 587, 465).</td>
+</tr>
+<tr>
+<td><code>non_smtpd_milters</code></td>
+<td>Milters para el correo generado localmente (<code>sendmail</code>, como el de PHP o cron).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>sudo<span class="w"> </span>postfix<span class="w"> </span>check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>postfix
+</code></pre></div>
+<h3 id="paso-910-publicar-las-claves-dkim-en-el-dns">PASO 9.10 – Publicar las claves DKIM en el DNS<a class="headerlink" href="#paso-910-publicar-las-claves-dkim-en-el-dns" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> publicar la clave pública de cada dominio.</p>
+<p><strong>Comando:</strong> muestra el contenido de los archivos generados:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>cat<span class="w"> </span>/etc/opendkim/keys/ejemplo1.com/mail.txt
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>mail._domainkey IN  TXT ( "v=DKIM1; h=sha256; k=rsa; "
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>      "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx3Q...primera parte..."
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>      "...segunda parte...IDAQAB" )  ; ----- DKIM key mail for ejemplo1.com
+</code></pre></div>
+<p><strong>Explicación:</strong> un texto TXT no puede superar 255 caracteres por cadena, y una clave de 2048 bits es más larga, por eso el archivo la divide en varias cadenas entre comillas. En el panel DNS:</p>
+<ul>
+<li><strong>Nombre</strong>: <code>mail._domainkey</code></li>
+<li><strong>Tipo</strong>: TXT</li>
+<li><strong>Valor</strong>: une todas las partes entre comillas en una sola línea, <strong>sin</strong> las comillas ni los paréntesis: <code>v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq...IDAQAB</code>. La mayoría de paneles dividen el texto automáticamente. Si tu panel exige las cadenas separadas, pégalas con sus comillas tal como aparecen.</li>
+</ul>
+<p>Este comando te muestra el valor ya unido, listo para copiar:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"tr -d '\n' &lt; /etc/opendkim/keys/ejemplo1.com/mail.txt | sed -e 's/.*( *//' -e 's/ *).*//' -e 's/\"[[:space:]]*\"//g' -e 's/\"//g'"</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span>
+</code></pre></div>
+<p>Repite para <code>ejemplo2.com</code> (archivo <code>/etc/opendkim/keys/ejemplo2.com/mail.txt</code>, nombre <code>mail._domainkey</code> en la zona de ejemplo2.com).</p>
+<p><strong>Comprobación (cuando el registro se haya propagado):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>mail._domainkey.ejemplo1.com
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>sudo<span class="w"> </span>opendkim-testkey<span class="w"> </span>-d<span class="w"> </span>ejemplo1.com<span class="w"> </span>-s<span class="w"> </span>mail<span class="w"> </span>-vvv
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>sudo<span class="w"> </span>opendkim-testkey<span class="w"> </span>-d<span class="w"> </span>ejemplo2.com<span class="w"> </span>-s<span class="w"> </span>mail<span class="w"> </span>-vvv
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>opendkim-testkey: using default configfile /etc/opendkim.conf
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>opendkim-testkey: checking key 'mail._domainkey.ejemplo1.com'
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>opendkim-testkey: key not secure
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>opendkim-testkey: key OK
+</code></pre></div>
+<p><code>key OK</code> significa que la clave publicada coincide con la privada. <code>key not secure</code> solo indica que tu dominio no usa DNSSEC; no es un error.</p>
+<p><strong>Errores habituales:</strong> <code>record not found</code> (aún no propagado o nombre mal escrito); <code>key data does not match</code> (copiaste mal el valor o falta un fragmento).</p>
+<h2 id="96-dmarc">9.6 DMARC<a class="headerlink" href="#96-dmarc" title="Permanent link">&para;</a></h2>
+<p><strong>DMARC</strong> une SPF y DKIM con el remitente <strong>visible</strong> (<code>From:</code>). Un mensaje pasa DMARC si:</p>
+<ul>
+<li>pasa SPF <strong>y</strong> el dominio del <code>MAIL FROM</code> coincide (está <em>alineado</em>) con el del <code>From:</code>, <strong>o</strong></li>
+<li>pasa DKIM <strong>y</strong> el dominio de la firma (<code>d=</code>) coincide con el del <code>From:</code>.</li>
+</ul>
+<p>Además, el propietario del dominio publica qué debe hacerse con los mensajes que no pasan y a dónde enviar informes.</p>
+<table>
+<thead>
+<tr>
+<th>Etiqueta</th>
+<th>Significado</th>
+<th>Valores</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v=DMARC1</code></td>
+<td>Versión (obligatoria, al principio).</td>
+<td></td>
+</tr>
+<tr>
+<td><code>p=</code></td>
+<td>Política para el dominio.</td>
+<td><code>none</code> (solo informar), <code>quarantine</code> (a spam), <code>reject</code> (rechazar).</td>
+</tr>
+<tr>
+<td><code>sp=</code></td>
+<td>Política para subdominios (si no se indica, usa <code>p</code>).</td>
+<td>Igual que <code>p</code>.</td>
+</tr>
+<tr>
+<td><code>rua=</code></td>
+<td>Dirección para informes agregados diarios.</td>
+<td><code>mailto:dmarc@ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>adkim=</code> / <code>aspf=</code></td>
+<td>Alineación estricta (<code>s</code>) o relajada (<code>r</code>) de DKIM y SPF.</td>
+<td><code>r</code> permite subdominios.</td>
+</tr>
+<tr>
+<td><code>pct=</code></td>
+<td>Porcentaje de mensajes a los que se aplica la política.</td>
+<td>0–100</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-911-crear-los-registros-dmarc">PASO 9.11 – Crear los registros DMARC<a class="headerlink" href="#paso-911-crear-los-registros-dmarc" title="Permanent link">&para;</a></h3>
+<p>Registros:</p>
+<table>
+<thead>
+<tr>
+<th>Dominio</th>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ejemplo1.com</td>
+<td>TXT</td>
+<td>_dmarc</td>
+<td><code>v=DMARC1; p=none; rua=mailto:dmarc@ejemplo1.com; adkim=r; aspf=r</code></td>
+</tr>
+<tr>
+<td>ejemplo2.com</td>
+<td>TXT</td>
+<td>_dmarc</td>
+<td><code>v=DMARC1; p=none; rua=mailto:dmarc@ejemplo2.com; adkim=r; aspf=r</code></td>
+</tr>
+</tbody>
+</table>
+<p>Análisis: empezamos con <code>p=none</code> (modo observación). Durante unas semanas recibirás informes XML en <code>dmarc@</code> (que es alias de <code>administracion@</code>/<code>soporte@</code>, PASO 8.8) indicando qué IP envían en nombre de tu dominio y si pasan. Cuando todo pase, sube a <code>p=quarantine</code> y después a <code>p=reject</code>, que es la protección completa contra la suplantación de tu dominio.</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>_dmarc.ejemplo1.com
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>_dmarc.ejemplo2.com
+</code></pre></div>
+<h2 id="97-comprobar-la-propagacion-de-los-registros">9.7 Comprobar la propagación de los registros<a class="headerlink" href="#97-comprobar-la-propagacion-de-los-registros" title="Permanent link">&para;</a></h2>
+<p>Cuando creas o cambias un registro, los resolvedores que tenían en caché la respuesta anterior la mantienen hasta que expira su TTL. Para saber si un cambio ya es visible:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Preguntar a varios resolvedores públicos</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>MX<span class="w"> </span>ejemplo1.com<span class="w"> </span>@1.1.1.1
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>dig<span class="w"> </span>+short<span class="w"> </span>MX<span class="w"> </span>ejemplo1.com<span class="w"> </span>@8.8.8.8
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>dig<span class="w"> </span>+short<span class="w"> </span>MX<span class="w"> </span>ejemplo1.com<span class="w"> </span>@9.9.9.9
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># Preguntar directamente a los servidores autoritativos (la «fuente de verdad»)</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>dig<span class="w"> </span>+short<span class="w"> </span>NS<span class="w"> </span>ejemplo1.com
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>_dmarc.ejemplo1.com<span class="w"> </span>@ns1.tuproveedordns.example
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="c1"># Ver la cadena completa de resolución desde la raíz</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>dig<span class="w"> </span>+trace<span class="w"> </span>TXT<span class="w"> </span>mail._domainkey.ejemplo1.com
+</code></pre></div>
+<p>Análisis: si los autoritativos ya devuelven el valor nuevo pero <code>1.1.1.1</code> no, solo es cuestión de esperar (como máximo el TTL anterior). Si los autoritativos tampoco lo devuelven, el registro está mal creado en el panel. También existen herramientas web que consultan desde muchos países a la vez («DNS propagation checker»).</p>
+<h2 id="98-verificacion-final-de-la-autenticacion">9.8 Verificación final de la autenticación<a class="headerlink" href="#98-verificacion-final-de-la-autenticacion" title="Permanent link">&para;</a></h2>
+<h3 id="paso-912-verificar-spf-dkim-y-dmarc-con-un-correo-real">PASO 9.12 – Verificar SPF, DKIM y DMARC con un correo real<a class="headerlink" href="#paso-912-verificar-spf-dkim-y-dmarc-con-un-correo-real" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> confirmar que los servidores receptores dan por buenos los tres mecanismos.</p>
+<p><strong>Comando:</strong> envía un correo desde Thunderbird (o con swaks por el puerto 587) desde <code>info@ejemplo1.com</code> a tu cuenta de Gmail. Antes, comprueba en el log que OpenDKIM firma:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/mail.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dkim
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>opendkim[8120]: 7B3C13E101: DKIM-Signature field added (s=mail, d=ejemplo1.com)
+</code></pre></div>
+<p>Comprobación en Gmail: abre el mensaje, pulsa los tres puntos → «Mostrar original». Debes ver:</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>SPF:   PASS con la IP 203.0.113.10
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>DKIM:  'PASS' con el dominio ejemplo1.com
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>DMARC: 'PASS'
+</code></pre></div>
+<p>Y en las cabeceras:</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Authentication-Results: mx.google.com;
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>       dkim=pass header.i=@ejemplo1.com header.s=mail header.b=Ab3dEfGh;
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>       spf=pass (google.com: domain of info@ejemplo1.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=info@ejemplo1.com;
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=ejemplo1.com
+</code></pre></div>
+<p>Repite el envío desde <code>soporte@ejemplo2.com</code>.</p>
+<p>Otras herramientas de verificación:</p>
+<ul>
+<li><strong>mail-tester.com</strong>: te da una dirección temporal; envías un correo y te devuelve una puntuación sobre 10 con todos los problemas detectados (SPF, DKIM, DMARC, PTR, listas negras, contenido).</li>
+<li><strong>check-auth@verifier.port25.com</strong>: si le envías un correo, responde con un informe detallado de SPF, DKIM y DMARC.</li>
+</ul>
+<p><strong>Errores habituales:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Resultado</th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dkim=none</code></td>
+<td>OpenDKIM no firmó.</td>
+<td>En el log no aparece <code>DKIM-Signature field added</code>: revisa <code>smtpd_milters</code>, el socket 8891 y la <code>signing.table</code>.</td>
+</tr>
+<tr>
+<td><code>dkim=fail (bad signature)</code></td>
+<td>La clave del DNS no corresponde a la privada, o el mensaje se modificó tras firmar.</td>
+<td><code>opendkim-testkey</code>; evita reescrituras posteriores (firmas de antivirus, pies añadidos).</td>
+</tr>
+<tr>
+<td><code>spf=softfail</code> / <code>spf=fail</code></td>
+<td>La IP de envío no está en el SPF (por ejemplo, se envió por IPv6 y el MX no tiene AAAA).</td>
+<td>Añade <code>ip6:</code> o el registro AAAA, o usa <code>inet_protocols = ipv4</code>.</td>
+</tr>
+<tr>
+<td><code>dmarc=fail</code></td>
+<td>SPF y DKIM fallan o no están alineados con el <code>From:</code>.</td>
+<td>Corrige primero DKIM, que es el mecanismo más robusto.</td>
+</tr>
+<tr>
+<td>Gmail rechaza con <code>550-5.7.25 ... PTR record</code></td>
+<td>Falta PTR o no coincide (habitual en IPv6).</td>
+<td>PASO 9.2 para IPv4 <strong>e</strong> IPv6.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="99-reputacion-de-la-ip-y-entregabilidad">9.9 Reputación de la IP y entregabilidad<a class="headerlink" href="#99-reputacion-de-la-ip-y-entregabilidad" title="Permanent link">&para;</a></h2>
+<p>Tener los registros perfectos es necesario, pero no suficiente. Los grandes proveedores también valoran la <strong>reputación</strong>:</p>
+<ul>
+<li><strong>IP limpia</strong>: antes de usar un servidor para correo, comprueba que su IP no está en listas negras (Spamhaus, Barracuda, SpamCop...). Hay comprobadores web que consultan decenas de listas a la vez (busca «multi RBL check»). Si tu IP está listada por un uso anterior, solicita la retirada en la web de la lista o pide otra IP al proveedor.</li>
+<li><strong>IP residencial</strong>: las IP de conexiones domésticas aparecen en listas como la PBL de Spamhaus y su correo se rechaza casi siempre.</li>
+<li><strong>Calentamiento</strong> (<em>warm-up</em>): una IP nueva no tiene historial. Empieza enviando poco volumen y a destinatarios que interactúan (abren, responden) y aumenta gradualmente.</li>
+<li><strong>Contenido y comportamiento</strong>: sin listas compradas, con baja tasa de quejas, con enlace de baja en los envíos masivos, sin acortadores de URL sospechosos.</li>
+<li><strong>Paneles de los proveedores</strong>: Google Postmaster Tools y Microsoft SNDS te muestran cómo ven tu dominio e IP.</li>
+<li><strong>Coherencia</strong>: <code>myhostname</code> = PTR = registro A = nombre en el <code>EHLO</code>. Ya lo tenemos.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Para envíos masivos (boletines con miles de destinatarios), lo recomendable es no usar el mismo servidor e IP que el correo personal: un problema de reputación con el boletín afectaría a todos los buzones.</p>
+</div>
+<h2 id="910-ejercicios-practicos-del-modulo-9">9.10 Ejercicios prácticos del Módulo 9<a class="headerlink" href="#910-ejercicios-practicos-del-modulo-9" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Envía un correo a <code>check-auth@verifier.port25.com</code> desde cada dominio y analiza el informe que recibes.</li>
+<li>Simula una suplantación: con swaks, conéctate al puerto 25 de Gmail desde otro servidor (no autorizado en tu SPF) usando <code>--from info@ejemplo1.com</code>. ¿Qué resultado de SPF y DMARC obtiene? (Solo con direcciones de tu propiedad.)</li>
+<li>Cambia temporalmente el selector a uno inexistente en la <code>key.table</code> y observa qué ocurre con <code>dkim</code> en Gmail. Restaura la configuración.</li>
+<li>Calcula cuántas consultas DNS consume tu registro SPF. ¿Qué pasaría si añadieras 11 <code>include:</code>?</li>
+<li>Tras unos días con <code>p=none</code>, abre un informe DMARC recibido en <code>dmarc@ejemplo1.com</code> (es un XML comprimido) e identifica las IP y los resultados.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../08-cuentas-correo/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 8. Cuentas de correo">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                8. Cuentas de correo
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../10-ssl-tls/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 10. Certificados SSL/TLS">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                10. Certificados SSL/TLS
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

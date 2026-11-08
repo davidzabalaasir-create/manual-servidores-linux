@@ -1,0 +1,1627 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/">
+      
+      
+      
+        <link rel="next" href="01-fundamentos/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduccion" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introducción
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-quien-va-dirigido-este-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A quién va dirigido este manual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-esta-organizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo está organizado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convenciones-tipograficas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenciones tipográficas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plataforma-de-referencia-y-versiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plataforma de referencia y versiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#antes-de-empezar-lo-que-necesitas-saber-de-tu-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Antes de empezar: lo que necesitas saber de tu entorno
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Antes de empezar: lo que necesitas saber de tu entorno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restricciones-de-proveedores-que-debes-conocer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restricciones de proveedores que debes conocer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#los-datos-del-proyecto-guia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Los datos del proyecto guía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-quien-va-dirigido-este-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A quién va dirigido este manual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-esta-organizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo está organizado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convenciones-tipograficas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenciones tipográficas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plataforma-de-referencia-y-versiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plataforma de referencia y versiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#antes-de-empezar-lo-que-necesitas-saber-de-tu-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Antes de empezar: lo que necesitas saber de tu entorno
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Antes de empezar: lo que necesitas saber de tu entorno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restricciones-de-proveedores-que-debes-conocer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restricciones de proveedores que debes conocer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#los-datos-del-proyecto-guia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Los datos del proyecto guía
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/index.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">Descargar el manual completo</p>
+<p>También disponible como libro: <a href="descargas/Manual_Administracion_Servidores_Linux.pdf">PDF</a> · <a href="descargas/Manual_Administracion_Servidores_Linux.docx">Word (.docx)</a></p>
+</div>
+<h2 id="a-quien-va-dirigido-este-manual">A quién va dirigido este manual<a class="headerlink" href="#a-quien-va-dirigido-este-manual" title="Permanent link">&para;</a></h2>
+<p>Este manual está escrito para una persona que nunca ha administrado un servidor y quiere aprender a hacerlo de verdad. No basta con instalar paquetes: el objetivo es entender qué se hace, por qué se hace, qué pasa por dentro y cómo comprobar que funciona.</p>
+<p>Al terminar, serás capaz de montar, desde un servidor vacío, una infraestructura completa con:</p>
+<ul>
+<li>Dos sitios web independientes (<code>ejemplo1.com</code> y <code>ejemplo2.com</code>) servidos por Apache mediante Virtual Hosting.</li>
+<li>Una aplicación PHP en cada sitio, ejecutada con PHP-FPM y un usuario del sistema propio para cada web.</li>
+<li>Una base de datos MariaDB independiente para cada aplicación (<code>web1_db</code> y <code>web2_db</code>), cada una con su propio usuario y permisos limitados.</li>
+<li>Un servidor de correo completo: Postfix (SMTP) para enviar y recibir, y Dovecot (IMAP/POP3) para consultar los buzones.</li>
+<li>Cuentas de correo virtuales como <code>info@ejemplo1.com</code>, <code>administracion@ejemplo1.com</code> y <code>soporte@ejemplo2.com</code>.</li>
+<li>Firma DKIM, políticas SPF y DMARC, y DNS inverso para que tus correos no acaben en la carpeta de spam.</li>
+<li>Certificados SSL/TLS gratuitos de Let's Encrypt para la web y el correo, con renovación automática.</li>
+<li>Cortafuegos UFW, protección contra fuerza bruta con Fail2ban, copias de seguridad automáticas y procedimientos de diagnóstico.</li>
+</ul>
+<h2 id="como-esta-organizado">Cómo está organizado<a class="headerlink" href="#como-esta-organizado" title="Permanent link">&para;</a></h2>
+<p>El manual tiene 14 módulos que se apoyan unos en otros. Cada módulo empieza con sus objetivos y termina con ejercicios prácticos. Las operaciones están divididas en <strong>PASOS</strong> que siempre siguen la misma estructura:</p>
+<table>
+<thead>
+<tr>
+<th>Apartado</th>
+<th>Qué contiene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Objetivo</td>
+<td>Qué vamos a conseguir con este paso.</td>
+</tr>
+<tr>
+<td>Explicación</td>
+<td>Qué estamos haciendo, por qué y qué ocurre internamente.</td>
+</tr>
+<tr>
+<td>Comando</td>
+<td>El comando completo, listo para copiar y pegar.</td>
+</tr>
+<tr>
+<td>Análisis del comando</td>
+<td>Qué significa cada parte y cada parámetro.</td>
+</tr>
+<tr>
+<td>Resultado esperado</td>
+<td>Lo que debería aparecer en el terminal.</td>
+</tr>
+<tr>
+<td>Comprobación</td>
+<td>Cómo verificar que el paso ha funcionado antes de seguir.</td>
+</tr>
+<tr>
+<td>Errores habituales</td>
+<td>Qué puede fallar y cómo solucionarlo.</td>
+</tr>
+<tr>
+<td>Siguiente paso</td>
+<td>Qué haremos a continuación.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p><strong>Regla de oro del manual:</strong> no pases nunca al paso siguiente sin haber hecho la comprobación del paso actual. Casi todos los problemas difíciles de un servidor son en realidad tres problemas fáciles que se han acumulado sin que nadie los detectara.</p>
+</div>
+<h2 id="convenciones-tipograficas">Convenciones tipográficas<a class="headerlink" href="#convenciones-tipograficas" title="Permanent link">&para;</a></h2>
+<p>Los bloques de código llevan una etiqueta que indica qué son:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># TERMINAL: comandos que se escriben en la consola del servidor (o del equipo que se indique).</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Las líneas que empiezan por # son comentarios: no hacen nada, solo explican.</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>apache2
+</code></pre></div>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># ARCHIVO DE CONFIGURACIÓN: contenido de un archivo. Encima se indica siempre su ruta exacta.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ServerName www.ejemplo1.com
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SALIDA ESPERADA: lo que el terminal debería mostrarte. Puede variar ligeramente
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>(fechas, números de proceso, versiones menores), pero la estructura será la misma.
+</code></pre></div>
+<p>Además:</p>
+<ul>
+<li>El indicador <code>sysadmin@mail:~$</code> significa «terminal del servidor, como usuario normal <code>sysadmin</code>». Si ves <code>root@mail:~#</code> estás como superusuario. Nunca copies el indicador, solo lo que va detrás.</li>
+<li><code>sudo</code> delante de un comando significa «ejecútalo con privilegios de administrador». Te pedirá tu contraseña de usuario (no la de root).</li>
+<li>Las palabras entre <code>&lt;</code> y <code>&gt;</code> (por ejemplo <code>&lt;CONTRASEÑA_SEGURA&gt;</code>) son marcadores: sustitúyelas por tu valor real, <strong>sin</strong> los signos <code>&lt;</code> y <code>&gt;</code>.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Este manual no contiene contraseñas reales. Todos los valores como <code>Cambia.Esta.Clave.01</code> son ejemplos y <strong>debes</strong> sustituirlos por contraseñas largas y únicas generadas por ti (más adelante verás cómo generarlas con <code>openssl rand</code>).</p>
+</div>
+<h2 id="plataforma-de-referencia-y-versiones">Plataforma de referencia y versiones<a class="headerlink" href="#plataforma-de-referencia-y-versiones" title="Permanent link">&para;</a></h2>
+<p>Para que todos los comandos, rutas y archivos sean exactos, el manual usa una única plataforma de referencia:</p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Versión de referencia (Ubuntu Server 24.04 LTS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sistema operativo</td>
+<td>Ubuntu Server 24.04 LTS «Noble Numbat», 64 bits (amd64 o arm64)</td>
+</tr>
+<tr>
+<td>Servidor web</td>
+<td>Apache HTTP Server 2.4.58 o superior (paquete <code>apache2</code>)</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td>PHP 8.3 con PHP-FPM (paquetes <code>php8.3-*</code>)</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td>MariaDB 10.11 LTS (paquete <code>mariadb-server</code>)</td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>Postfix 3.8</td>
+</tr>
+<tr>
+<td>IMAP / POP3</td>
+<td>Dovecot 2.3.21</td>
+</tr>
+<tr>
+<td>Firma DKIM</td>
+<td>OpenDKIM 2.11</td>
+</tr>
+<tr>
+<td>Certificados</td>
+<td>Certbot 2.x (paquete <code>certbot</code> + <code>python3-certbot-apache</code>)</td>
+</tr>
+<tr>
+<td>Cortafuegos</td>
+<td>UFW 0.36</td>
+</tr>
+<tr>
+<td>Anti fuerza bruta</td>
+<td>Fail2ban 1.0</td>
+</tr>
+</tbody>
+</table>
+<p>Ubuntu 24.04 LTS tiene soporte estándar hasta abril de 2029, utiliza Dovecot 2.3 (cuya sintaxis de configuración está muy documentada) y es la plataforma que la mayoría de proveedores de servidores ofrecen como imagen preinstalada.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p><strong>Si usas otra versión del sistema, lee esto.</strong> Debian 12 «bookworm» es casi idéntica a Ubuntu 24.04 en todo lo que hace este manual; la diferencia principal es que trae PHP 8.2, así que donde ponga <code>8.3</code> deberás escribir <code>8.2</code> (por ejemplo <code>/etc/php/8.2/fpm/</code>). En cambio, <strong>Debian 13 «trixie» y Ubuntu 26.04 incluyen Dovecot 2.4</strong>, cuya sintaxis de configuración cambió de forma importante (por ejemplo <code>mail_location</code> se divide en <code>mail_driver</code> y <code>mail_path</code>, y el bloque <code>passdb</code> usa otro formato). Los módulos 7 y 8 están escritos para Dovecot 2.3. Comprueba siempre tu versión con <code>dovecot --version</code> antes de copiar su configuración.</p>
+</div>
+<h2 id="antes-de-empezar-lo-que-necesitas-saber-de-tu-entorno">Antes de empezar: lo que necesitas saber de tu entorno<a class="headerlink" href="#antes-de-empezar-lo-que-necesitas-saber-de-tu-entorno" title="Permanent link">&para;</a></h2>
+<p>Un administrador nunca empieza a instalar sin conocer el terreno. Rellena esta ficha antes de continuar; la usarás durante todo el manual.</p>
+<table>
+<thead>
+<tr>
+<th>Dato</th>
+<th>Cómo averiguarlo</th>
+<th>Valor en el manual</th>
+<th>Tu valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sistema operativo y versión</td>
+<td><code>lsb_release -a</code> o <code>cat /etc/os-release</code></td>
+<td>Ubuntu 24.04 LTS</td>
+<td></td>
+</tr>
+<tr>
+<td>Arquitectura</td>
+<td><code>uname -m</code> (x86_64 = amd64; aarch64 = arm64)</td>
+<td>x86_64</td>
+<td></td>
+</tr>
+<tr>
+<td>IP pública IPv4</td>
+<td>Panel del proveedor o <code>curl -4 ifconfig.me</code></td>
+<td>203.0.113.10</td>
+<td></td>
+</tr>
+<tr>
+<td>IP pública IPv6 (si tienes)</td>
+<td>Panel del proveedor o <code>ip -6 addr</code></td>
+<td>2001:db8:10::10</td>
+<td></td>
+</tr>
+<tr>
+<td>Dominio 1</td>
+<td>El que hayas registrado</td>
+<td>ejemplo1.com</td>
+<td></td>
+</tr>
+<tr>
+<td>Dominio 2</td>
+<td>El que hayas registrado</td>
+<td>ejemplo2.com</td>
+<td></td>
+</tr>
+<tr>
+<td>Acceso</td>
+<td>SSH con usuario y contraseña, o consola web</td>
+<td>SSH</td>
+<td></td>
+</tr>
+<tr>
+<td>Proveedor DNS</td>
+<td>Donde gestionas los registros (registrador, Cloudflare...)</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>¿Puedes configurar el DNS inverso (PTR)?</td>
+<td>Panel del proveedor del servidor (no del dominio)</td>
+<td>Sí</td>
+<td></td>
+</tr>
+<tr>
+<td>¿El puerto 25 saliente está abierto?</td>
+<td>Documentación del proveedor; prueba del Módulo 6</td>
+<td>Sí</td>
+<td></td>
+</tr>
+<tr>
+<td>RAM y disco</td>
+<td><code>free -h</code> y <code>df -h</code></td>
+<td>2 GB / 40 GB</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Las direcciones <code>203.0.113.10</code> y <code>2001:db8:10::10</code> pertenecen a rangos reservados para documentación (RFC 5737 y RFC 3849). No existen en Internet: sustitúyelas siempre por las tuyas. Lo mismo ocurre con <code>ejemplo1.com</code> y <code>ejemplo2.com</code>.</p>
+</div>
+<h3 id="restricciones-de-proveedores-que-debes-conocer">Restricciones de proveedores que debes conocer<a class="headerlink" href="#restricciones-de-proveedores-que-debes-conocer" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Puerto 25 bloqueado.</strong> Muchas nubes (AWS, Google Cloud, Azure, y la mayoría de conexiones domésticas) bloquean por defecto el tráfico saliente al puerto 25 para frenar el spam. Sin él tu servidor podrá <strong>recibir</strong> correo, pero no <strong>entregarlo</strong> a Gmail, Outlook, etc. Algunos proveedores lo desbloquean bajo petición; otros nunca. Si es tu caso, tendrás que usar un <em>relay</em> (servidor intermediario) de envío. Lo verás en el Módulo 6.</li>
+<li><strong>DNS inverso (PTR).</strong> Lo configura el dueño de la IP (tu proveedor del servidor), no tu registrador de dominios. Sin un PTR correcto, gran parte de tus correos será rechazada.</li>
+<li><strong>IP doméstica o dinámica.</strong> Puedes seguir todo el manual en una máquina virtual de tu casa para aprender, pero un servidor de correo real necesita una IP pública fija con buena reputación. Las IP domésticas suelen estar en listas negras (por ejemplo la PBL de Spamhaus).</li>
+<li><strong>RAM.</strong> 1 GB es el mínimo absoluto; 2 GB es lo recomendable para Apache + PHP + MariaDB + correo.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Si estás aprendiendo en un laboratorio local</strong> (VirtualBox, VMware, Proxmox, Hyper-V) sin IP pública ni dominios reales, puedes seguir todos los módulos. Las diferencias son tres: (1) en lugar de configurar el DNS público, añadirás los nombres al archivo <code>hosts</code> de tu equipo; (2) Let's Encrypt no podrá emitir certificados, así que usarás el certificado autofirmado que Ubuntu genera automáticamente (<code>/etc/ssl/certs/ssl-cert-snakeoil.pem</code>); (3) no podrás intercambiar correo con Internet, pero sí entre tus propias cuentas. Cada módulo indica cómo adaptarlo.</p>
+</div>
+<h2 id="los-datos-del-proyecto-guia">Los datos del proyecto guía<a class="headerlink" href="#los-datos-del-proyecto-guia" title="Permanent link">&para;</a></h2>
+<p>Durante todo el manual usaremos estos valores. Cuando adaptes el manual a tu caso, mantén la coherencia: si cambias un nombre, cámbialo en todas partes.</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>ejemplo1.com</th>
+<th>ejemplo2.com</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre web principal</td>
+<td>www.ejemplo1.com</td>
+<td>www.ejemplo2.com</td>
+</tr>
+<tr>
+<td>Alias</td>
+<td>ejemplo1.com</td>
+<td>ejemplo2.com</td>
+</tr>
+<tr>
+<td>Usuario Linux del sitio</td>
+<td>web1</td>
+<td>web2</td>
+</tr>
+<tr>
+<td>Carpeta del sitio</td>
+<td>/var/www/ejemplo1.com</td>
+<td>/var/www/ejemplo2.com</td>
+</tr>
+<tr>
+<td>Carpeta pública (DocumentRoot)</td>
+<td>/var/www/ejemplo1.com/public_html</td>
+<td>/var/www/ejemplo2.com/public_html</td>
+</tr>
+<tr>
+<td>Archivo VirtualHost</td>
+<td>/etc/apache2/sites-available/ejemplo1.com.conf</td>
+<td>/etc/apache2/sites-available/ejemplo2.com.conf</td>
+</tr>
+<tr>
+<td>Pool PHP-FPM</td>
+<td>/etc/php/8.3/fpm/pool.d/web1.conf</td>
+<td>/etc/php/8.3/fpm/pool.d/web2.conf</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td>web1_db</td>
+<td>web2_db</td>
+</tr>
+<tr>
+<td>Usuario de base de datos</td>
+<td>web1_user</td>
+<td>web2_user</td>
+</tr>
+<tr>
+<td>Cuentas de correo</td>
+<td>info@, administracion@, postmaster@ (alias)</td>
+<td>soporte@, postmaster@ (alias)</td>
+</tr>
+<tr>
+<td>Servidor de correo (MX)</td>
+<td>mail.ejemplo1.com</td>
+<td>mail.ejemplo2.com (misma IP)</td>
+</tr>
+</tbody>
+</table>
+<p>El servidor se llamará <code>mail.ejemplo1.com</code>. Es su nombre «oficial» (el que aparecerá en el DNS inverso y en los saludos SMTP). El usuario administrador del sistema será <code>sysadmin</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+        
+          
+          <a href="01-fundamentos/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 1. Fundamentos de infraestructura">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                1. Fundamentos de infraestructura
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

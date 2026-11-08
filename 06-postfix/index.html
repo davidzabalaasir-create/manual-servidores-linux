@@ -1,0 +1,2452 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/06-postfix/">
+      
+      
+        <link rel="prev" href="../05-php-mariadb/">
+      
+      
+        <link rel="next" href="../07-dovecot/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>6. Postfix - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-6-instalacion-y-configuracion-de-postfix" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6. Postfix
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-que-es-smtp-y-como-viaja-un-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Qué es SMTP y cómo viaja un correo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-los-puertos-smtp-recepcion-envio-y-envio-autenticado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Los puertos SMTP: recepción, envío y envío autenticado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Los puertos SMTP: recepción, envío y envío autenticado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-61-comprobar-si-tu-proveedor-permite-el-puerto-25-saliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.1 – Comprobar si tu proveedor permite el puerto 25 saliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-62-obtener-el-certificado-tls-para-mailejemplo1com-y-mailejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.2 – Obtener el certificado TLS para mail.ejemplo1.com y mail.ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-instalacion-de-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Instalación de Postfix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Instalación de Postfix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-63-instalar-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.3 – Instalar Postfix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-estructura-y-arquitectura-de-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Estructura y arquitectura de Postfix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-los-parametros-fundamentales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Los parámetros fundamentales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-configuracion-de-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Configuración de Postfix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 Configuración de Postfix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-64-escribir-la-configuracion-principal-maincf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.4 – Escribir la configuración principal main.cf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-65-configurar-los-alias-del-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.5 – Configurar los alias del sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-66-abrir-el-puerto-25-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.6 – Abrir el puerto 25 en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-pruebas-logs-y-cola-de-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Pruebas, logs y cola de correo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.7 Pruebas, logs y cola de correo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-67-enviar-un-correo-local-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.7 – Enviar un correo local de prueba
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-68-enviar-un-correo-a-una-direccion-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.8 – Enviar un correo a una dirección externa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-69-probar-la-recepcion-con-una-conversacion-smtp-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.9 – Probar la recepción con una conversación SMTP manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-610-leer-los-logs-y-gestionar-la-cola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.10 – Leer los logs y gestionar la cola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68-si-tu-proveedor-bloquea-el-puerto-25-relayhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Si tu proveedor bloquea el puerto 25: relayhost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#69-ejercicios-practicos-del-modulo-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 Ejercicios prácticos del Módulo 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-que-es-smtp-y-como-viaja-un-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Qué es SMTP y cómo viaja un correo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-los-puertos-smtp-recepcion-envio-y-envio-autenticado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Los puertos SMTP: recepción, envío y envío autenticado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Los puertos SMTP: recepción, envío y envío autenticado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-61-comprobar-si-tu-proveedor-permite-el-puerto-25-saliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.1 – Comprobar si tu proveedor permite el puerto 25 saliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-62-obtener-el-certificado-tls-para-mailejemplo1com-y-mailejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.2 – Obtener el certificado TLS para mail.ejemplo1.com y mail.ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-instalacion-de-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Instalación de Postfix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Instalación de Postfix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-63-instalar-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.3 – Instalar Postfix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-estructura-y-arquitectura-de-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Estructura y arquitectura de Postfix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-los-parametros-fundamentales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Los parámetros fundamentales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-configuracion-de-postfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Configuración de Postfix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 Configuración de Postfix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-64-escribir-la-configuracion-principal-maincf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.4 – Escribir la configuración principal main.cf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-65-configurar-los-alias-del-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.5 – Configurar los alias del sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-66-abrir-el-puerto-25-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.6 – Abrir el puerto 25 en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-pruebas-logs-y-cola-de-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Pruebas, logs y cola de correo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.7 Pruebas, logs y cola de correo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-67-enviar-un-correo-local-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.7 – Enviar un correo local de prueba
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-68-enviar-un-correo-a-una-direccion-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.8 – Enviar un correo a una dirección externa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-69-probar-la-recepcion-con-una-conversacion-smtp-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.9 – Probar la recepción con una conversación SMTP manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-610-leer-los-logs-y-gestionar-la-cola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 6.10 – Leer los logs y gestionar la cola
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68-si-tu-proveedor-bloquea-el-puerto-25-relayhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Si tu proveedor bloquea el puerto 25: relayhost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#69-ejercicios-practicos-del-modulo-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 Ejercicios prácticos del Módulo 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/06-postfix.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-6-instalacion-y-configuracion-de-postfix">Módulo 6. Instalación y configuración de Postfix<a class="headerlink" href="#modulo-6-instalacion-y-configuracion-de-postfix" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Comprender cómo viaja un correo electrónico por Internet y qué papel cumple cada componente.</li>
+<li>Distinguir entre recepción (puerto 25), envío autenticado (587 y 465) y relay.</li>
+<li>Instalar Postfix y entender sus archivos y parámetros principales: <code>myhostname</code>, <code>mydomain</code>, <code>myorigin</code>, <code>mydestination</code>, <code>mynetworks</code>, <code>inet_interfaces</code>.</li>
+<li>Configurar TLS y restricciones antispam básicas.</li>
+<li>Enviar correos de prueba, leer los logs y gestionar la cola de correo.</li>
+</ul>
+<h2 id="61-que-es-smtp-y-como-viaja-un-correo">6.1 Qué es SMTP y cómo viaja un correo<a class="headerlink" href="#61-que-es-smtp-y-como-viaja-un-correo" title="Permanent link">&para;</a></h2>
+<p><strong>SMTP</strong> (<em>Simple Mail Transfer Protocol</em>) es el protocolo con el que se <strong>envía</strong> y se <strong>transporta</strong> el correo entre servidores. No sirve para leer el correo: para eso existen IMAP y POP3 (Módulo 7).</p>
+<p>En el correo intervienen varios componentes con nombres propios:</p>
+<table>
+<thead>
+<tr>
+<th>Sigla</th>
+<th>Nombre</th>
+<th>Función</th>
+<th>En nuestro servidor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MUA</td>
+<td><em>Mail User Agent</em></td>
+<td>Programa del usuario para leer y escribir correo.</td>
+<td>Thunderbird, Outlook, el móvil, la app PHP.</td>
+</tr>
+<tr>
+<td>MSA</td>
+<td><em>Mail Submission Agent</em></td>
+<td>Recibe el correo que envían <strong>tus usuarios autenticados</strong>.</td>
+<td>Postfix en los puertos 587 y 465.</td>
+</tr>
+<tr>
+<td>MTA</td>
+<td><em>Mail Transfer Agent</em></td>
+<td>Transporta el correo de servidor a servidor.</td>
+<td>Postfix en el puerto 25.</td>
+</tr>
+<tr>
+<td>MDA</td>
+<td><em>Mail Delivery Agent</em></td>
+<td>Deposita el correo en el buzón del destinatario.</td>
+<td>Dovecot LMTP (Módulo 7).</td>
+</tr>
+<tr>
+<td>MAA</td>
+<td><em>Mail Access Agent</em></td>
+<td>Permite al usuario consultar su buzón.</td>
+<td>Dovecot IMAP/POP3.</td>
+</tr>
+</tbody>
+</table>
+<p>El viaje completo de un correo de <code>info@ejemplo1.com</code> a <code>pepe@gmail.com</code>:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> Thunderbird de info@         Nuestro servidor                       Gmail
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a> ┌────────────┐  587/465   ┌──────────────────┐     25      ┌───────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> │    MUA     │──────────► │ POSTFIX (MSA)    │───────────► │ MTA de Gmail      │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> │            │ usuario +  │ autentica, firma │  consulta   │ comprueba SPF,    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> └────────────┘ contraseña │ DKIM y entrega   │  DNS MX de  │ DKIM, DMARC, PTR  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                (TLS)      └──────────────────┘  gmail.com  └─────────┬─────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                                                                      ▼
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                                                              buzón de pepe@
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a> Y en sentido contrario, de pepe@gmail.com a info@ejemplo1.com:
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a> MTA de Gmail ──25──► consulta MX de ejemplo1.com → mail.ejemplo1.com → POSTFIX (MTA)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>              ──LMTP──► DOVECOT ──► /var/mail/vhosts/ejemplo1.com/info/Maildir
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>              ──IMAP 993──► Thunderbird de info@
+</code></pre></div>
+<p>Una conversación SMTP real es texto plano. Así recibe nuestro servidor un mensaje (C = cliente, S = servidor):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>S: 220 mail.ejemplo1.com ESMTP
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>C: EHLO mail-ed1-f45.google.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>S: 250-mail.ejemplo1.com
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>S: 250-STARTTLS
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>S: 250 SMTPUTF8
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>C: MAIL FROM:&lt;pepe@gmail.com&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>S: 250 2.1.0 Ok
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>C: RCPT TO:&lt;info@ejemplo1.com&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>S: 250 2.1.5 Ok
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>C: DATA
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>S: 354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>C: From: Pepe &lt;pepe@gmail.com&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>C: To: info@ejemplo1.com
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>C: Subject: Hola
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>C:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>C: Texto del mensaje.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>C: .
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>S: 250 2.0.0 Ok: queued as 4ZK3t21XyPz5
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>C: QUIT
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Fíjate en que hay dos remitentes: el del <strong>sobre</strong> (<code>MAIL FROM</code>, también llamado <em>envelope sender</em> o <em>Return-Path</em>), que usan los servidores para devolver errores y comprobar SPF; y el de la <strong>cabecera</strong> (<code>From:</code>), que es el que ve el usuario y el que comprueba DMARC. Entender esta diferencia es clave en el Módulo 9.</p>
+</div>
+<h2 id="62-los-puertos-smtp-recepcion-envio-y-envio-autenticado">6.2 Los puertos SMTP: recepción, envío y envío autenticado<a class="headerlink" href="#62-los-puertos-smtp-recepcion-envio-y-envio-autenticado" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Puerto</th>
+<th>Nombre</th>
+<th>Quién se conecta</th>
+<th>Autenticación</th>
+<th>Cifrado</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>25</strong></td>
+<td>SMTP</td>
+<td>Otros servidores de correo de Internet.</td>
+<td>No (los servidores no tienen contraseña en el tuyo).</td>
+<td>Opcional con STARTTLS.</td>
+<td><strong>Recepción</strong>: correo que llega a tus dominios. Postfix solo acepta mensajes <strong>para tus dominios</strong>; rechaza todo lo demás (evita ser un <em>relay abierto</em>).</td>
+</tr>
+<tr>
+<td><strong>587</strong></td>
+<td>Submission</td>
+<td>Tus usuarios (Thunderbird, móvil, apps).</td>
+<td><strong>Obligatoria</strong> (usuario y contraseña).</td>
+<td>Obligatorio con STARTTLS.</td>
+<td><strong>Envío autenticado</strong>: tus usuarios envían correo a cualquier destino.</td>
+</tr>
+<tr>
+<td><strong>465</strong></td>
+<td>SMTPS (Submissions)</td>
+<td>Tus usuarios.</td>
+<td><strong>Obligatoria</strong>.</td>
+<td>Obligatorio, TLS implícito desde el primer byte.</td>
+<td>Igual que 587, pero con TLS directo. RFC 8314 lo recomienda; ambos son válidos.</td>
+</tr>
+</tbody>
+</table>
+<p>Conceptos:</p>
+<ul>
+<li><strong>STARTTLS</strong>: la conexión empieza en texto plano y el cliente pide pasar a cifrado con el comando <code>STARTTLS</code>.</li>
+<li><strong>TLS implícito</strong>: la conexión es cifrada desde el principio (como HTTPS).</li>
+<li><strong>Relay abierto</strong>: un servidor que acepta y reenvía correo de cualquiera a cualquiera. Los spammers los buscan constantemente; si tu servidor lo fuera, en horas estaría en todas las listas negras. La regla de Postfix será: «acepto correo <strong>para</strong> mis dominios de cualquiera; acepto correo <strong>hacia</strong> cualquier destino solo de usuarios autenticados o del propio servidor».</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Tus usuarios <strong>nunca</strong> deben enviar por el puerto 25. Muchos operadores de acceso a Internet bloquean el 25 saliente de sus clientes domésticos precisamente para frenar el spam de equipos infectados. Los clientes de correo usan siempre 587 o 465.</p>
+</div>
+<h3 id="paso-61-comprobar-si-tu-proveedor-permite-el-puerto-25-saliente">PASO 6.1 – Comprobar si tu proveedor permite el puerto 25 saliente<a class="headerlink" href="#paso-61-comprobar-si-tu-proveedor-permite-el-puerto-25-saliente" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> saber si tu servidor podrá entregar correo a otros servidores.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nc<span class="w"> </span>-vz<span class="w"> </span>-w<span class="w"> </span><span class="m">5</span><span class="w"> </span>gmail-smtp-in.l.google.com<span class="w"> </span><span class="m">25</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>nc</code> (netcat) abre una conexión; <code>-v</code> muestra detalles, <code>-z</code> solo comprueba si el puerto responde sin enviar datos, <code>-w 5</code> espera como máximo 5 segundos. <code>gmail-smtp-in.l.google.com</code> es uno de los servidores de recepción de Gmail.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Connection to gmail-smtp-in.l.google.com (142.250.153.27) 25 port [tcp/smtp] succeeded!
+</code></pre></div>
+<p><strong>Errores habituales:</strong> si obtienes <code>Connection timed out</code>, tu proveedor bloquea el 25 saliente. Opciones: solicitar el desbloqueo (muchos lo hacen tras verificar tu cuenta), cambiar de proveedor o configurar un <em>relayhost</em> (sección 6.7). Podrás seguir el manual igualmente: la recepción no depende de esto.</p>
+<p><strong>Siguiente paso:</strong> obtener el certificado del servidor de correo.</p>
+<h3 id="paso-62-obtener-el-certificado-tls-para-mailejemplo1com-y-mailejemplo2com">PASO 6.2 – Obtener el certificado TLS para mail.ejemplo1.com y mail.ejemplo2.com<a class="headerlink" href="#paso-62-obtener-el-certificado-tls-para-mailejemplo1com-y-mailejemplo2com" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> tener un certificado válido que Postfix y Dovecot presentarán a clientes y servidores.</p>
+<p><strong>Explicación:</strong> los clientes de correo de ejemplo1 se conectarán a <code>mail.ejemplo1.com</code> y los de ejemplo2 a <code>mail.ejemplo2.com</code>. Un único certificado con ambos nombres sirve para los dos. Lo validamos a través del sitio comodín de Apache (PASO 3.4), cuyo DocumentRoot es <code>/var/www/html</code>.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/html<span class="w"> </span>-d<span class="w"> </span>mail.ejemplo1.com<span class="w"> </span>-d<span class="w"> </span>mail.ejemplo2.com<span class="w"> </span>--email<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>--agree-tos<span class="w"> </span>--no-eff-email
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Successfully received certificate.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Certificate is saved at: /etc/letsencrypt/live/mail.ejemplo1.com/fullchain.pem
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Key is saved at:         /etc/letsencrypt/live/mail.ejemplo1.com/privkey.pem
+</code></pre></div>
+<p><strong>Comprobación:</strong> <code>sudo certbot certificates</code> debe mostrar un tercer certificado <code>mail.ejemplo1.com</code> con los dominios <code>mail.ejemplo1.com mail.ejemplo2.com</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Laboratorio sin dominio real:</strong> usa el certificado autofirmado. En los archivos de Postfix y Dovecot de este manual sustituye <code>/etc/letsencrypt/live/mail.ejemplo1.com/fullchain.pem</code> por <code>/etc/ssl/certs/ssl-cert-snakeoil.pem</code> y <code>/etc/letsencrypt/live/mail.ejemplo1.com/privkey.pem</code> por <code>/etc/ssl/private/ssl-cert-snakeoil.key</code>. Los clientes de correo te pedirán aceptar una excepción de seguridad.</p>
+</div>
+<p><strong>Siguiente paso:</strong> instalar Postfix.</p>
+<h2 id="63-instalacion-de-postfix">6.3 Instalación de Postfix<a class="headerlink" href="#63-instalacion-de-postfix" title="Permanent link">&para;</a></h2>
+<h3 id="paso-63-instalar-postfix">PASO 6.3 – Instalar Postfix<a class="headerlink" href="#paso-63-instalar-postfix" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> instalar el servidor SMTP y una utilidad para enviar correos desde la consola.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postfix<span class="w"> </span>bsd-mailx
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>postfix</code> es el servidor; <code>bsd-mailx</code> aporta el comando <code>mail</code> para enviar y leer correo desde el terminal.</p>
+<p>Durante la instalación aparece un asistente de configuración (debconf):</p>
+<table>
+<thead>
+<tr>
+<th>Pantalla</th>
+<th>Respuesta</th>
+<th>Explicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General type of mail configuration</td>
+<td><strong>Internet Site</strong></td>
+<td>El servidor envía y recibe directamente con SMTP.</td>
+</tr>
+<tr>
+<td>System mail name</td>
+<td><strong>ejemplo1.com</strong></td>
+<td>Dominio que se añade al correo generado localmente (se guarda en <code>/etc/mailname</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>Si se abre alguna pantalla más (destinos, redes...), acepta el valor por defecto: sustituiremos la configuración completa en el paso siguiente. Si te equivocas, puedes repetir el asistente con <code>sudo dpkg-reconfigure postfix</code>.</p>
+<p><strong>Resultado esperado:</strong> termina con <code>Postfix (main.cf) is now set up with a default configuration.</code></p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>postconf<span class="w"> </span>mail_version
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>postfix@-<span class="w"> </span>--no-pager
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mail_version = 3.8.6
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>● postfix@-.service - Postfix Mail Transport Agent (instance -)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>     Active: active (running) since ...
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>En Ubuntu, <code>postfix.service</code> es solo un «envoltorio» que arranca las instancias. La instancia real se llama <code>postfix@-.service</code>. Para reiniciar puedes usar indistintamente <code>systemctl restart postfix</code>, pero para ver el estado detallado y los errores usa <code>postfix@-</code>.</p>
+</div>
+<p><strong>Siguiente paso:</strong> conocer la estructura de Postfix.</p>
+<h2 id="64-estructura-y-arquitectura-de-postfix">6.4 Estructura y arquitectura de Postfix<a class="headerlink" href="#64-estructura-y-arquitectura-de-postfix" title="Permanent link">&para;</a></h2>
+<p>Postfix no es un único programa, sino un conjunto de pequeños procesos especializados coordinados por un proceso <strong>master</strong>. Este diseño lo hace rápido y seguro: cada proceso tiene los privilegios justos y muchos se ejecutan encerrados (<em>chroot</em>) en <code>/var/spool/postfix</code>.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>                    ┌────────────── master (proceso principal, root) ───────────────┐
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Internet :25 ───► │ smtpd ──► cleanup ──► cola incoming ──► qmgr (gestor de cola) │
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Usuarios :587 ──► │ smtpd                                      │                  │
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  PHP/sendmail ───► │ pickup ──► cleanup ─┘                      ├──► smtp  ──► Internet
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>                    │                                            ├──► lmtp  ──► Dovecot
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>                    │                                            └──► local ──► /var/mail
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>                    └──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Archivo o carpeta</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/postfix/main.cf</code></td>
+<td>Configuración principal: parámetros <code>nombre = valor</code>.</td>
+</tr>
+<tr>
+<td><code>/etc/postfix/master.cf</code></td>
+<td>Qué servicios arrancan (smtpd en 25, 587, 465...) y con qué opciones.</td>
+</tr>
+<tr>
+<td><code>/etc/aliases</code></td>
+<td>Alias de las cuentas locales del sistema (root, postmaster...).</td>
+</tr>
+<tr>
+<td><code>/etc/mailname</code></td>
+<td>Dominio de correo del sistema.</td>
+</tr>
+<tr>
+<td><code>/var/spool/postfix/</code></td>
+<td>Colas de correo y sockets (<code>private/</code>, <code>public/</code>).</td>
+</tr>
+<tr>
+<td><code>/var/log/mail.log</code></td>
+<td>Log de todo el correo (lo escribe rsyslog).</td>
+</tr>
+</tbody>
+</table>
+<p>Herramientas de administración:</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postconf -n</code></td>
+<td>Muestra solo los parámetros que <strong>tú</strong> has cambiado respecto a los valores por defecto.</td>
+</tr>
+<tr>
+<td><code>postconf -d parametro</code></td>
+<td>Muestra el valor por defecto de un parámetro.</td>
+</tr>
+<tr>
+<td><code>postconf parametro</code></td>
+<td>Muestra el valor actual.</td>
+</tr>
+<tr>
+<td><code>sudo postconf -e 'param = valor'</code></td>
+<td>Modifica un parámetro en <code>main.cf</code>.</td>
+</tr>
+<tr>
+<td><code>sudo postfix check</code></td>
+<td>Revisa configuración, permisos y archivos.</td>
+</tr>
+<tr>
+<td><code>sudo postmap archivo</code></td>
+<td>Compila un archivo de tabla a formato <code>.db</code> (lo verás en el Módulo 8).</td>
+</tr>
+<tr>
+<td><code>sudo newaliases</code></td>
+<td>Compila <code>/etc/aliases</code>.</td>
+</tr>
+<tr>
+<td><code>mailq</code> o <code>postqueue -p</code></td>
+<td>Muestra la cola de correo pendiente.</td>
+</tr>
+<tr>
+<td><code>sudo postqueue -f</code></td>
+<td>Fuerza el reintento inmediato de toda la cola.</td>
+</tr>
+<tr>
+<td><code>sudo postsuper -d ID</code></td>
+<td>Borra un mensaje de la cola (<code>-d ALL</code> borra todos).</td>
+</tr>
+<tr>
+<td><code>sudo postcat -q ID</code></td>
+<td>Muestra el contenido de un mensaje en cola.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="65-los-parametros-fundamentales">6.5 Los parámetros fundamentales<a class="headerlink" href="#65-los-parametros-fundamentales" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Significado</th>
+<th>Valor en nuestro servidor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>myhostname</code></td>
+<td>Nombre completo (FQDN) del servidor. Se usa en el saludo SMTP (<code>220 mail.ejemplo1.com</code>) y en el <code>EHLO</code> al enviar. <strong>Debe</strong> coincidir con el registro A y con el PTR.</td>
+<td><code>mail.ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>mydomain</code></td>
+<td>Dominio del servidor. Por defecto es <code>myhostname</code> sin la primera parte.</td>
+<td><code>ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>myorigin</code></td>
+<td>Dominio que se añade a los correos generados localmente sin dominio (por ejemplo, el que envía <code>cron</code> como <code>root</code>).</td>
+<td><code>$mydomain</code> → <code>root@ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>mydestination</code></td>
+<td>Dominios cuyos destinatarios son <strong>cuentas del sistema Linux</strong> (entrega local en <code>/var/mail/usuario</code>).</td>
+<td><code>$myhostname, localhost.$mydomain, localhost</code></td>
+</tr>
+<tr>
+<td><code>mynetworks</code></td>
+<td>Redes «de confianza» que pueden enviar a cualquier destino sin autenticarse.</td>
+<td>Solo el propio servidor: <code>127.0.0.0/8</code> y <code>[::1]/128</code>.</td>
+</tr>
+<tr>
+<td><code>inet_interfaces</code></td>
+<td>En qué interfaces de red escucha Postfix.</td>
+<td><code>all</code> (necesario para recibir de Internet).</td>
+</tr>
+<tr>
+<td><code>inet_protocols</code></td>
+<td>IPv4, IPv6 o ambos.</td>
+<td><code>all</code> (o <code>ipv4</code> si tu servidor no tiene IPv6 funcional).</td>
+</tr>
+<tr>
+<td><code>relayhost</code></td>
+<td>Servidor intermediario por el que enviar todo el correo saliente.</td>
+<td>Vacío (entrega directa).</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p><strong>Muy importante:</strong> <code>ejemplo1.com</code> y <code>ejemplo2.com</code> <strong>no</strong> se ponen en <code>mydestination</code>. Esos dominios tendrán buzones <strong>virtuales</strong> (Módulo 8), gestionados por Dovecot y desvinculados de las cuentas Linux. Un dominio nunca debe aparecer a la vez en <code>mydestination</code> y en <code>virtual_mailbox_domains</code>. En <code>mydestination</code> solo dejamos el nombre del propio servidor, para el correo administrativo del sistema.</p>
+</div>
+<p>Tipos de dominio que Postfix sabe gestionar:</p>
+<table>
+<thead>
+<tr>
+<th>Clase de dominio</th>
+<th>Parámetro</th>
+<th>Buzones</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local</td>
+<td><code>mydestination</code></td>
+<td>Cuentas Linux (<code>/var/mail/usuario</code> o <code>~/Maildir</code>).</td>
+<td>Correo del sistema (root, cron).</td>
+</tr>
+<tr>
+<td>Alias virtual</td>
+<td><code>virtual_alias_domains</code></td>
+<td>Ninguno: todo se reenvía a otras direcciones.</td>
+<td>Dominios que solo redirigen.</td>
+</tr>
+<tr>
+<td><strong>Buzón virtual</strong></td>
+<td><code>virtual_mailbox_domains</code></td>
+<td>Buzones independientes de las cuentas Linux.</td>
+<td><strong>Nuestros dominios de clientes.</strong></td>
+</tr>
+<tr>
+<td>Relay</td>
+<td><code>relay_domains</code></td>
+<td>En otro servidor.</td>
+<td>Servidor de respaldo (MX secundario).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="66-configuracion-de-postfix">6.6 Configuración de Postfix<a class="headerlink" href="#66-configuracion-de-postfix" title="Permanent link">&para;</a></h2>
+<h3 id="paso-64-escribir-la-configuracion-principal-maincf">PASO 6.4 – Escribir la configuración principal main.cf<a class="headerlink" href="#paso-64-escribir-la-configuracion-principal-maincf" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> dejar <code>main.cf</code> con una configuración limpia, comentada y segura.</p>
+<p><strong>Explicación:</strong> en lugar de modificar parámetro a parámetro, sustituimos el archivo por una versión completa que entiendes línea por línea. Primero guardamos una copia del original.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/postfix/main.cf<span class="w"> </span>/etc/postfix/main.cf.original
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/postfix/main.cf
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/postfix/main.cf</code> (sustituye todo el contenido; versión del Módulo 6):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># =====================================================================
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>#  /etc/postfix/main.cf  -  mail.ejemplo1.com
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>#  Versión del Módulo 6: SMTP básico con TLS.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>#  (En los módulos 7, 8 y 9 se añadirán Dovecot, buzones virtuales y DKIM)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a># =====================================================================
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a># --- Generales ---------------------------------------------------------
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>compatibility_level = 3.6
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>smtpd_banner = $myhostname ESMTP
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>biff = no
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>append_dot_mydomain = no
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>readme_directory = no
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a># --- Identidad del servidor -------------------------------------------
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>myhostname = mail.ejemplo1.com
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>mydomain = ejemplo1.com
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>myorigin = $mydomain
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a># Solo el propio servidor es destino LOCAL (cuentas del sistema)
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>mydestination = $myhostname, localhost.$mydomain, localhost
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a># Redes de confianza: solo el propio servidor
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>inet_interfaces = all
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>inet_protocols = all
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>relayhost =
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a># --- Alias y límites ---------------------------------------------------
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>alias_maps = hash:/etc/aliases
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>alias_database = hash:/etc/aliases
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>recipient_delimiter = +
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>mailbox_size_limit = 0
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a># Tamaño máximo de un mensaje: 50 MB
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>message_size_limit = 52428800
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a># --- TLS cuando otros se conectan a nosotros (smtpd) -------------------
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>smtpd_tls_cert_file = /etc/letsencrypt/live/mail.ejemplo1.com/fullchain.pem
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>smtpd_tls_key_file = /etc/letsencrypt/live/mail.ejemplo1.com/privkey.pem
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>smtpd_tls_security_level = may
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>smtpd_tls_auth_only = yes
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>smtpd_tls_protocols = &gt;=TLSv1.2
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>smtpd_tls_mandatory_protocols = &gt;=TLSv1.2
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>smtpd_tls_loglevel = 1
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a># --- TLS cuando nosotros enviamos a otros (smtp) -----------------------
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>smtp_tls_security_level = may
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>smtp_tls_CApath = /etc/ssl/certs
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>smtp_tls_loglevel = 1
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a>
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a># --- Restricciones (antispam y anti relay abierto) ---------------------
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a>smtpd_helo_required = yes
+<a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a>disable_vrfy_command = yes
+<a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a>smtpd_helo_restrictions =
+<a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a>    permit_mynetworks,
+<a id="__codelineno-11-55" name="__codelineno-11-55" href="#__codelineno-11-55"></a>    permit_sasl_authenticated,
+<a id="__codelineno-11-56" name="__codelineno-11-56" href="#__codelineno-11-56"></a>    reject_invalid_helo_hostname,
+<a id="__codelineno-11-57" name="__codelineno-11-57" href="#__codelineno-11-57"></a>    reject_non_fqdn_helo_hostname
+<a id="__codelineno-11-58" name="__codelineno-11-58" href="#__codelineno-11-58"></a>smtpd_sender_restrictions =
+<a id="__codelineno-11-59" name="__codelineno-11-59" href="#__codelineno-11-59"></a>    permit_mynetworks,
+<a id="__codelineno-11-60" name="__codelineno-11-60" href="#__codelineno-11-60"></a>    permit_sasl_authenticated,
+<a id="__codelineno-11-61" name="__codelineno-11-61" href="#__codelineno-11-61"></a>    reject_non_fqdn_sender,
+<a id="__codelineno-11-62" name="__codelineno-11-62" href="#__codelineno-11-62"></a>    reject_unknown_sender_domain
+<a id="__codelineno-11-63" name="__codelineno-11-63" href="#__codelineno-11-63"></a>smtpd_relay_restrictions =
+<a id="__codelineno-11-64" name="__codelineno-11-64" href="#__codelineno-11-64"></a>    permit_mynetworks,
+<a id="__codelineno-11-65" name="__codelineno-11-65" href="#__codelineno-11-65"></a>    permit_sasl_authenticated,
+<a id="__codelineno-11-66" name="__codelineno-11-66" href="#__codelineno-11-66"></a>    defer_unauth_destination
+<a id="__codelineno-11-67" name="__codelineno-11-67" href="#__codelineno-11-67"></a>smtpd_recipient_restrictions =
+<a id="__codelineno-11-68" name="__codelineno-11-68" href="#__codelineno-11-68"></a>    permit_mynetworks,
+<a id="__codelineno-11-69" name="__codelineno-11-69" href="#__codelineno-11-69"></a>    permit_sasl_authenticated,
+<a id="__codelineno-11-70" name="__codelineno-11-70" href="#__codelineno-11-70"></a>    reject_unauth_destination,
+<a id="__codelineno-11-71" name="__codelineno-11-71" href="#__codelineno-11-71"></a>    reject_non_fqdn_recipient,
+<a id="__codelineno-11-72" name="__codelineno-11-72" href="#__codelineno-11-72"></a>    reject_unknown_recipient_domain
+</code></pre></div>
+<p>Análisis por bloques:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compatibility_level = 3.6</code></td>
+<td>Activa los valores por defecto seguros de Postfix 3.6 en adelante.</td>
+</tr>
+<tr>
+<td><code>smtpd_banner = $myhostname ESMTP</code></td>
+<td>Saludo del servidor. No revela la versión de Postfix ni el sistema operativo.</td>
+</tr>
+<tr>
+<td><code>biff = no</code></td>
+<td>Desactiva un antiguo servicio de notificación local.</td>
+</tr>
+<tr>
+<td><code>append_dot_mydomain = no</code></td>
+<td>No completa direcciones incompletas (es tarea del cliente).</td>
+</tr>
+<tr>
+<td><code>recipient_delimiter = +</code></td>
+<td>Permite direcciones como <code>info+facturas@ejemplo1.com</code>, que se entregan a <code>info</code>.</td>
+</tr>
+<tr>
+<td><code>smtpd_tls_security_level = may</code></td>
+<td>En el puerto 25, TLS se ofrece pero no se exige (si lo exigiéramos, rechazaríamos correo de servidores antiguos).</td>
+</tr>
+<tr>
+<td><code>smtpd_tls_auth_only = yes</code></td>
+<td>Nunca se aceptan contraseñas sin cifrar.</td>
+</tr>
+<tr>
+<td><code>smtpd_tls_protocols = &gt;=TLSv1.2</code></td>
+<td>Solo TLS 1.2 y 1.3.</td>
+</tr>
+<tr>
+<td><code>smtp_tls_security_level = may</code></td>
+<td>Al enviar, cifra si el destino lo admite.</td>
+</tr>
+<tr>
+<td><code>smtp_tls_CApath</code></td>
+<td>Autoridades de confianza para verificar los certificados de otros servidores.</td>
+</tr>
+<tr>
+<td><code>smtpd_helo_required</code></td>
+<td>El cliente debe presentarse con HELO/EHLO.</td>
+</tr>
+<tr>
+<td><code>disable_vrfy_command</code></td>
+<td>Desactiva <code>VRFY</code>, que permitiría a un spammer averiguar qué direcciones existen.</td>
+</tr>
+<tr>
+<td><code>reject_invalid_helo_hostname</code> / <code>reject_non_fqdn_helo_hostname</code></td>
+<td>Rechaza clientes que se presentan con nombres mal formados. Los servidores legítimos usan un FQDN.</td>
+</tr>
+<tr>
+<td><code>reject_non_fqdn_sender</code> / <code>reject_unknown_sender_domain</code></td>
+<td>Rechaza remitentes con dominios incompletos o inexistentes en el DNS.</td>
+</tr>
+<tr>
+<td><code>smtpd_relay_restrictions</code></td>
+<td>La regla anti relay abierto: permite enviar a cualquier destino solo a <code>mynetworks</code> y a usuarios autenticados (SASL); al resto solo les deja entregar a nuestros dominios.</td>
+</tr>
+<tr>
+<td><code>reject_unauth_destination</code></td>
+<td>Rechaza destinatarios que no son nuestros si el cliente no está autorizado.</td>
+</tr>
+<tr>
+<td><code>permit_sasl_authenticated</code></td>
+<td>Autoriza a usuarios autenticados. Aún no tenemos SASL (llega en el Módulo 7), pero dejarlo no hace daño.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Las restricciones se evalúan <strong>en orden</strong> y la primera que da un veredicto (<code>permit</code> o <code>reject</code>) gana. Por eso <code>permit_mynetworks</code> y <code>permit_sasl_authenticated</code> van siempre primero: tus usuarios no deben sufrir los filtros antispam pensados para desconocidos.</p>
+</div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>postfix<span class="w"> </span>check
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>postconf<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+<p><code>postfix check</code> no debe mostrar nada. <code>postconf -n</code> debe reflejar tus valores.</p>
+<p><strong>Errores habituales:</strong> <code>postconf: warning: /etc/postfix/main.cf, line N: missing '=' after attribute name</code> indica una línea mal escrita. Recuerda: las líneas de continuación (como los elementos de las restricciones) <strong>deben empezar con espacios</strong>; una línea que empieza sin espacio se interpreta como un parámetro nuevo.</p>
+<p><strong>Siguiente paso:</strong> los alias del sistema.</p>
+<h3 id="paso-65-configurar-los-alias-del-sistema">PASO 6.5 – Configurar los alias del sistema<a class="headerlink" href="#paso-65-configurar-los-alias-del-sistema" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que el correo dirigido a <code>root</code> y a <code>postmaster</code> del servidor llegue al administrador.</p>
+<p><strong>Explicación:</strong> los servicios del sistema (cron, actualizaciones automáticas, Fail2ban, mdadm...) envían avisos a <code>root</code>. Nadie lee el buzón de root: los redirigimos al usuario <code>sysadmin</code>. En el Módulo 8 cambiaremos este destino por una dirección virtual real.</p>
+<p><strong>Archivo:</strong> <code>/etc/aliases</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Alias del sistema: formato "alias: destino"
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a># Después de modificar este archivo ejecuta: sudo newaliases
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>postmaster:    root
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>abuse:         root
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>webmaster:     root
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>www-data:      root
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>root:          sysadmin
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>newaliases
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>postfix
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>newaliases</code> compila <code>/etc/aliases</code> en <code>/etc/aliases.db</code>, el formato que lee Postfix. Si editas el archivo y olvidas este comando, los cambios no se aplican.</p>
+<p><strong>Siguiente paso:</strong> abrir el puerto 25 y probar.</p>
+<h3 id="paso-66-abrir-el-puerto-25-en-el-cortafuegos">PASO 6.6 – Abrir el puerto 25 en el cortafuegos<a class="headerlink" href="#paso-66-abrir-el-puerto-25-en-el-cortafuegos" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">25</span>/tcp<span class="w"> </span>comment<span class="w"> </span><span class="s1">'SMTP recepcion'</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">':25 '</span>
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Rule added
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Rule added (v6)
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>LISTEN 0  100   0.0.0.0:25   0.0.0.0:*  users:(("master",pid=6012,fd=13))
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>LISTEN 0  100      [::]:25      [::]:*  users:(("master",pid=6012,fd=14))
+</code></pre></div>
+<p>Postfix escucha en todas las interfaces (<code>0.0.0.0</code> y <code>[::]</code>) en el puerto 25.</p>
+<h2 id="67-pruebas-logs-y-cola-de-correo">6.7 Pruebas, logs y cola de correo<a class="headerlink" href="#67-pruebas-logs-y-cola-de-correo" title="Permanent link">&para;</a></h2>
+<h3 id="paso-67-enviar-un-correo-local-de-prueba">PASO 6.7 – Enviar un correo local de prueba<a class="headerlink" href="#paso-67-enviar-un-correo-local-de-prueba" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> comprobar la entrega local.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Este es el cuerpo del mensaje de prueba."</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">"Prueba local 1"</span><span class="w"> </span>root
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">15</span><span class="w"> </span>/var/log/mail.log
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>mail -s "asunto" destinatario</code> envía lo que recibe por la entrada estándar. Como <code>root</code> es alias de <code>sysadmin</code>, el mensaje debe llegar al buzón de <code>sysadmin</code>.</p>
+<p>Resultado esperado en el log (cada línea comparte un <strong>ID de cola</strong>, aquí <code>5B2A13E0F1</code>, que te permite seguir el mensaje):</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>postfix/pickup[6100]: 5B2A13E0F1: uid=1000 from=&lt;sysadmin&gt;
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>postfix/cleanup[6170]: 5B2A13E0F1: message-id=&lt;20261109001501.5B2A13E0F1@mail.ejemplo1.com&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>postfix/qmgr[6101]: 5B2A13E0F1: from=&lt;sysadmin@ejemplo1.com&gt;, size=412, nrcpt=1 (queue active)
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>postfix/local[6172]: 5B2A13E0F1: to=&lt;sysadmin@mail.ejemplo1.com&gt;, orig_to=&lt;root&gt;, relay=local, delay=0.03, status=sent (delivered to mailbox)
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>postfix/qmgr[6101]: 5B2A13E0F1: removed
+</code></pre></div>
+<p><strong>Comprobación:</strong> lee el correo con el comando <code>mail</code> (como <code>sysadmin</code>, sin sudo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>mail
+</code></pre></div>
+<p>Verás la lista de mensajes; escribe el número para leerlo y <code>q</code> para salir. El buzón local está en <code>/var/mail/sysadmin</code>.</p>
+<p><strong>Errores habituales:</strong> <code>status=bounced (unknown user: "root")</code> indica que no ejecutaste <code>newaliases</code>.</p>
+<h3 id="paso-68-enviar-un-correo-a-una-direccion-externa">PASO 6.8 – Enviar un correo a una dirección externa<a class="headerlink" href="#paso-68-enviar-un-correo-a-una-direccion-externa" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> comprobar que el servidor entrega correo en Internet.</p>
+<p><strong>Comando:</strong> usa una dirección tuya de Gmail, Outlook u otro proveedor:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Prueba de envío desde mail.ejemplo1.com"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">"Prueba externa"</span><span class="w"> </span>-r<span class="w"> </span>sysadmin@mail.ejemplo1.com<span class="w"> </span>tu-direccion@gmail.com
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/mail.log
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>-r</code> fija el remitente del sobre. Usamos <code>sysadmin@mail.ejemplo1.com</code> porque es una dirección local que sí existe y puede recibir respuestas.</p>
+<p>Resultado esperado en el log:</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>postfix/smtp[6230]: Trusted TLS connection established to gmail-smtp-in.l.google.com[142.250.153.27]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>postfix/smtp[6230]: 8C1D23E0F4: to=&lt;tu-direccion@gmail.com&gt;, relay=gmail-smtp-in.l.google.com[142.250.153.27]:25, delay=1.2, dsn=2.0.0, status=sent (250 2.0.0 OK  1762647301 ...)
+</code></pre></div>
+<p><code>status=sent</code> con <code>250 2.0.0 OK</code> significa que Gmail <strong>aceptó</strong> el mensaje. Pulsa Ctrl+C para salir.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Que Gmail lo acepte no significa que llegue a la bandeja de entrada. Sin SPF, DKIM, DMARC y PTR (Módulo 9) es muy probable que acabe en spam o que sea rechazado con un mensaje como <code>550-5.7.1 ... does not meet IPv6 sending guidelines regarding PTR records and authentication</code>. Es normal en este punto.</p>
+</div>
+<p><strong>Errores habituales:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Mensaje en mail.log</th>
+<th>Significado</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect to ...:25: Connection timed out</code> + <code>status=deferred</code></td>
+<td>El puerto 25 saliente está bloqueado.</td>
+<td>PASO 6.1 y sección 6.8 (relayhost).</td>
+</tr>
+<tr>
+<td><code>status=bounced ... 550-5.7.1 ... PTR records</code></td>
+<td>Falta el DNS inverso.</td>
+<td>Módulo 9.</td>
+</tr>
+<tr>
+<td><code>status=deferred ... 421-4.7.0 ... unusual rate of unsolicited mail</code></td>
+<td>La reputación de tu IP es mala o nueva.</td>
+<td>Configura todo el Módulo 9 y envía poco volumen al principio.</td>
+</tr>
+<tr>
+<td><code>Network is unreachable</code> en direcciones IPv6</td>
+<td>El servidor no tiene IPv6 funcional.</td>
+<td><code>sudo postconf -e 'inet_protocols = ipv4'</code> y <code>sudo systemctl restart postfix</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-69-probar-la-recepcion-con-una-conversacion-smtp-manual">PASO 6.9 – Probar la recepción con una conversación SMTP manual<a class="headerlink" href="#paso-69-probar-la-recepcion-con-una-conversacion-smtp-manual" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> comprobar que el servidor recibe correo desde Internet y ver el protocolo con tus propios ojos.</p>
+<p><strong>Explicación:</strong> aún no hemos creado los registros MX, pero cuando un dominio no tiene MX, los servidores usan su registro A. Como <code>mail.ejemplo1.com</code> tiene registro A, podemos enviar a <code>sysadmin@mail.ejemplo1.com</code>. Haremos la conversación a mano desde <strong>tu ordenador</strong> (si tu conexión doméstica bloquea el 25, hazla desde otro servidor o desde el propio servidor contra su IP pública).</p>
+<p><strong>Comando (en tu ordenador con Linux o macOS; en Windows instala <code>ncat</code> del paquete Nmap o usa <code>telnet</code>):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>nc<span class="w"> </span>mail.ejemplo1.com<span class="w"> </span><span class="m">25</span>
+</code></pre></div>
+<p>Escribe las líneas marcadas con C (sin la C) y observa las respuestas:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>S: 220 mail.ejemplo1.com ESMTP
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>C: EHLO prueba.ejemplo.org
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>S: 250-mail.ejemplo1.com
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>S: 250-PIPELINING
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>S: 250-SIZE 52428800
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>S: 250-ETRN
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>S: 250-STARTTLS
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>S: 250-ENHANCEDSTATUSCODES
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>S: 250-8BITMIME
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>S: 250-DSN
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>S: 250-SMTPUTF8
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>S: 250 CHUNKING
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>C: MAIL FROM:&lt;prueba@gmail.com&gt;
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>S: 250 2.1.0 Ok
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>C: RCPT TO:&lt;sysadmin@mail.ejemplo1.com&gt;
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>S: 250 2.1.5 Ok
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>C: DATA
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>S: 354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>C: Subject: Prueba manual
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>C:
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>C: Hola desde una conversacion SMTP manual.
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>C: .
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>S: 250 2.0.0 Ok: queued as 1F0A43E0F7
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>C: QUIT
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>S: 221 2.0.0 Bye
+</code></pre></div>
+<p><strong>Comprobación:</strong> ejecuta <code>mail</code> como <code>sysadmin</code> en el servidor; el mensaje debe estar ahí.</p>
+<p>Ahora comprueba que <strong>no</strong> eres un relay abierto. Repite la conversación pero con un destinatario externo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>C: RCPT TO:&lt;alguien@gmail.com&gt;
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>S: 454 4.7.1 &lt;alguien@gmail.com&gt;: Relay access denied
+</code></pre></div>
+<p>Ese rechazo es la prueba de que el servidor solo acepta correo para sus propios destinos cuando el cliente no está autenticado.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>También puedes enviar un correo desde tu Gmail a <code>sysadmin@mail.ejemplo1.com</code> y verlo llegar con <code>mail</code>.</p>
+</div>
+<h3 id="paso-610-leer-los-logs-y-gestionar-la-cola">PASO 6.10 – Leer los logs y gestionar la cola<a class="headerlink" href="#paso-610-leer-los-logs-y-gestionar-la-cola" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> dominar las herramientas de diagnóstico del correo.</p>
+<p>Comandos más útiles:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Seguir el log en tiempo real</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/mail.log
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># Buscar todo lo relacionado con un mensaje por su ID de cola</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>sudo<span class="w"> </span>grep<span class="w"> </span>8C1D23E0F4<span class="w"> </span>/var/log/mail.log
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># Buscar los envíos a una dirección</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>sudo<span class="w"> </span>grep<span class="w"> </span><span class="s1">'to=&lt;tu-direccion@gmail.com&gt;'</span><span class="w"> </span>/var/log/mail.log
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Ver sólo errores y avisos</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>sudo<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'warning|error|fatal|reject'</span><span class="w"> </span>/var/log/mail.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># También desde systemd</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>postfix@-<span class="w"> </span>--since<span class="w"> </span><span class="s2">"1 hour ago"</span><span class="w"> </span>--no-pager
+</code></pre></div>
+<p>Cola de correo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>mailq
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>sudo<span class="w"> </span>postcat<span class="w"> </span>-q<span class="w"> </span>8C1D23E0F4<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>sudo<span class="w"> </span>postqueue<span class="w"> </span>-f
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>sudo<span class="w"> </span>postsuper<span class="w"> </span>-d<span class="w"> </span>8C1D23E0F4
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>sudo<span class="w"> </span>postsuper<span class="w"> </span>-d<span class="w"> </span>ALL<span class="w"> </span>deferred
+</code></pre></div>
+<p>Análisis: <code>mailq</code> lista los mensajes pendientes con el motivo del retraso; <code>postcat -q</code> muestra un mensaje concreto; <code>postqueue -f</code> fuerza el reintento; <code>postsuper -d</code> borra un mensaje (o todos los diferidos con <code>ALL deferred</code>). Postfix reintenta automáticamente los mensajes diferidos durante 5 días (<code>maximal_queue_lifetime</code>) antes de devolverlos al remitente.</p>
+<p>Estados de entrega en el log:</p>
+<table>
+<thead>
+<tr>
+<th>Estado</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status=sent</code></td>
+<td>Entregado (al buzón local o aceptado por el servidor remoto).</td>
+</tr>
+<tr>
+<td><code>status=deferred</code></td>
+<td>Error temporal (código 4xx): se reintentará.</td>
+</tr>
+<tr>
+<td><code>status=bounced</code></td>
+<td>Error permanente (código 5xx): se devuelve al remitente.</td>
+</tr>
+<tr>
+<td><code>status=expired</code></td>
+<td>Se agotó el tiempo de reintentos.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="68-si-tu-proveedor-bloquea-el-puerto-25-relayhost">6.8 Si tu proveedor bloquea el puerto 25: relayhost<a class="headerlink" href="#68-si-tu-proveedor-bloquea-el-puerto-25-relayhost" title="Permanent link">&para;</a></h2>
+<p>Si no puedes enviar directamente, puedes entregar todo el correo saliente a un servicio de envío (por ejemplo, el <em>smarthost</em> de tu proveedor o un servicio transaccional) que lo reenvía por ti. La recepción por el puerto 25 no cambia. La configuración general es:</p>
+<p><strong>Archivo:</strong> <code>/etc/postfix/sasl_passwd</code> (nuevo; los datos te los da el servicio de relay):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>[smtp.servicio-relay.example]:587 usuario_relay:&lt;CONTRASEÑA_RELAY&gt;
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/postfix/sasl_passwd
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>sudo<span class="w"> </span>postmap<span class="w"> </span>/etc/postfix/sasl_passwd
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">'relayhost = [smtp.servicio-relay.example]:587'</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">'smtp_sasl_auth_enable = yes'</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">'smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd'</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">'smtp_sasl_security_options = noanonymous'</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">'smtp_tls_security_level = encrypt'</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>postfix
+</code></pre></div>
+<p>Análisis: los corchetes <code>[...]</code> indican a Postfix que no busque registros MX de ese nombre. <code>postmap</code> compila el archivo de contraseñas. <code>smtp_tls_security_level = encrypt</code> obliga a cifrar la conexión con el relay, porque por ella viaja tu contraseña. Con un relay, el registro SPF (Módulo 9) debe incluir también los servidores del servicio de relay, según indique su documentación.</p>
+<h2 id="69-ejercicios-practicos-del-modulo-6">6.9 Ejercicios prácticos del Módulo 6<a class="headerlink" href="#69-ejercicios-practicos-del-modulo-6" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Ejecuta <code>postconf -d myorigin</code> y <code>postconf myorigin</code>. Explica la diferencia.</li>
+<li>Envía un correo a una dirección inexistente de tu propio servidor (<code>noexiste@mail.ejemplo1.com</code>) y sigue en el log el rebote (<code>status=bounced</code>). ¿Dónde llega la notificación de error?</li>
+<li>Repite la conversación SMTP manual pero usando <code>EHLO prueba</code> (sin dominio). ¿Qué restricción la rechaza y con qué código?</li>
+<li>Detén temporalmente la salida al puerto 25 con <code>sudo ufw deny out 25/tcp</code>, envía un correo externo, observa la cola con <code>mailq</code> y vuelve a permitirlo con <code>sudo ufw delete deny out 25/tcp</code>. Fuerza la entrega con <code>postqueue -f</code>.</li>
+<li>Dibuja el recorrido de un correo enviado por la aplicación PHP de ejemplo1.com indicando qué procesos de Postfix intervienen.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../05-php-mariadb/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 5. PHP y MariaDB">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                5. PHP y MariaDB
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../07-dovecot/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 7. Dovecot">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                7. Dovecot
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

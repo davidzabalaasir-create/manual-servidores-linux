@@ -1,0 +1,2138 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/13-pruebas/">
+      
+      
+        <link rel="prev" href="../12-seguridad/">
+      
+      
+        <link rel="next" href="../14-proyecto-final/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>13. Pruebas y diagnóstico - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-13-pruebas-y-diagnostico" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              13. Pruebas y diagnóstico
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#131-metodo-de-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.1 Método de diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#132-procedimiento-de-verificacion-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.2 Procedimiento de verificación completo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.2 Procedimiento de verificación completo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-131-apache-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.1 – Apache funciona
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-132-cada-dominio-carga-su-propia-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.2 – Cada dominio carga su propia web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-133-php-se-ejecuta-correctamente-y-en-su-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.3 – PHP se ejecuta correctamente y en su pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-134-mariadb-responde-y-cada-aplicacion-accede-a-su-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.4 – MariaDB responde y cada aplicación accede a su base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-135-postfix-recibe-mensajes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.5 – Postfix recibe mensajes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-136-postfix-envia-mensajes-con-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.6 – Postfix envía mensajes (con autenticación)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-137-dovecot-permite-consultar-los-buzones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.7 – Dovecot permite consultar los buzones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-138-los-certificados-son-validos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.8 – Los certificados son válidos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-139-spf-dkim-y-dmarc-estan-correctamente-configurados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.9 – SPF, DKIM y DMARC están correctamente configurados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1310-los-servicios-arrancan-automaticamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.10 – Los servicios arrancan automáticamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#133-hoja-de-verificacion-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.3 Hoja de verificación final
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#134-catalogo-de-errores-reales-y-soluciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.4 Catálogo de errores reales y soluciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.4 Catálogo de errores reales y soluciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#135-caja-de-herramientas-de-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.5 Caja de herramientas de diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#136-ejercicios-practicos-del-modulo-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6 Ejercicios prácticos del Módulo 13
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#131-metodo-de-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.1 Método de diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#132-procedimiento-de-verificacion-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.2 Procedimiento de verificación completo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.2 Procedimiento de verificación completo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-131-apache-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.1 – Apache funciona
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-132-cada-dominio-carga-su-propia-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.2 – Cada dominio carga su propia web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-133-php-se-ejecuta-correctamente-y-en-su-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.3 – PHP se ejecuta correctamente y en su pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-134-mariadb-responde-y-cada-aplicacion-accede-a-su-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.4 – MariaDB responde y cada aplicación accede a su base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-135-postfix-recibe-mensajes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.5 – Postfix recibe mensajes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-136-postfix-envia-mensajes-con-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.6 – Postfix envía mensajes (con autenticación)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-137-dovecot-permite-consultar-los-buzones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.7 – Dovecot permite consultar los buzones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-138-los-certificados-son-validos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.8 – Los certificados son válidos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-139-spf-dkim-y-dmarc-estan-correctamente-configurados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.9 – SPF, DKIM y DMARC están correctamente configurados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1310-los-servicios-arrancan-automaticamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 13.10 – Los servicios arrancan automáticamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#133-hoja-de-verificacion-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.3 Hoja de verificación final
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#134-catalogo-de-errores-reales-y-soluciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.4 Catálogo de errores reales y soluciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.4 Catálogo de errores reales y soluciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#135-caja-de-herramientas-de-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.5 Caja de herramientas de diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#136-ejercicios-practicos-del-modulo-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6 Ejercicios prácticos del Módulo 13
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/13-pruebas.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-13-pruebas-y-diagnostico">Módulo 13. Pruebas y diagnóstico<a class="headerlink" href="#modulo-13-pruebas-y-diagnostico" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Disponer de un procedimiento de verificación completo y ordenado de toda la infraestructura.</li>
+<li>Saber qué comando usar para comprobar cada servicio y cómo interpretar su resultado.</li>
+<li>Aplicar un método de diagnóstico sistemático ante cualquier fallo.</li>
+<li>Reconocer los errores reales más frecuentes y su solución.</li>
+</ul>
+<h2 id="131-metodo-de-diagnostico">13.1 Método de diagnóstico<a class="headerlink" href="#131-metodo-de-diagnostico" title="Permanent link">&para;</a></h2>
+<p>Ante cualquier problema, sigue siempre el mismo orden, «de abajo arriba», como las capas de la red:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> 1. ¿El servicio está funcionando?        systemctl status / is-active
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a> 2. ¿Escucha en el puerto correcto?       ss -tlnp
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> 3. ¿El cortafuegos lo permite?           ufw status
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> 4. ¿El DNS resuelve bien?                dig
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> 5. ¿Se llega por red desde fuera?        nc -vz / curl / openssl s_client (desde otro equipo)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a> 6. ¿La configuración es válida?          apachectl configtest / postfix check / doveconf -n
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a> 7. ¿Qué dice el log?                     tail / grep / journalctl
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a> 8. ¿Son correctos permisos y propietarios? ls -l / namei -l / sudo -u USUARIO
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Cambia <strong>una sola cosa</strong> cada vez y vuelve a probar. Si cambias cinco cosas a la vez y funciona, no sabrás cuál era el problema; si deja de funcionar, no sabrás cuál lo rompió. Y antes de cambiar un archivo, haz una copia: <code>sudo cp archivo archivo.$(date +%F)</code>.</p>
+</div>
+<h2 id="132-procedimiento-de-verificacion-completo">13.2 Procedimiento de verificación completo<a class="headerlink" href="#132-procedimiento-de-verificacion-completo" title="Permanent link">&para;</a></h2>
+<p>Ejecuta esta batería de pruebas al terminar la instalación, tras cada cambio importante y tras cada actualización mayor. Las pruebas marcadas como «externa» deben hacerse desde <strong>otro</strong> equipo.</p>
+<h3 id="paso-131-apache-funciona">PASO 13.1 – Apache funciona<a class="headerlink" href="#paso-131-apache-funciona" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>apache2<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>is-enabled<span class="w"> </span>apache2
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>-S<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'namevhost|default server'</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">':(80|443) '</span>
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> <code>active</code>, <code>enabled</code>, <code>Syntax OK</code>, los VirtualHosts de ambos dominios y Apache escuchando en 80 y 443.</p>
+<h3 id="paso-132-cada-dominio-carga-su-propia-web">PASO 13.2 – Cada dominio carga su propia web<a class="headerlink" href="#paso-132-cada-dominio-carga-su-propia-web" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span>www.ejemplo1.com<span class="w"> </span>www.ejemplo2.com<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"== </span><span class="nv">$d</span><span class="s2">"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"HTTP %{http_code}  -&gt;  %{redirect_url}\n"</span><span class="w"> </span>http://<span class="nv">$d</span>/
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>https://<span class="nv">$d</span>/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'&lt;h1&gt;[^&lt;]*&lt;/h1&gt;'</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">done</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code} %{redirect_url}\n"</span><span class="w"> </span>https://ejemplo2.com/
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>== www.ejemplo1.com
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>HTTP 301  -&gt;  https://www.ejemplo1.com/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&lt;h1&gt;Agenda de contactos · ejemplo1.com&lt;/h1&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>== www.ejemplo2.com
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>HTTP 301  -&gt;  https://www.ejemplo2.com/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>&lt;h1&gt;Agenda de contactos · ejemplo2.com&lt;/h1&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>301 https://www.ejemplo2.com/
+</code></pre></div>
+<p>Prueba externa: abre las cuatro direcciones (<code>ejemplo1.com</code>, <code>www.ejemplo1.com</code>, <code>ejemplo2.com</code>, <code>www.ejemplo2.com</code>) en un navegador y en el móvil con datos móviles.</p>
+<h3 id="paso-133-php-se-ejecuta-correctamente-y-en-su-pool">PASO 13.3 – PHP se ejecuta correctamente y en su pool<a class="headerlink" href="#paso-133-php-se-ejecuta-correctamente-y-en-su-pool" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>php8.3-fpm
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>php-fpm8.3<span class="w"> </span>-t
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ls<span class="w"> </span>-l<span class="w"> </span>/run/php/*.sock
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ps<span class="w"> </span>-eo<span class="w"> </span>user,cmd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'[p]hp-fpm: pool'</span>
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> <code>active</code>, <code>test is successful</code>, los dos sockets y, si hay visitas recientes, procesos <code>php-fpm: pool web1</code> del usuario <code>web1</code> y <code>php-fpm: pool web2</code> del usuario <code>web2</code> (con <code>pm = ondemand</code> puede no haber procesos si nadie ha visitado las webs en los últimos 30 segundos; recarga una web y repite).</p>
+<h3 id="paso-134-mariadb-responde-y-cada-aplicacion-accede-a-su-base-de-datos">PASO 13.4 – MariaDB responde y cada aplicación accede a su base de datos<a class="headerlink" href="#paso-134-mariadb-responde-y-cada-aplicacion-accede-a-su-base-de-datos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>mariadb
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">3306</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>mariadb<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT table_schema AS bd, COUNT(*) AS tablas FROM information_schema.tables WHERE table_schema LIKE 'web%' GROUP BY table_schema;"</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>mariadb<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SHOW GRANTS FOR 'web1_user'@'localhost'; SHOW GRANTS FOR 'web2_user'@'localhost';"</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>grep<span class="w"> </span>-h<span class="w"> </span>SQLSTATE<span class="w"> </span>/var/www/*/logs/php-error.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> <code>active</code>, escucha solo en <code>127.0.0.1:3306</code>, dos tablas en cada base (<code>contactos</code> y <code>mensajes</code>), permisos limitados y ningún <code>SQLSTATE</code> reciente en los logs de PHP. La prueba definitiva es funcional: crear, editar y borrar un contacto en cada web (PASO 5.15).</p>
+<h3 id="paso-135-postfix-recibe-mensajes">PASO 13.5 – Postfix recibe mensajes<a class="headerlink" href="#paso-135-postfix-recibe-mensajes" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>postfix@-
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>postfix<span class="w"> </span>check
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>postconf<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'^(myhostname|mydestination|virtual_mailbox_domains|virtual_transport|smtpd_milters)'</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>postmap<span class="w"> </span>-q<span class="w"> </span>ejemplo2.com<span class="w"> </span>hash:/etc/postfix/virtual_domains
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>postmap<span class="w"> </span>-q<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span>hash:/etc/postfix/vmailbox
+</code></pre></div>
+<p>Prueba externa: envía desde Gmail a <code>info@ejemplo1.com</code> y a <code>soporte@ejemplo2.com</code>, y sigue la llegada:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/mail.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'postfix/smtpd|lmtp|Saved'</span>
+</code></pre></div>
+<p>Debe aparecer la conexión desde un servidor de Google y <code>status=sent (250 2.0.0 ... Saved)</code>.</p>
+<p>Prueba de relay abierto desde un equipo externo (debe ser <strong>rechazado</strong>):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>swaks<span class="w"> </span>--server<span class="w"> </span>mail.ejemplo1.com<span class="w"> </span>--port<span class="w"> </span><span class="m">25</span><span class="w"> </span>--from<span class="w"> </span>prueba@example.org<span class="w"> </span>--to<span class="w"> </span>alguien@example.net
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&lt;** 454 4.7.1 &lt;alguien@example.net&gt;: Relay access denied
+</code></pre></div>
+<h3 id="paso-136-postfix-envia-mensajes-con-autenticacion">PASO 13.6 – Postfix envía mensajes (con autenticación)<a class="headerlink" href="#paso-136-postfix-envia-mensajes-con-autenticacion" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>swaks<span class="w"> </span>--server<span class="w"> </span>mail.ejemplo1.com<span class="w"> </span>--port<span class="w"> </span><span class="m">587</span><span class="w"> </span>--tls<span class="w"> </span>--auth<span class="w"> </span>LOGIN<span class="w"> </span>--auth-user<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>--from<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>--to<span class="w"> </span>tu-direccion@gmail.com<span class="w"> </span>--header<span class="w"> </span><span class="s2">"Subject: Verificacion 587"</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>swaks<span class="w"> </span>--server<span class="w"> </span>mail.ejemplo2.com<span class="w"> </span>--port<span class="w"> </span><span class="m">465</span><span class="w"> </span>--tlsc<span class="w"> </span>--auth<span class="w"> </span>LOGIN<span class="w"> </span>--auth-user<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span>--from<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span>--to<span class="w"> </span>tu-direccion@gmail.com<span class="w"> </span>--header<span class="w"> </span><span class="s2">"Subject: Verificacion 465"</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>sudo<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'status=(sent|deferred|bounced)'</span><span class="w"> </span>/var/log/mail.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-4
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> <code>235 Authentication successful</code> en swaks y <code>status=sent (250 2.0.0 OK ...)</code> hacia Gmail en el log.</p>
+<h3 id="paso-137-dovecot-permite-consultar-los-buzones">PASO 13.7 – Dovecot permite consultar los buzones<a class="headerlink" href="#paso-137-dovecot-permite-consultar-los-buzones" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>dovecot
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>doveconf<span class="w"> </span>-n<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"configuración OK"</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dovecot
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>sudo<span class="w"> </span>doveadm<span class="w"> </span>user<span class="w"> </span><span class="s1">'*'</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>sudo<span class="w"> </span>doveadm<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>info@ejemplo1.com
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>sudo<span class="w"> </span>doveadm<span class="w"> </span>mailbox<span class="w"> </span>status<span class="w"> </span>-u<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span><span class="s2">"messages unseen"</span><span class="w"> </span>INBOX
+</code></pre></div>
+<p>Prueba externa: abre las cuentas en Thunderbird o en el móvil con IMAP 993, comprueba que ves los mensajes y que al borrar uno en un dispositivo desaparece en el otro.</p>
+<h3 id="paso-138-los-certificados-son-validos">PASO 13.8 – Los certificados son válidos<a class="headerlink" href="#paso-138-los-certificados-son-validos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certificates<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'Certificate Name|Domains|Expiry'</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">for</span><span class="w"> </span>hp<span class="w"> </span><span class="k">in</span><span class="w"> </span>www.ejemplo1.com:443<span class="w"> </span>www.ejemplo2.com:443<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$hp</span><span class="w"> </span>-servername<span class="w"> </span><span class="si">${</span><span class="nv">hp</span><span class="p">%:*</span><span class="si">}</span><span class="w"> </span>-verify_return_error<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'^subject|Verify return code'</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">done</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">for</span><span class="w"> </span>p<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">465</span><span class="w"> </span><span class="m">993</span><span class="w"> </span><span class="m">995</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo1.com:<span class="nv">$p</span><span class="w"> </span>-verify_return_error<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'Verify return code'</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="k">done</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo2.com:587<span class="w"> </span>-starttls<span class="w"> </span>smtp<span class="w"> </span>-verify_return_error<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'Verify return code'</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-4
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> <code>Verify return code: 0 (ok)</code> en todos los puertos y <code>all simulated renewals succeeded</code>.</p>
+<h3 id="paso-139-spf-dkim-y-dmarc-estan-correctamente-configurados">PASO 13.9 – SPF, DKIM y DMARC están correctamente configurados<a class="headerlink" href="#paso-139-spf-dkim-y-dmarc-estan-correctamente-configurados" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span>ejemplo1.com<span class="w"> </span>ejemplo2.com<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"== </span><span class="nv">$d</span><span class="s2">"</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"MX:    "</span><span class="p">;</span><span class="w"> </span>dig<span class="w"> </span>+short<span class="w"> </span>MX<span class="w"> </span><span class="nv">$d</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"SPF:   "</span><span class="p">;</span><span class="w"> </span>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span><span class="nv">$d</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>spf1
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"DMARC: "</span><span class="p">;</span><span class="w"> </span>dig<span class="w"> </span>+short<span class="w"> </span>TXT<span class="w"> </span>_dmarc.<span class="nv">$d</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>sudo<span class="w"> </span>opendkim-testkey<span class="w"> </span>-d<span class="w"> </span><span class="nv">$d</span><span class="w"> </span>-s<span class="w"> </span>mail<span class="w"> </span>-vvv<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">done</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"PTR:   "</span><span class="p">;</span><span class="w"> </span>dig<span class="w"> </span>+short<span class="w"> </span>-x<span class="w"> </span><span class="m">203</span>.0.113.10
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> MX, SPF y DMARC con los valores del Módulo 9, <code>key OK</code> para ambos dominios y PTR <code>mail.ejemplo1.com.</code>.</p>
+<p>Prueba externa: envía un correo desde cada dominio a <code>check-auth@verifier.port25.com</code> o a la dirección que te dé <code>mail-tester.com</code>. Debes obtener <code>SPF check: pass</code>, <code>DKIM check: pass</code> y <code>DMARC check: pass</code> (y una puntuación de 9 o 10 sobre 10 en mail-tester).</p>
+<h3 id="paso-1310-los-servicios-arrancan-automaticamente">PASO 13.10 – Los servicios arrancan automáticamente<a class="headerlink" href="#paso-1310-los-servicios-arrancan-automaticamente" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span><span class="w"> </span>s<span class="w"> </span><span class="k">in</span><span class="w"> </span>apache2<span class="w"> </span>php8.3-fpm<span class="w"> </span>mariadb<span class="w"> </span>postfix<span class="w"> </span>dovecot<span class="w"> </span>opendkim<span class="w"> </span>fail2ban<span class="w"> </span>ssh<span class="w"> </span>certbot.timer<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%-14s %s\n'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>systemctl<span class="w"> </span>is-enabled<span class="w"> </span><span class="nv">$s</span><span class="k">)</span><span class="s2">"</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">done</span>
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> <code>enabled</code> en todos. La prueba definitiva:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>reboot
+</code></pre></div>
+<p>Espera un par de minutos, vuelve a conectarte y ejecuta:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>estado-servidor
+</code></pre></div>
+<p>Todo debe aparecer <code>[OK]</code> sin que hayas arrancado nada a mano.</p>
+<h2 id="133-hoja-de-verificacion-final">13.3 Hoja de verificación final<a class="headerlink" href="#133-hoja-de-verificacion-final" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Comprobación</th>
+<th>Comando o prueba</th>
+<th>✓</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apache activo y sintaxis correcta</td>
+<td>PASO 13.1</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Cada dominio carga su web y redirige a HTTPS www</td>
+<td>PASO 13.2</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>PHP se ejecuta en el pool de cada web</td>
+<td>PASO 13.3</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>MariaDB solo local; cada app usa su base</td>
+<td>PASO 13.4</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Postfix recibe de Internet y no es relay abierto</td>
+<td>PASO 13.5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Envío autenticado por 587 y 465</td>
+<td>PASO 13.6</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Lectura de buzones por IMAP/POP3 con TLS</td>
+<td>PASO 13.7</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Certificados válidos y renovación simulada correcta</td>
+<td>PASO 13.8</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>SPF, DKIM, DMARC y PTR correctos</td>
+<td>PASO 13.9</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Todo arranca tras reiniciar</td>
+<td>PASO 13.10</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Fail2ban con 5 jails activos</td>
+<td><code>sudo fail2ban-client status</code></td>
+<td></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Copia de seguridad de hoy completa</td>
+<td><code>sudo ls -lh /var/backups/servidor/$(date +%F)</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="134-catalogo-de-errores-reales-y-soluciones">13.4 Catálogo de errores reales y soluciones<a class="headerlink" href="#134-catalogo-de-errores-reales-y-soluciones" title="Permanent link">&para;</a></h2>
+<h3 id="web">Web<a class="headerlink" href="#web" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mensaje / síntoma</th>
+<th>Dónde aparece</th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AH00558: Could not reliably determine the server's fully qualified domain name</code></td>
+<td><code>apachectl configtest</code></td>
+<td>Sin <code>ServerName</code> global.</td>
+<td>PASO 2.5.</td>
+</tr>
+<tr>
+<td><code>AH00526: Syntax error on line 12 of /etc/apache2/sites-enabled/ejemplo1.com.conf: Invalid command 'RewriteEngine'</code></td>
+<td>configtest</td>
+<td>Módulo no activado.</td>
+<td><code>sudo a2enmod rewrite</code>.</td>
+</tr>
+<tr>
+<td><code>AH00072: make_sock: could not bind to address [::]:80</code></td>
+<td>journal de apache2</td>
+<td>Otro programa usa el puerto.</td>
+<td><code>sudo ss -tlnp \| grep :80</code>; detén el otro servicio.</td>
+</tr>
+<tr>
+<td><code>AH01630: client denied by server configuration</code></td>
+<td>error.log</td>
+<td>Falta <code>Require all granted</code> en <code>&lt;Directory&gt;</code> o la ruta no coincide.</td>
+<td>Revisa el bloque <code>&lt;Directory&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>AH01797</code>/<code>AH00035: access to / denied ... because search permissions are missing</code></td>
+<td>error.log</td>
+<td>Falta permiso <code>x</code> en alguna carpeta de la ruta.</td>
+<td><code>namei -l ruta</code>; <code>chmod 750</code> + grupo <code>www-data</code>.</td>
+</tr>
+<tr>
+<td><code>AH01079: failed to make connection to backend: httpd-UDS</code> + 503</td>
+<td>error.log</td>
+<td>Socket de PHP-FPM inexistente.</td>
+<td><code>systemctl status php8.3-fpm</code>, revisa <code>listen</code> del pool.</td>
+</tr>
+<tr>
+<td><code>Primary script unknown</code></td>
+<td>error.log</td>
+<td>PHP-FPM no encuentra el archivo (ruta o permisos).</td>
+<td>El usuario del pool debe poder leer el script.</td>
+</tr>
+<tr>
+<td><code>PHP Warning: require(): open_basedir restriction in effect</code></td>
+<td>log PHP de la web</td>
+<td>El código intenta salir de su carpeta.</td>
+<td>Corrige la ruta en el código.</td>
+</tr>
+<tr>
+<td><code>PHP Fatal error: Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied</code></td>
+<td>log PHP</td>
+<td>Credenciales incorrectas.</td>
+<td>Revisa <code>config.php</code> y PASO 4.11.</td>
+</tr>
+<tr>
+<td><code>PHP Fatal error: Uncaught PDOException: could not find driver</code></td>
+<td>log PHP</td>
+<td>Falta <code>php-mysql</code>.</td>
+<td>Instala y reinicia FPM.</td>
+</tr>
+<tr>
+<td><code>ERR_TOO_MANY_REDIRECTS</code></td>
+<td>navegador</td>
+<td>Bucle de redirección (proxy/CDN en modo HTTP).</td>
+<td>Ver PASO 3.14.</td>
+</tr>
+<tr>
+<td><code>NET::ERR_CERT_COMMON_NAME_INVALID</code></td>
+<td>navegador</td>
+<td>El nombre no está en el certificado o SNI cae en el comodín.</td>
+<td>Revisa <code>ServerName/ServerAlias</code> y el certificado del VirtualHost.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="base-de-datos">Base de datos<a class="headerlink" href="#base-de-datos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mensaje</th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR 1698 (28000): Access denied for user 'root'@'localhost'</code></td>
+<td>Entrar como root sin sudo.</td>
+<td><code>sudo mariadb</code>. Es el comportamiento correcto.</td>
+</tr>
+<tr>
+<td><code>ERROR 1044 (42000): Access denied for user 'web1_user'@'localhost' to database 'web2_db'</code></td>
+<td>Intento de acceder a otra base.</td>
+<td>Correcto: es el aislamiento.</td>
+</tr>
+<tr>
+<td><code>ERROR 1142 (42000): DROP command denied</code></td>
+<td>Permisos limitados.</td>
+<td>Correcto, salvo que la aplicación necesite ese permiso.</td>
+</tr>
+<tr>
+<td><code>ERROR 2002 (HY000): Can't connect to local server through socket</code></td>
+<td>MariaDB detenido.</td>
+<td><code>systemctl start mariadb</code>; si no arranca, <code>/var/log/mysql/error.log</code> (suele ser disco lleno).</td>
+</tr>
+<tr>
+<td><code>ERROR 1062 (23000): Duplicate entry ... for key 'uk_email'</code></td>
+<td>Valor repetido en un campo único.</td>
+<td>Comportamiento esperado; la aplicación lo traduce a un aviso.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="correo">Correo<a class="headerlink" href="#correo" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mensaje en <code>/var/log/mail.log</code></th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NOQUEUE: reject: RCPT from ...: 454 4.7.1 &lt;x@gmail.com&gt;: Relay access denied</code></td>
+<td>Alguien sin autenticar intenta enviar a fuera.</td>
+<td>Correcto si es un desconocido. Si es tu usuario, está usando el puerto 25 en vez del 587.</td>
+</tr>
+<tr>
+<td><code>NOQUEUE: reject: RCPT ...: 550 5.1.1 &lt;x@ejemplo1.com&gt;: Recipient address rejected: User unknown in virtual mailbox table</code></td>
+<td>La dirección no existe.</td>
+<td>Créala o añade un alias.</td>
+</tr>
+<tr>
+<td><code>warning: SASL authentication failure: ...</code> / <code>SASL LOGIN authentication failed</code></td>
+<td>Contraseña incorrecta (o ataque).</td>
+<td>Si es masivo, Fail2ban lo bloqueará.</td>
+</tr>
+<tr>
+<td><code>warning: SASL: Connect to private/auth failed: No such file or directory</code></td>
+<td>Dovecot detenido o sin socket auth.</td>
+<td>PASO 7.8.</td>
+</tr>
+<tr>
+<td><code>connect to private/dovecot-lmtp: No such file or directory</code> + <code>status=deferred</code></td>
+<td>Dovecot detenido.</td>
+<td>Arranca Dovecot; Postfix reintentará solo.</td>
+</tr>
+<tr>
+<td><code>connect to gmail-smtp-in.l.google.com[...]:25: Connection timed out</code></td>
+<td>Puerto 25 saliente bloqueado.</td>
+<td>PASO 6.1 / relayhost.</td>
+</tr>
+<tr>
+<td><code>said: 550-5.7.26 Unauthenticated email from ejemplo1.com is not accepted due to domain's DMARC policy</code></td>
+<td>SPF y DKIM fallan.</td>
+<td>Módulo 9: revisa firma DKIM y SPF.</td>
+</tr>
+<tr>
+<td><code>said: 550-5.7.25 ... The IP address sending this message does not have a PTR record setup</code></td>
+<td>Falta PTR (a menudo en IPv6).</td>
+<td>PASO 9.2, o <code>inet_protocols = ipv4</code>.</td>
+</tr>
+<tr>
+<td><code>warning: hostname X does not resolve to address Y</code></td>
+<td>El cliente remoto tiene DNS inverso incoherente.</td>
+<td>Informativo; es problema del remitente.</td>
+</tr>
+<tr>
+<td><code>warning: connect to Milter service inet:localhost:8891: Connection refused</code></td>
+<td>OpenDKIM detenido o en otro socket.</td>
+<td>PASO 9.8.</td>
+</tr>
+<tr>
+<td><code>dovecot: imap-login: Disconnected (auth failed, 1 attempts in 2 secs): user=&lt;info@ejemplo1.com&gt;</code></td>
+<td>Contraseña incorrecta en IMAP.</td>
+<td><code>correo-clave</code> si el usuario la olvidó.</td>
+</tr>
+<tr>
+<td><code>dovecot: lmtp(...): Error: ... Permission denied</code></td>
+<td>Propietario de los buzones incorrecto.</td>
+<td><code>sudo chown -R vmail:vmail /var/mail/vhosts</code>.</td>
+</tr>
+<tr>
+<td><code>dovecot: auth: Error: passwd-file /etc/dovecot/users: User ... has invalid UID</code></td>
+<td>Campo uid vacío o erróneo.</td>
+<td>Revisa el formato de la línea (8 campos).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="135-caja-de-herramientas-de-diagnostico">13.5 Caja de herramientas de diagnóstico<a class="headerlink" href="#135-caja-de-herramientas-de-diagnostico" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Uso</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>systemctl</code> / <code>journalctl</code></td>
+<td>Estado y logs de servicios.</td>
+<td><code>journalctl -u dovecot -n 50</code></td>
+</tr>
+<tr>
+<td><code>ss</code></td>
+<td>Puertos en escucha y conexiones.</td>
+<td><code>sudo ss -tlnp</code></td>
+</tr>
+<tr>
+<td><code>dig</code></td>
+<td>Consultas DNS.</td>
+<td><code>dig +short MX ejemplo1.com @1.1.1.1</code></td>
+</tr>
+<tr>
+<td><code>curl</code></td>
+<td>Pruebas HTTP/HTTPS.</td>
+<td><code>curl -vI https://www.ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>openssl s_client</code></td>
+<td>Pruebas TLS en cualquier puerto.</td>
+<td><code>openssl s_client -connect mail.ejemplo1.com:993</code></td>
+</tr>
+<tr>
+<td><code>nc</code></td>
+<td>Conectividad TCP y diálogos manuales.</td>
+<td><code>nc -vz mail.ejemplo1.com 25</code></td>
+</tr>
+<tr>
+<td><code>swaks</code></td>
+<td>Pruebas SMTP completas.</td>
+<td>Ver PASO 7.19</td>
+</tr>
+<tr>
+<td><code>doveadm</code></td>
+<td>Usuarios, autenticación y buzones de Dovecot.</td>
+<td><code>doveadm auth test usuario</code></td>
+</tr>
+<tr>
+<td><code>postconf</code> / <code>postmap -q</code> / <code>mailq</code></td>
+<td>Configuración, tablas y cola de Postfix.</td>
+<td><code>postmap -q x@ejemplo1.com hash:/etc/postfix/vmailbox</code></td>
+</tr>
+<tr>
+<td><code>namei -l</code></td>
+<td>Permisos de toda una ruta.</td>
+<td><code>namei -l /var/www/ejemplo1.com/public_html/index.php</code></td>
+</tr>
+<tr>
+<td><code>sudo -u usuario</code></td>
+<td>Probar como otro usuario.</td>
+<td><code>sudo -u web1 cat /var/www/ejemplo1.com/config/config.php</code></td>
+</tr>
+<tr>
+<td><code>fail2ban-client</code></td>
+<td>Estado de bloqueos.</td>
+<td><code>fail2ban-client status sshd</code></td>
+</tr>
+<tr>
+<td><code>htop</code>, <code>free -h</code>, <code>df -h</code></td>
+<td>Recursos (CPU, memoria, disco).</td>
+<td><code>df -h</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="136-ejercicios-practicos-del-modulo-13">13.6 Ejercicios prácticos del Módulo 13<a class="headerlink" href="#136-ejercicios-practicos-del-modulo-13" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Ejecuta toda la batería de pruebas del apartado 13.2 y rellena la hoja de verificación.</li>
+<li>Pide a un compañero que provoque un fallo oculto (detener un servicio, cambiar un permiso, borrar una línea de configuración) y encuéntralo siguiendo el método del apartado 13.1.</li>
+<li>Provoca deliberadamente tres errores del catálogo y verifica que aparecen exactamente los mensajes descritos.</li>
+<li>Escribe tu propio script <code>verificar-infraestructura</code> que automatice los pasos 13.1 a 13.10 y devuelva un resumen.</li>
+<li>Documenta en una tabla tus propios errores encontrados durante el curso, su causa y su solución: es la base del manual de operaciones de tu servidor.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../12-seguridad/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 12. Seguridad y mantenimiento">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                12. Seguridad y mantenimiento
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../14-proyecto-final/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 14. Proyecto final">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                14. Proyecto final
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2178 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/02-apache/">
+      
+      
+        <link rel="prev" href="../01-fundamentos/">
+      
+      
+        <link rel="next" href="../03-virtualhosts/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>2. Apache - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-2-instalacion-y-configuracion-de-apache" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2. Apache
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-que-es-apache-y-como-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Qué es Apache y cómo funciona
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 Qué es Apache y cómo funciona">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-instalar-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.1 – Instalar Apache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-permitir-el-trafico-web-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.2 – Permitir el tráfico web en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-gestion-del-servicio-con-systemctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Gestión del servicio con systemctl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Gestión del servicio con systemctl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-comprobar-que-apache-esta-activo-y-habilitado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.3 – Comprobar que Apache está activo y habilitado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-estructura-de-directorios-de-apache-en-ubuntu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Estructura de directorios de Apache en Ubuntu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Estructura de directorios de Apache en Ubuntu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivos-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivos principales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-el-directorio-raiz-de-las-webs-propietarios-y-permisos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 El directorio raíz de las webs, propietarios y permisos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 El directorio raíz de las webs, propietarios y permisos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-crear-una-pagina-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.4 – Crear una página de prueba
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-comprobacion-de-errores-de-configuracion-apachectl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Comprobación de errores de configuración: apachectl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Comprobación de errores de configuración: apachectl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-comprobar-la-configuracion-y-corregir-el-aviso-de-servername" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.5 – Comprobar la configuración y corregir el aviso de ServerName
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-activacion-y-desactivacion-de-modulos-sitios-y-configuraciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Activación y desactivación de módulos, sitios y configuraciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6 Activación y desactivación de módulos, sitios y configuraciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-26-activar-los-modulos-basicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.6 – Activar los módulos básicos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-logs-de-acceso-y-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Logs de acceso y de errores
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 Logs de acceso y de errores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-27-ver-los-logs-en-tiempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.7 – Ver los logs en tiempo real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-ejercicios-practicos-del-modulo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Ejercicios prácticos del Módulo 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-que-es-apache-y-como-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Qué es Apache y cómo funciona
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 Qué es Apache y cómo funciona">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-instalar-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.1 – Instalar Apache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-permitir-el-trafico-web-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.2 – Permitir el tráfico web en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-gestion-del-servicio-con-systemctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Gestión del servicio con systemctl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Gestión del servicio con systemctl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-comprobar-que-apache-esta-activo-y-habilitado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.3 – Comprobar que Apache está activo y habilitado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-estructura-de-directorios-de-apache-en-ubuntu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Estructura de directorios de Apache en Ubuntu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Estructura de directorios de Apache en Ubuntu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivos-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archivos principales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-el-directorio-raiz-de-las-webs-propietarios-y-permisos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 El directorio raíz de las webs, propietarios y permisos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 El directorio raíz de las webs, propietarios y permisos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-crear-una-pagina-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.4 – Crear una página de prueba
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-comprobacion-de-errores-de-configuracion-apachectl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Comprobación de errores de configuración: apachectl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Comprobación de errores de configuración: apachectl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-comprobar-la-configuracion-y-corregir-el-aviso-de-servername" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.5 – Comprobar la configuración y corregir el aviso de ServerName
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-activacion-y-desactivacion-de-modulos-sitios-y-configuraciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Activación y desactivación de módulos, sitios y configuraciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6 Activación y desactivación de módulos, sitios y configuraciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-26-activar-los-modulos-basicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.6 – Activar los módulos básicos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-logs-de-acceso-y-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Logs de acceso y de errores
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 Logs de acceso y de errores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-27-ver-los-logs-en-tiempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 2.7 – Ver los logs en tiempo real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-ejercicios-practicos-del-modulo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Ejercicios prácticos del Módulo 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/02-apache.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-2-instalacion-y-configuracion-de-apache">Módulo 2. Instalación y configuración de Apache<a class="headerlink" href="#modulo-2-instalacion-y-configuracion-de-apache" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Instalar Apache HTTP Server y dejarlo arrancando automáticamente.</li>
+<li>Conocer la estructura de directorios y los archivos de configuración de Apache en Ubuntu.</li>
+<li>Entender el directorio raíz de las webs, los propietarios y los permisos.</li>
+<li>Crear una página de prueba y verla desde el navegador.</li>
+<li>Activar y desactivar módulos, sitios y configuraciones con las herramientas <code>a2*</code>.</li>
+<li>Comprobar errores de configuración y leer los logs de acceso y de errores.</li>
+</ul>
+<h2 id="21-que-es-apache-y-como-funciona">2.1 Qué es Apache y cómo funciona<a class="headerlink" href="#21-que-es-apache-y-como-funciona" title="Permanent link">&para;</a></h2>
+<p><strong>Apache HTTP Server</strong> es un servidor web: un programa que escucha en los puertos 80 (HTTP) y 443 (HTTPS), recibe peticiones de los navegadores y responde con archivos (HTML, imágenes, CSS) o con el resultado de ejecutar un programa (por ejemplo, PHP).</p>
+<p>Una petición HTTP tiene este aspecto (es texto plano):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>GET /index.html HTTP/1.1
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Host: www.ejemplo1.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>User-Agent: Mozilla/5.0 ...
+</code></pre></div>
+<p>Y la respuesta de Apache:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>HTTP/1.1 200 OK
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Server: Apache
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Content-Type: text/html; charset=UTF-8
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>&lt;html&gt; ... contenido de la página ... &lt;/html&gt;
+</code></pre></div>
+<p>La cabecera <strong>Host</strong> es la clave del Virtual Hosting (Módulo 3): gracias a ella, Apache sabe a qué web quiere ir el visitante aunque todas compartan la misma IP.</p>
+<p>Apache atiende muchas peticiones a la vez gracias a un <strong>MPM</strong> (<em>Multi-Processing Module</em>). En Ubuntu 24.04 se usa por defecto <strong>mpm_event</strong>, que gestiona miles de conexiones con pocos procesos. Es el MPM recomendado cuando PHP se ejecuta aparte con PHP-FPM, como haremos en el Módulo 5.</p>
+<p>Los códigos de respuesta más habituales:</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+<th>Causa típica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>Todo correcto.</td>
+</tr>
+<tr>
+<td>301 / 302</td>
+<td>Redirección permanente / temporal</td>
+<td>Paso de HTTP a HTTPS, de <code>ejemplo1.com</code> a <code>www</code>.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Prohibido</td>
+<td>Permisos de archivo o configuración <code>Require</code> que deniega.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>No encontrado</td>
+<td>El archivo no existe en el DocumentRoot.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Error interno</td>
+<td>Error en el código PHP o en un <code>.htaccess</code>.</td>
+</tr>
+<tr>
+<td>502 / 503</td>
+<td>Puerta de enlace / servicio no disponible</td>
+<td>PHP-FPM detenido o socket incorrecto.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-21-instalar-apache">PASO 2.1 – Instalar Apache<a class="headerlink" href="#paso-21-instalar-apache" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> instalar el servidor web.</p>
+<p><strong>Explicación:</strong> el paquete <code>apache2</code> instala el programa, los módulos básicos, las herramientas de administración y una configuración por defecto que ya sirve una página de bienvenida.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>apache2
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>apt install</code> instala el paquete y todas sus dependencias (<code>apache2-bin</code>, <code>apache2-data</code>, <code>apache2-utils</code>...). <code>-y</code> acepta sin preguntar.</p>
+<p><strong>Resultado esperado:</strong> termina con líneas como <code>Setting up apache2 (2.4.58-1ubuntu8...)</code> y <code>Created symlink ... apache2.service</code>. Esa última indica que el servicio ya está registrado para arrancar con el sistema.</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>apache2<span class="w"> </span>-v
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Server version: Apache/2.4.58 (Ubuntu)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Server built:   2025-xx-xx...
+</code></pre></div>
+<p><strong>Errores habituales:</strong> <code>Unable to locate package apache2</code> indica que no ejecutaste <code>apt update</code> o que no hay red.</p>
+<p><strong>Siguiente paso:</strong> abrir el cortafuegos y gestionar el servicio.</p>
+<h3 id="paso-22-permitir-el-trafico-web-en-el-cortafuegos">PASO 2.2 – Permitir el tráfico web en el cortafuegos<a class="headerlink" href="#paso-22-permitir-el-trafico-web-en-el-cortafuegos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> permitir conexiones a los puertos 80 y 443.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>app<span class="w"> </span>list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="s2">"Apache Full"</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>status
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> Apache instala tres perfiles de UFW: <code>Apache</code> (solo 80), <code>Apache Secure</code> (solo 443) y <code>Apache Full</code> (80 y 443). Usamos el completo porque el puerto 80 es necesario para redirigir a HTTPS y para que Let's Encrypt valide el dominio.</p>
+<p><strong>Resultado esperado:</strong> en <code>ufw status</code> aparecerá la línea <code>Apache Full  ALLOW  Anywhere</code>, además de <code>OpenSSH</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Si tu proveedor tiene además un <strong>cortafuegos externo</strong> (en AWS «Security Groups», en Oracle «Security Lists», en Hetzner «Firewalls»...), también debes abrir allí los puertos. UFW solo controla el cortafuegos del propio servidor.</p>
+</div>
+<p><strong>Siguiente paso:</strong> aprender a gestionar el servicio.</p>
+<h2 id="22-gestion-del-servicio-con-systemctl">2.2 Gestión del servicio con systemctl<a class="headerlink" href="#22-gestion-del-servicio-con-systemctl" title="Permanent link">&para;</a></h2>
+<p><code>systemctl</code> es la herramienta con la que hablas con systemd. Funciona igual para todos los servicios del manual (<code>apache2</code>, <code>mariadb</code>, <code>postfix</code>, <code>dovecot</code>, <code>php8.3-fpm</code>, <code>opendkim</code>, <code>fail2ban</code>, <code>ssh</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo systemctl start apache2</code></td>
+<td>Arranca el servicio.</td>
+</tr>
+<tr>
+<td><code>sudo systemctl stop apache2</code></td>
+<td>Lo detiene.</td>
+</tr>
+<tr>
+<td><code>sudo systemctl restart apache2</code></td>
+<td>Lo detiene y lo arranca (corta las conexiones en curso).</td>
+</tr>
+<tr>
+<td><code>sudo systemctl reload apache2</code></td>
+<td>Relee la configuración sin cortar conexiones. <strong>Úsalo tras cambiar configuración.</strong></td>
+</tr>
+<tr>
+<td><code>systemctl status apache2</code></td>
+<td>Muestra si está activo, desde cuándo y las últimas líneas del log.</td>
+</tr>
+<tr>
+<td><code>sudo systemctl enable apache2</code></td>
+<td>Hace que arranque automáticamente al iniciar el sistema.</td>
+</tr>
+<tr>
+<td><code>sudo systemctl disable apache2</code></td>
+<td>Quita el arranque automático.</td>
+</tr>
+<tr>
+<td><code>systemctl is-active apache2</code></td>
+<td>Responde solo <code>active</code> o <code>inactive</code> (útil en scripts).</td>
+</tr>
+<tr>
+<td><code>systemctl is-enabled apache2</code></td>
+<td>Responde <code>enabled</code> o <code>disabled</code>.</td>
+</tr>
+<tr>
+<td><code>journalctl -u apache2 -n 50</code></td>
+<td>Muestra las últimas 50 líneas del registro de systemd para ese servicio.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-23-comprobar-que-apache-esta-activo-y-habilitado">PASO 2.3 – Comprobar que Apache está activo y habilitado<a class="headerlink" href="#paso-23-comprobar-que-apache-esta-activo-y-habilitado" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> verificar que Apache funciona y arrancará tras cada reinicio.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>apache2
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>apache2<span class="w"> </span>--no-pager
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>enable --now</code> habilita el arranque automático y, a la vez, arranca el servicio si no lo estaba. <code>--no-pager</code> muestra la salida completa sin entrar en el visor paginado (si entras en él, sales con la tecla <code>q</code>).</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>● apache2.service - The Apache HTTP Server
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>     Loaded: loaded (/usr/lib/systemd/system/apache2.service; enabled; preset: enabled)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>     Active: active (running) since Sun 2026-11-08 21:52:04 CET; 3min ago
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>       Docs: https://httpd.apache.org/docs/2.4/
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   Main PID: 2741 (apache2)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      Tasks: 55 (limit: 2275)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>     Memory: 5.3M
+</code></pre></div>
+<p>Las palabras clave son <strong>enabled</strong> (arranca solo) y <strong>active (running)</strong> (está funcionando).</p>
+<p><strong>Comprobación:</strong> abre en tu navegador <code>http://203.0.113.10</code> (tu IP). Debe aparecer la página <strong>«Apache2 Default Page – It works!»</strong>. Desde el propio servidor también puedes comprobarlo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://localhost
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>HTTP/1.1 200 OK
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Date: Sun, 08 Nov 2026 20:55:41 GMT
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Server: Apache/2.4.58 (Ubuntu)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Content-Type: text/html
+</code></pre></div>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li>El navegador no carga nada: revisa UFW (PASO 2.2) y el cortafuegos del proveedor.</li>
+<li><code>Active: failed</code>: mira el motivo con <code>journalctl -u apache2 -n 30 --no-pager</code>. Suele ser que otro programa (por ejemplo nginx) ocupa el puerto 80; compruébalo con <code>sudo ss -tlnp | grep ':80'</code>.</li>
+</ul>
+<p><strong>Siguiente paso:</strong> conocer dónde vive la configuración.</p>
+<h2 id="23-estructura-de-directorios-de-apache-en-ubuntu">2.3 Estructura de directorios de Apache en Ubuntu<a class="headerlink" href="#23-estructura-de-directorios-de-apache-en-ubuntu" title="Permanent link">&para;</a></h2>
+<p>Ubuntu (y Debian) organizan Apache de forma modular, distinta de otras distribuciones como Rocky Linux o Fedora (que usan <code>/etc/httpd/</code> y el servicio <code>httpd</code>). Todo lo que hagas en este manual corresponde a la organización de Debian/Ubuntu.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>/etc/apache2/
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>├── apache2.conf          ← archivo principal: incluye todos los demás
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>├── envvars               ← variables: usuario (www-data), rutas de logs
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>├── ports.conf            ← en qué puertos escucha (Listen 80, Listen 443)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>├── conf-available/       ← fragmentos de configuración global disponibles
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>├── conf-enabled/         ← enlaces a los fragmentos activos  (a2enconf/a2disconf)
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>├── mods-available/       ← todos los módulos instalados (.load y .conf)
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>├── mods-enabled/         ← enlaces a los módulos activos      (a2enmod/a2dismod)
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>├── sites-available/      ← un archivo por cada sitio web (VirtualHost)
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>└── sites-enabled/        ← enlaces a los sitios activos       (a2ensite/a2dissite)
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>/var/www/html/            ← DocumentRoot del sitio por defecto
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>/var/log/apache2/         ← access.log, error.log, other_vhosts_access.log
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>/usr/lib/systemd/system/apache2.service  ← unidad de systemd
+</code></pre></div>
+<p>La idea clave del par <strong>available / enabled</strong>: en las carpetas <code>*-available</code> están todos los elementos que <strong>podrías</strong> usar; en <code>*-enabled</code> hay <strong>enlaces simbólicos</strong> a los que <strong>estás</strong> usando. Apache solo lee las carpetas <code>*-enabled</code>. Las herramientas <code>a2en*</code> crean esos enlaces y las <code>a2dis*</code> los borran. Así puedes activar o desactivar un sitio sin borrar su configuración.</p>
+<h3 id="archivos-principales">Archivos principales<a class="headerlink" href="#archivos-principales" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Contenido</th>
+<th>¿Lo modificaremos?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/apache2/apache2.conf</code></td>
+<td>Configuración global: tiempos de espera, usuario, permisos de directorios, inclusión del resto de archivos.</td>
+<td>Casi nunca.</td>
+</tr>
+<tr>
+<td><code>/etc/apache2/ports.conf</code></td>
+<td>Directivas <code>Listen</code>.</td>
+<td>No (ya escucha en 80 y en 443 cuando se activa SSL).</td>
+</tr>
+<tr>
+<td><code>/etc/apache2/envvars</code></td>
+<td>Define <code>APACHE_RUN_USER=www-data</code> y <code>APACHE_RUN_GROUP=www-data</code>.</td>
+<td>No.</td>
+</tr>
+<tr>
+<td><code>/etc/apache2/conf-available/security.conf</code></td>
+<td>Cabeceras e información que Apache revela.</td>
+<td>Sí (Módulo 12).</td>
+</tr>
+<tr>
+<td><code>/etc/apache2/sites-available/000-default.conf</code></td>
+<td>VirtualHost por defecto.</td>
+<td>Lo usaremos como «sitio comodín».</td>
+</tr>
+</tbody>
+</table>
+<p>Echa un vistazo a cómo <code>apache2.conf</code> incluye el resto:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'^(Include|IncludeOptional)'</span><span class="w"> </span>/etc/apache2/apache2.conf
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>IncludeOptional mods-enabled/*.load
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>IncludeOptional mods-enabled/*.conf
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Include ports.conf
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>IncludeOptional conf-enabled/*.conf
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>IncludeOptional sites-enabled/*.conf
+</code></pre></div>
+<p>Y la sección que controla qué carpetas puede servir Apache:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'/&lt;Directory \/&gt;/,/&lt;\/Directory&gt;/p;/&lt;Directory \/var\/www\/&gt;/,/&lt;\/Directory&gt;/p'</span><span class="w"> </span>/etc/apache2/apache2.conf
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&lt;Directory /&gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>        Options FollowSymLinks
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        AllowOverride None
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        Require all denied
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>&lt;/Directory&gt;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>&lt;Directory /var/www/&gt;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        Options Indexes FollowSymLinks
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        AllowOverride None
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        Require all granted
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>&lt;/Directory&gt;
+</code></pre></div>
+<p>Esto significa: por defecto Apache <strong>deniega</strong> el acceso a todo el sistema de archivos (<code>/</code>) y solo <strong>permite</strong> servir lo que esté bajo <code>/var/www/</code>. Por eso todas nuestras webs vivirán en <code>/var/www/</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>La palabra <code>Indexes</code> permite que Apache muestre un listado de archivos si una carpeta no tiene <code>index.html</code>. Eso puede revelar archivos que no quieres publicar. En nuestros VirtualHosts lo desactivaremos con <code>Options -Indexes</code>.</p>
+</div>
+<h2 id="24-el-directorio-raiz-de-las-webs-propietarios-y-permisos">2.4 El directorio raíz de las webs, propietarios y permisos<a class="headerlink" href="#24-el-directorio-raiz-de-las-webs-propietarios-y-permisos" title="Permanent link">&para;</a></h2>
+<p>El <strong>DocumentRoot</strong> es la carpeta cuyo contenido se publica. Si el DocumentRoot es <code>/var/www/html</code>, la URL <code>http://servidor/fotos/a.jpg</code> corresponde al archivo <code>/var/www/html/fotos/a.jpg</code>.</p>
+<p>Apache se ejecuta con el usuario <strong>www-data</strong>. Para servir un archivo estático, <code>www-data</code> necesita:</p>
+<ul>
+<li>Permiso <code>x</code> en <strong>todas</strong> las carpetas de la ruta (<code>/</code>, <code>/var</code>, <code>/var/www</code>, <code>/var/www/html</code>).</li>
+<li>Permiso <code>r</code> sobre el propio archivo.</li>
+</ul>
+<p>Lo que <strong>no</strong> debe tener <code>www-data</code>: permiso de escritura sobre el código de la web. Si un atacante consiguiera ejecutar algo a través de Apache, no podría modificar tus páginas.</p>
+<h3 id="paso-24-crear-una-pagina-de-prueba">PASO 2.4 – Crear una página de prueba<a class="headerlink" href="#paso-24-crear-una-pagina-de-prueba" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> publicar una página propia en el sitio por defecto y entender la relación entre archivo y URL.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ls<span class="w"> </span>-l<span class="w"> </span>/var/www/html/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'&lt;h1&gt;Servidor mail.ejemplo1.com funcionando&lt;/h1&gt;'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/var/www/html/prueba.html
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/var/www/html/prueba.html
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>ls<span class="w"> </span>-l<span class="w"> </span>/var/www/html/
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>echo '...'</code> escribe el texto en la salida.</li>
+<li><code>| sudo tee archivo</code> recibe ese texto y lo escribe en el archivo <strong>con privilegios de root</strong> (un simple <code>sudo echo ... &gt; archivo</code> no funcionaría, porque la redirección <code>&gt;</code> la hace tu shell sin privilegios).</li>
+<li><code>chmod 644</code>: el propietario (root) lee y escribe; el resto, solo lee. <code>www-data</code> entra en «el resto», así que puede leerlo.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>-rw-r--r-- 1 root root 10671 nov  8 21:52 index.html
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>-rw-r--r-- 1 root root    49 nov  8 22:01 prueba.html
+</code></pre></div>
+<p><strong>Comprobación:</strong> abre <code>http://203.0.113.10/prueba.html</code> o, desde el servidor:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>http://localhost/prueba.html
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>&lt;h1&gt;Servidor mail.ejemplo1.com funcionando&lt;/h1&gt;
+</code></pre></div>
+<p>Ahora provoca un error 403 a propósito para entender los permisos:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/var/www/html/prueba.html
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://localhost/prueba.html
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/var/www/html/prueba.html
+</code></pre></div>
+<p>La respuesta intermedia será <code>HTTP/1.1 403 Forbidden</code>: <code>www-data</code> ya no podía leer el archivo. Tras restaurar <code>644</code>, vuelve a funcionar.</p>
+<p><strong>Errores habituales:</strong> un 404 significa que el archivo no está en la ruta que crees; comprueba mayúsculas y minúsculas (Linux las distingue: <code>Prueba.html</code> ≠ <code>prueba.html</code>).</p>
+<p><strong>Siguiente paso:</strong> aprender a comprobar la configuración.</p>
+<h2 id="25-comprobacion-de-errores-de-configuracion-apachectl">2.5 Comprobación de errores de configuración: apachectl<a class="headerlink" href="#25-comprobacion-de-errores-de-configuracion-apachectl" title="Permanent link">&para;</a></h2>
+<p>Antes de recargar Apache tras un cambio, <strong>comprueba siempre la sintaxis</strong>. Si recargas con un error, Apache puede negarse a arrancar y dejar todas tus webs caídas.</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo apachectl configtest</code></td>
+<td>Comprueba la sintaxis. Debe responder <code>Syntax OK</code>.</td>
+</tr>
+<tr>
+<td><code>sudo apachectl -S</code></td>
+<td>Muestra los VirtualHosts cargados, sus puertos y archivos. Fundamental en el Módulo 3.</td>
+</tr>
+<tr>
+<td><code>sudo apachectl -M</code></td>
+<td>Lista los módulos cargados.</td>
+</tr>
+<tr>
+<td><code>sudo apachectl -t -D DUMP_INCLUDES</code></td>
+<td>Muestra qué archivos se incluyen y en qué orden.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-25-comprobar-la-configuracion-y-corregir-el-aviso-de-servername">PASO 2.5 – Comprobar la configuración y corregir el aviso de ServerName<a class="headerlink" href="#paso-25-comprobar-la-configuracion-y-corregir-el-aviso-de-servername" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> obtener un <code>Syntax OK</code> limpio, sin avisos.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest
+</code></pre></div>
+<p><strong>Resultado esperado (en una instalación nueva):</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress this message
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Syntax OK
+</code></pre></div>
+<p><strong>Explicación:</strong> no es un error, sino un aviso: Apache no tiene un nombre global configurado. Lo corregimos creando un pequeño fragmento de configuración global.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'ServerName mail.ejemplo1.com'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apache2/conf-available/servername.conf
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>sudo<span class="w"> </span>a2enconf<span class="w"> </span>servername
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> creamos <code>/etc/apache2/conf-available/servername.conf</code> con una sola directiva y lo activamos con <code>a2enconf</code> (que crea el enlace en <code>conf-enabled/</code>). Después comprobamos y recargamos.</p>
+<p><strong>Resultado esperado:</strong> <code>configtest</code> responde solo <code>Syntax OK</code>.</p>
+<p><strong>Comprobación:</strong> <code>ls -l /etc/apache2/conf-enabled/servername.conf</code> debe mostrar un enlace (<code>-&gt;</code>) a <code>../conf-available/servername.conf</code>.</p>
+<p><strong>Siguiente paso:</strong> gestionar módulos.</p>
+<h2 id="26-activacion-y-desactivacion-de-modulos-sitios-y-configuraciones">2.6 Activación y desactivación de módulos, sitios y configuraciones<a class="headerlink" href="#26-activacion-y-desactivacion-de-modulos-sitios-y-configuraciones" title="Permanent link">&para;</a></h2>
+<p>Las herramientas <code>a2*</code> funcionan todas igual: crean o eliminan enlaces y te recuerdan que recargues Apache.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Actúa sobre</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a2enmod</code> / <code>a2dismod</code></td>
+<td>Módulos (<code>mods-available</code>)</td>
+<td><code>sudo a2enmod rewrite</code></td>
+</tr>
+<tr>
+<td><code>a2ensite</code> / <code>a2dissite</code></td>
+<td>Sitios (<code>sites-available</code>)</td>
+<td><code>sudo a2ensite ejemplo1.com</code></td>
+</tr>
+<tr>
+<td><code>a2enconf</code> / <code>a2disconf</code></td>
+<td>Configuraciones (<code>conf-available</code>)</td>
+<td><code>sudo a2enconf servername</code></td>
+</tr>
+</tbody>
+</table>
+<p>Algunos módulos que usaremos:</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssl</code></td>
+<td>HTTPS. Lo activará Certbot.</td>
+</tr>
+<tr>
+<td><code>rewrite</code></td>
+<td>Reescritura de URL y redirecciones avanzadas.</td>
+</tr>
+<tr>
+<td><code>headers</code></td>
+<td>Añadir o modificar cabeceras HTTP (seguridad).</td>
+</tr>
+<tr>
+<td><code>proxy</code> y <code>proxy_fcgi</code></td>
+<td>Pasar las peticiones PHP a PHP-FPM.</td>
+</tr>
+<tr>
+<td><code>setenvif</code></td>
+<td>Variables según la petición (lo requiere la configuración de PHP-FPM).</td>
+</tr>
+<tr>
+<td><code>http2</code></td>
+<td>Protocolo HTTP/2, más eficiente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-26-activar-los-modulos-basicos">PASO 2.6 – Activar los módulos básicos<a class="headerlink" href="#paso-26-activar-los-modulos-basicos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> activar los módulos que necesitaremos en los módulos siguientes y practicar el ciclo activar → comprobar → recargar.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>a2enmod<span class="w"> </span>rewrite<span class="w"> </span>headers<span class="w"> </span>http2
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>apache2
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>-M<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'rewrite|headers|http2|mpm'</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> activamos tres módulos de una vez. Tras activar <strong>módulos</strong> se recomienda <code>restart</code> (no basta <code>reload</code> para algunos). El último comando filtra la lista de módulos cargados.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a> mpm_event_module (shared)
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a> headers_module (shared)
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a> http2_module (shared)
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a> rewrite_module (shared)
+</code></pre></div>
+<p>Ahora practica desactivar uno y volver a activarlo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>sudo<span class="w"> </span>a2dismod<span class="w"> </span>http2
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>apache2
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>-M<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>http2<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"http2 desactivado"</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>sudo<span class="w"> </span>a2enmod<span class="w"> </span>http2
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>apache2
+</code></pre></div>
+<p><strong>Errores habituales:</strong> <code>ERROR: Module xyz does not exist!</code> significa que el módulo no está instalado o que el nombre está mal escrito (lista los disponibles con <code>ls /etc/apache2/mods-available/</code>).</p>
+<p><strong>Siguiente paso:</strong> entender los logs.</p>
+<h2 id="27-logs-de-acceso-y-de-errores">2.7 Logs de acceso y de errores<a class="headerlink" href="#27-logs-de-acceso-y-de-errores" title="Permanent link">&para;</a></h2>
+<p>Los logs son la primera herramienta de diagnóstico de un administrador. Apache escribe en <code>/var/log/apache2/</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>access.log</code></td>
+<td>Una línea por petición atendida por el sitio por defecto.</td>
+</tr>
+<tr>
+<td><code>error.log</code></td>
+<td>Errores y avisos de Apache y de los módulos.</td>
+</tr>
+<tr>
+<td><code>other_vhosts_access.log</code></td>
+<td>Accesos a VirtualHosts que no definen su propio log.</td>
+</tr>
+<tr>
+<td><code>ejemplo1.com-access.log</code> (lo crearemos)</td>
+<td>Accesos al sitio ejemplo1.com.</td>
+</tr>
+<tr>
+<td><code>ejemplo1.com-error.log</code> (lo crearemos)</td>
+<td>Errores del sitio ejemplo1.com.</td>
+</tr>
+</tbody>
+</table>
+<p>Una línea de <code>access.log</code> (formato <em>combined</em>):</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>198.51.100.7 - - [08/Nov/2026:22:10:31 +0100] "GET /prueba.html HTTP/1.1" 200 289 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IP del cliente</td>
+<td>198.51.100.7</td>
+<td>Quién hizo la petición.</td>
+</tr>
+<tr>
+<td>Fecha</td>
+<td>[08/Nov/2026:22:10:31 +0100]</td>
+<td>Cuándo.</td>
+</tr>
+<tr>
+<td>Petición</td>
+<td>"GET /prueba.html HTTP/1.1"</td>
+<td>Método, ruta y protocolo.</td>
+</tr>
+<tr>
+<td>Código</td>
+<td>200</td>
+<td>Resultado.</td>
+</tr>
+<tr>
+<td>Tamaño</td>
+<td>289</td>
+<td>Bytes enviados.</td>
+</tr>
+<tr>
+<td>Referer</td>
+<td>"-"</td>
+<td>Página de la que venía el visitante.</td>
+</tr>
+<tr>
+<td>User-Agent</td>
+<td>"Mozilla/5.0 ..."</td>
+<td>Navegador o robot.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-27-ver-los-logs-en-tiempo-real">PASO 2.7 – Ver los logs en tiempo real<a class="headerlink" href="#paso-27-ver-los-logs-en-tiempo-real" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> aprender a observar lo que ocurre mientras haces pruebas.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/apache2/access.log<span class="w"> </span>/var/log/apache2/error.log
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>tail</code> muestra el final de un archivo; <code>-f</code> (<em>follow</em>) se queda esperando y muestra cada línea nueva al instante. Con dos archivos, los muestra con un encabezado <code>==&gt; archivo &lt;==</code>.</p>
+<p><strong>Comprobación:</strong> con el comando en marcha, recarga <code>http://TU_IP/prueba.html</code> y luego visita <code>http://TU_IP/no-existe</code>. Verás aparecer una línea con <code>200</code> y otra con <code>404</code>. Pulsa <strong>Ctrl+C</strong> para salir.</p>
+<p>Otros comandos útiles con logs:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Las 20 últimas líneas de errores</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>/var/log/apache2/error.log
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="c1"># Cuántas peticiones ha hecho cada IP (top 10)</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>sudo<span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="w"> </span>/var/log/apache2/access.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1"># Todas las peticiones que dieron error 404</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>sudo<span class="w"> </span>grep<span class="w"> </span><span class="s1">'" 404 '</span><span class="w"> </span>/var/log/apache2/access.log
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Los logs rotan automáticamente cada día gracias a <strong>logrotate</strong> (<code>/etc/logrotate.d/apache2</code>): el de ayer pasa a llamarse <code>access.log.1</code>, los anteriores se comprimen (<code>access.log.2.gz</code>) y se conservan 14 días. Para leer uno comprimido usa <code>zcat</code> o <code>zgrep</code>.</p>
+</div>
+<p><strong>Siguiente paso:</strong> Módulo 3, alojar varias webs con VirtualHosts.</p>
+<h2 id="28-ejercicios-practicos-del-modulo-2">2.8 Ejercicios prácticos del Módulo 2<a class="headerlink" href="#28-ejercicios-practicos-del-modulo-2" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Detén Apache con <code>systemctl stop</code>, comprueba desde el navegador que la web no responde, consulta <code>systemctl status</code> y vuelve a arrancarlo.</li>
+<li>Introduce a propósito una errata en <code>/etc/apache2/conf-available/servername.conf</code> (por ejemplo <code>ServerNam</code>), ejecuta <code>apachectl configtest</code>, lee el mensaje de error y corrígelo. ¿Qué habría pasado si hubieras hecho <code>restart</code> sin comprobar?</li>
+<li>Crea una carpeta <code>/var/www/html/sinindice</code> con un archivo <code>a.txt</code> y visítala. ¿Qué ves? ¿Qué directiva lo provoca?</li>
+<li>Usa <code>awk</code> sobre <code>access.log</code> para averiguar qué rutas se piden más a menudo (pista: el campo 7).</li>
+<li>Busca en <code>error.log</code> líneas con la palabra <code>AH</code> y averigua qué significan sus códigos en la documentación oficial de Apache.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../01-fundamentos/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 1. Fundamentos de infraestructura">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                1. Fundamentos de infraestructura
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../03-virtualhosts/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 3. Virtual Hosting">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                3. Virtual Hosting
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

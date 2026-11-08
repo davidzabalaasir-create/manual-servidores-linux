@@ -1,0 +1,2014 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/10-ssl-tls/">
+      
+      
+        <link rel="prev" href="../09-dns-correo/">
+      
+      
+        <link rel="next" href="../11-integracion/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>10. Certificados SSL/TLS - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-10-certificados-ssltls" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              10. Certificados SSL/TLS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#101-como-funciona-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Cómo funciona TLS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-lets-encrypt-y-acme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Let's Encrypt y ACME
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#103-los-certificados-de-nuestra-infraestructura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Los certificados de nuestra infraestructura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.3 Los certificados de nuestra infraestructura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estructura-de-archivos-de-certbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de archivos de Certbot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#104-instalacion-de-certbot-apt-o-snap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Instalación de Certbot: apt o snap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#105-renovacion-automatica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Renovación automática
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.5 Renovación automática">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-101-comprobar-el-temporizador-de-renovacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.1 – Comprobar el temporizador de renovación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-102-simular-una-renovacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.2 – Simular una renovación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-103-recargar-los-servicios-tras-cada-renovacion-deploy-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.3 – Recargar los servicios tras cada renovación (deploy hook)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#106-verificar-los-certificados-de-todos-los-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Verificar los certificados de todos los servicios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.6 Verificar los certificados de todos los servicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-104-comprobar-el-certificado-que-presenta-cada-puerto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.4 – Comprobar el certificado que presenta cada puerto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-105-comprobar-que-los-protocolos-obsoletos-estan-desactivados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.5 – Comprobar que los protocolos obsoletos están desactivados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#107-proteccion-de-las-conexiones-de-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.7 Protección de las conexiones de autenticación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#108-operaciones-habituales-con-certificados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.8 Operaciones habituales con certificados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#109-ejercicios-practicos-del-modulo-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.9 Ejercicios prácticos del Módulo 10
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#101-como-funciona-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Cómo funciona TLS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-lets-encrypt-y-acme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Let's Encrypt y ACME
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#103-los-certificados-de-nuestra-infraestructura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Los certificados de nuestra infraestructura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.3 Los certificados de nuestra infraestructura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estructura-de-archivos-de-certbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de archivos de Certbot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#104-instalacion-de-certbot-apt-o-snap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Instalación de Certbot: apt o snap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#105-renovacion-automatica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Renovación automática
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.5 Renovación automática">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-101-comprobar-el-temporizador-de-renovacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.1 – Comprobar el temporizador de renovación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-102-simular-una-renovacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.2 – Simular una renovación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-103-recargar-los-servicios-tras-cada-renovacion-deploy-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.3 – Recargar los servicios tras cada renovación (deploy hook)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#106-verificar-los-certificados-de-todos-los-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Verificar los certificados de todos los servicios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.6 Verificar los certificados de todos los servicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-104-comprobar-el-certificado-que-presenta-cada-puerto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.4 – Comprobar el certificado que presenta cada puerto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-105-comprobar-que-los-protocolos-obsoletos-estan-desactivados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 10.5 – Comprobar que los protocolos obsoletos están desactivados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#107-proteccion-de-las-conexiones-de-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.7 Protección de las conexiones de autenticación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#108-operaciones-habituales-con-certificados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.8 Operaciones habituales con certificados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#109-ejercicios-practicos-del-modulo-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.9 Ejercicios prácticos del Módulo 10
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/10-ssl-tls.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-10-certificados-ssltls">Módulo 10. Certificados SSL/TLS<a class="headerlink" href="#modulo-10-certificados-ssltls" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Comprender cómo funciona TLS y qué es exactamente un certificado.</li>
+<li>Conocer Let's Encrypt, el protocolo ACME y los métodos de validación.</li>
+<li>Entender la estructura de archivos de Certbot y qué certificado usa cada servicio.</li>
+<li>Configurar la renovación automática y la recarga de Apache, Postfix y Dovecot tras cada renovación.</li>
+<li>Verificar los certificados de todos los servicios y los parámetros de seguridad TLS.</li>
+</ul>
+<h2 id="101-como-funciona-tls">10.1 Cómo funciona TLS<a class="headerlink" href="#101-como-funciona-tls" title="Permanent link">&para;</a></h2>
+<p><strong>TLS</strong> (<em>Transport Layer Security</em>, sucesor del antiguo SSL) protege una conexión de tres maneras:</p>
+<table>
+<thead>
+<tr>
+<th>Propiedad</th>
+<th>Qué garantiza</th>
+<th>Cómo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Confidencialidad</strong></td>
+<td>Nadie en el camino puede leer los datos.</td>
+<td>Cifrado simétrico (AES, ChaCha20) con una clave de sesión.</td>
+</tr>
+<tr>
+<td><strong>Integridad</strong></td>
+<td>Nadie puede modificar los datos sin que se detecte.</td>
+<td>Códigos de autenticación de mensajes.</td>
+</tr>
+<tr>
+<td><strong>Autenticidad</strong></td>
+<td>El servidor es quien dice ser.</td>
+<td>Certificado firmado por una autoridad de confianza.</td>
+</tr>
+</tbody>
+</table>
+<p>Un <strong>certificado</strong> es un documento digital que dice: «la clave pública X pertenece a <code>www.ejemplo1.com</code>», firmado por una <strong>Autoridad de Certificación</strong> (CA). Los navegadores y sistemas operativos traen una lista de CA de confianza (en Ubuntu, en <code>/etc/ssl/certs/</code>).</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Cadena de confianza
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ┌──────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │ CA raíz ISRG Root X1         │ ← preinstalada en navegadores y sistemas
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  └──────────────┬───────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                 │ firma
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ┌──────────────▼───────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │ CA intermedia de Let's Encrypt│ ← se envía junto al certificado (chain)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  └──────────────┬───────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                 │ firma
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ┌──────────────▼───────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │ www.ejemplo1.com             │ ← tu certificado (cert)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │ clave pública + nombres SAN  │    su clave privada (privkey) nunca sale del servidor
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  └──────────────────────────────┘
+</code></pre></div>
+<p>El saludo TLS (<em>handshake</em>), simplificado:</p>
+<ol>
+<li>El cliente saluda, indica qué versiones y cifrados admite y el nombre al que quiere conectar (SNI).</li>
+<li>El servidor responde con su certificado y la cadena intermedia.</li>
+<li>El cliente verifica la cadena hasta una CA raíz de confianza, que el nombre está en el certificado y que no ha caducado.</li>
+<li>Ambos acuerdan una clave de sesión mediante un intercambio Diffie-Hellman efímero (ECDHE). El servidor demuestra que posee la clave privada.</li>
+<li>A partir de ahí, todo viaja cifrado con la clave de sesión.</li>
+</ol>
+<h2 id="102-lets-encrypt-y-acme">10.2 Let's Encrypt y ACME<a class="headerlink" href="#102-lets-encrypt-y-acme" title="Permanent link">&para;</a></h2>
+<p><strong>Let's Encrypt</strong> es una CA gratuita, automatizada y abierta. Sus certificados:</p>
+<ul>
+<li>Son válidos durante <strong>90 días</strong> (corta duración para limitar los daños si una clave se compromete y para obligar a automatizar).</li>
+<li>Se obtienen con el protocolo <strong>ACME</strong>, que demuestra que controlas el dominio.</li>
+<li>Pueden cubrir varios nombres (campo SAN, <em>Subject Alternative Name</em>).</li>
+</ul>
+<p>Métodos de validación:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cómo se demuestra el control</th>
+<th>Cuándo usarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HTTP-01</strong></td>
+<td>Publicando un archivo en <code>http://dominio/.well-known/acme-challenge/</code>.</td>
+<td>El habitual. Requiere el puerto 80 abierto. <strong>Lo usamos con <code>--webroot</code>.</strong></td>
+</tr>
+<tr>
+<td>DNS-01</td>
+<td>Creando un registro TXT <code>_acme-challenge.dominio</code>.</td>
+<td>Certificados comodín (<code>*.ejemplo1.com</code>) o servidores sin puerto 80. Requiere un plugin para la API de tu DNS.</td>
+</tr>
+<tr>
+<td>TLS-ALPN-01</td>
+<td>Por el puerto 443 con un protocolo especial.</td>
+<td>Casos muy específicos.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="103-los-certificados-de-nuestra-infraestructura">10.3 Los certificados de nuestra infraestructura<a class="headerlink" href="#103-los-certificados-de-nuestra-infraestructura" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Certificado (nombre en Certbot)</th>
+<th>Nombres que cubre</th>
+<th>Lo usa</th>
+<th>Obtenido en</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ejemplo1.com</code></td>
+<td>ejemplo1.com, www.ejemplo1.com</td>
+<td>Apache: VirtualHost 443 de ejemplo1</td>
+<td>PASO 3.11</td>
+</tr>
+<tr>
+<td><code>ejemplo2.com</code></td>
+<td>ejemplo2.com, www.ejemplo2.com</td>
+<td>Apache: VirtualHost 443 de ejemplo2</td>
+<td>PASO 3.11</td>
+</tr>
+<tr>
+<td><code>mail.ejemplo1.com</code></td>
+<td>mail.ejemplo1.com, mail.ejemplo2.com</td>
+<td>Postfix (25, 587, 465) y Dovecot (993, 995)</td>
+<td>PASO 6.2</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Coherencia entre servicios.</strong> Un cliente solo acepta el certificado si el nombre al que se conecta está dentro de él. Por eso los clientes de correo deben usar <code>mail.ejemplo1.com</code> o <code>mail.ejemplo2.com</code> (nunca la IP ni <code>www</code>), y Postfix y Dovecot comparten el mismo certificado. Apache usa certificados distintos para cada web porque cada VirtualHost presenta el suyo gracias a SNI.</p>
+</div>
+<h3 id="estructura-de-archivos-de-certbot">Estructura de archivos de Certbot<a class="headerlink" href="#estructura-de-archivos-de-certbot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/etc/letsencrypt/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── live/                         ← SIEMPRE apunta a la versión vigente (enlaces simbólicos)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   └── mail.ejemplo1.com/
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│       ├── cert.pem      → ../../archive/mail.ejemplo1.com/cert3.pem     certificado
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│       ├── chain.pem     → ../../archive/mail.ejemplo1.com/chain3.pem    intermedios
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│       ├── fullchain.pem → ../../archive/mail.ejemplo1.com/fullchain3.pem cert + intermedios
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│       └── privkey.pem   → ../../archive/mail.ejemplo1.com/privkey3.pem  clave privada
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>├── archive/                      ← todas las versiones (cert1, cert2, cert3...)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>├── renewal/
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └── mail.ejemplo1.com.conf    ← cómo se obtuvo y cómo renovarlo (método, webroot...)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>├── renewal-hooks/
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ├── pre/                      ← scripts que se ejecutan antes de renovar
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   ├── deploy/                   ← scripts que se ejecutan tras CADA renovación con éxito
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   └── post/                     ← scripts que se ejecutan después de intentar renovar
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>└── accounts/                     ← tu cuenta ACME
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Configura siempre los servicios con las rutas de <code>live/</code> y con <code>fullchain.pem</code> (no <code>cert.pem</code>): así, tras cada renovación, solo hay que recargar el servicio. Si usas <code>cert.pem</code> sin la cadena, muchos clientes (especialmente de correo y móviles) darán error de certificado.</p>
+</div>
+<p>Consulta tus certificados en cualquier momento:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certificates
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Found the following certs:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Certificate Name: ejemplo1.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    Domains: ejemplo1.com www.ejemplo1.com
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    Expiry Date: 2027-02-06 22:41:03+00:00 (VALID: 89 days)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    Certificate Path: /etc/letsencrypt/live/ejemplo1.com/fullchain.pem
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    Private Key Path: /etc/letsencrypt/live/ejemplo1.com/privkey.pem
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Certificate Name: ejemplo2.com
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    ...
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Certificate Name: mail.ejemplo1.com
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    Domains: mail.ejemplo1.com mail.ejemplo2.com
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    ...
+</code></pre></div>
+<h2 id="104-instalacion-de-certbot-apt-o-snap">10.4 Instalación de Certbot: apt o snap<a class="headerlink" href="#104-instalacion-de-certbot-apt-o-snap" title="Permanent link">&para;</a></h2>
+<p>En el Módulo 3 instalamos Certbot desde los repositorios de Ubuntu (<code>apt install certbot</code>). Es una versión estable y se actualiza con el resto del sistema. El proyecto Certbot recomienda oficialmente instalarlo con <strong>snap</strong> para tener siempre la última versión. Ambas opciones son válidas; <strong>no las mezcles</strong>. Si quisieras pasar a snap:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>remove<span class="w"> </span>certbot
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>--classic<span class="w"> </span>certbot
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/snap/bin/certbot<span class="w"> </span>/usr/bin/certbot
+</code></pre></div>
+<p>La configuración de <code>/etc/letsencrypt</code> se conserva, y la renovación pasa a gestionarla el temporizador del snap (<code>snap.certbot.renew.timer</code>).</p>
+<h2 id="105-renovacion-automatica">10.5 Renovación automática<a class="headerlink" href="#105-renovacion-automatica" title="Permanent link">&para;</a></h2>
+<h3 id="paso-101-comprobar-el-temporizador-de-renovacion">PASO 10.1 – Comprobar el temporizador de renovación<a class="headerlink" href="#paso-101-comprobar-el-temporizador-de-renovacion" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> verificar que el sistema intenta renovar los certificados automáticamente.</p>
+<p><strong>Explicación:</strong> el paquete <code>certbot</code> instala un temporizador de systemd que ejecuta <code>certbot renew</code> dos veces al día. <code>renew</code> solo renueva los certificados a los que les quedan menos de 30 días; el resto los deja intactos.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>systemctl<span class="w"> </span>list-timers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>certbot
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>cat<span class="w"> </span>certbot.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ExecStart
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Mon 2026-11-09 11:43:00 CET  8h left  Sun 2026-11-08 23:12:01 CET  2h ago  certbot.timer  certbot.service
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ExecStart=/usr/bin/certbot -q renew --no-random-sleep-on-renew
+</code></pre></div>
+<p><strong>Errores habituales:</strong> si no aparece, actívalo con <code>sudo systemctl enable --now certbot.timer</code>.</p>
+<h3 id="paso-102-simular-una-renovacion">PASO 10.2 – Simular una renovación<a class="headerlink" href="#paso-102-simular-una-renovacion" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> comprobar que la renovación funcionará sin esperar 60 días.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+</code></pre></div>
+<p>Análisis: <code>--dry-run</code> hace todo el proceso contra el entorno de pruebas de Let's Encrypt sin guardar nada. Comprueba que el DNS, el puerto 80 y los webroots siguen bien.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Processing /etc/letsencrypt/renewal/ejemplo1.com.conf
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Simulating renewal of an existing certificate for ejemplo1.com and www.ejemplo1.com
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>...
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Congratulations, all simulated renewals succeeded:
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  /etc/letsencrypt/live/ejemplo1.com/fullchain.pem (success)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  /etc/letsencrypt/live/ejemplo2.com/fullchain.pem (success)
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  /etc/letsencrypt/live/mail.ejemplo1.com/fullchain.pem (success)
+</code></pre></div>
+<p><strong>Errores habituales:</strong> los mismos del PASO 3.11 (puerto 80 cerrado, DNS que ya no apunta al servidor, webroot que no coincide con el DocumentRoot). Revisa el método guardado en <code>/etc/letsencrypt/renewal/NOMBRE.conf</code> (línea <code>webroot_path</code>).</p>
+<h3 id="paso-103-recargar-los-servicios-tras-cada-renovacion-deploy-hook">PASO 10.3 – Recargar los servicios tras cada renovación (deploy hook)<a class="headerlink" href="#paso-103-recargar-los-servicios-tras-cada-renovacion-deploy-hook" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que Apache, Postfix y Dovecot empiecen a usar el certificado nuevo en cuanto se renueve.</p>
+<p><strong>Explicación:</strong> los servicios cargan el certificado en memoria al arrancar. Si Certbot renueva el archivo pero nadie recarga el servicio, este seguirá presentando el certificado antiguo hasta que caduque. Los scripts de <code>renewal-hooks/deploy/</code> se ejecutan tras cada renovación con éxito y reciben la variable <code>RENEWED_LINEAGE</code> con la carpeta del certificado renovado.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Se ejecuta tras cada renovación correcta de un certificado.</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Certbot define RENEWED_LINEAGE, por ejemplo /etc/letsencrypt/live/mail.ejemplo1.com</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">set</span><span class="w"> </span>-u
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"Certificado renovado: </span><span class="si">${</span><span class="nv">RENEWED_LINEAGE</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">case</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">RENEWED_LINEAGE</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>*/mail.ejemplo1.com<span class="o">)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">        </span><span class="c1"># Certificado del correo: Postfix y Dovecot</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">        </span>systemctl<span class="w"> </span>reload<span class="w"> </span>postfix
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">        </span>systemctl<span class="w"> </span>reload<span class="w"> </span>dovecot
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">        </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"Postfix y Dovecot recargados"</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="p">;;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>*<span class="o">)</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">        </span><span class="c1"># Certificados de las webs: Apache</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span>apachectl<span class="w"> </span>configtest<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">            </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">            </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"Apache recargado"</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">        </span><span class="k">else</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">            </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"ERROR: configuración de Apache inválida, no se recarga"</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">        </span><span class="k">fi</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">        </span><span class="p">;;</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="k">esac</span>
+</code></pre></div>
+<p>Análisis del script:</p>
+<table>
+<thead>
+<tr>
+<th>Línea</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logger -t certbot-deploy</code></td>
+<td>Escribe un mensaje en el registro del sistema (visible con <code>journalctl -t certbot-deploy</code>).</td>
+</tr>
+<tr>
+<td><code>case ... in */mail.ejemplo1.com)</code></td>
+<td>Si el certificado renovado es el del correo, recarga Postfix y Dovecot.</td>
+</tr>
+<tr>
+<td><code>apachectl configtest</code> antes de recargar</td>
+<td>Nunca recarga Apache si su configuración tiene un error (evita tumbar las webs de madrugada).</td>
+</tr>
+<tr>
+<td><code>systemctl reload</code></td>
+<td>Recarga sin cortar conexiones.</td>
+</tr>
+</tbody>
+</table>
+<p>Hazlo ejecutable y pruébalo simulando la renovación del certificado de correo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span><span class="nv">RENEWED_LINEAGE</span><span class="o">=</span>/etc/letsencrypt/live/mail.ejemplo1.com<span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>sudo<span class="w"> </span><span class="nv">RENEWED_LINEAGE</span><span class="o">=</span>/etc/letsencrypt/live/ejemplo1.com<span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>--no-pager
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>nov 09 03:40:11 mail certbot-deploy[9101]: Certificado renovado: /etc/letsencrypt/live/mail.ejemplo1.com
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>nov 09 03:40:11 mail certbot-deploy[9105]: Postfix y Dovecot recargados
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>nov 09 03:40:15 mail certbot-deploy[9112]: Certificado renovado: /etc/letsencrypt/live/ejemplo1.com
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>nov 09 03:40:15 mail certbot-deploy[9116]: Apache recargado
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><code>certbot renew --dry-run</code> <strong>no</strong> ejecuta los <em>deploy hooks</em> (porque no se instala ningún certificado real). Por eso los probamos llamando al script directamente, como acabamos de hacer.</p>
+</div>
+<h2 id="106-verificar-los-certificados-de-todos-los-servicios">10.6 Verificar los certificados de todos los servicios<a class="headerlink" href="#106-verificar-los-certificados-de-todos-los-servicios" title="Permanent link">&para;</a></h2>
+<h3 id="paso-104-comprobar-el-certificado-que-presenta-cada-puerto">PASO 10.4 – Comprobar el certificado que presenta cada puerto<a class="headerlink" href="#paso-104-comprobar-el-certificado-que-presenta-cada-puerto" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> confirmar que cada servicio presenta el certificado correcto, vigente y con la cadena completa.</p>
+<p><strong>Comandos:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Web (HTTPS, puerto 443) - con SNI</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>www.ejemplo1.com:443<span class="w"> </span>-servername<span class="w"> </span>www.ejemplo1.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># SMTP con STARTTLS (puertos 25 y 587)</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo1.com:587<span class="w"> </span>-starttls<span class="w"> </span>smtp<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># SMTPS (puerto 465, TLS implícito)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo1.com:465<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># IMAPS (993) y POP3S (995)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo2.com:993<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo1.com:995<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>echo |</code> envía una línea vacía para que <code>s_client</code> cierre la conexión tras el saludo.</li>
+<li><code>-servername</code> activa SNI (necesario en Apache para obtener el certificado del VirtualHost correcto).</li>
+<li><code>-starttls smtp</code> inicia la conexión en texto plano y la pasa a TLS con STARTTLS (también existen <code>-starttls imap</code> y <code>-starttls pop3</code>).</li>
+<li><code>openssl x509 -noout -subject -issuer -dates -ext subjectAltName</code> extrae del certificado el titular, el emisor, las fechas y los nombres que cubre.</li>
+</ul>
+<p><strong>Resultado esperado (para el 993 de mail.ejemplo2.com):</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>subject=CN = mail.ejemplo1.com
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>notBefore=Nov  9 00:41:03 2026 GMT
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>notAfter=Feb  7 00:41:02 2027 GMT
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>X509v3 Subject Alternative Name:
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    DNS:mail.ejemplo1.com, DNS:mail.ejemplo2.com
+</code></pre></div>
+<p>Para comprobar que la cadena es válida (el cliente puede verificarla):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo1.com:993<span class="w"> </span>-verify_return_error<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'Verify return code|Protocol|Cipher'</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Protocol  : TLSv1.3
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Cipher    : TLS_AES_256_GCM_SHA384
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Verify return code: 0 (ok)
+</code></pre></div>
+<p><code>Verify return code: 0 (ok)</code> significa cadena completa y válida.</p>
+<h3 id="paso-105-comprobar-que-los-protocolos-obsoletos-estan-desactivados">PASO 10.5 – Comprobar que los protocolos obsoletos están desactivados<a class="headerlink" href="#paso-105-comprobar-que-los-protocolos-obsoletos-estan-desactivados" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>www.ejemplo1.com:443<span class="w"> </span>-servername<span class="w"> </span>www.ejemplo1.com<span class="w"> </span>-tls1_1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'alert|Cipher is|error'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>mail.ejemplo1.com:993<span class="w"> </span>-tls1_1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'alert|Cipher is|error'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> un error del tipo <code>alert protocol version</code> o <code>no protocols available</code> y <code>Cipher is (NONE)</code>. Significa que TLS 1.1 es rechazado.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Para una auditoría completa, usa la herramienta libre <strong>testssl.sh</strong> (<code>./testssl.sh mail.ejemplo1.com:993</code>) o, para las webs, el test de <strong>SSL Labs</strong> (en su web). Ambas califican protocolos, cifrados y configuración.</p>
+</div>
+<p>Resumen de la configuración TLS en cada servicio:</p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Archivo</th>
+<th>Directivas TLS clave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apache</td>
+<td><code>/etc/apache2/sites-available/*.conf</code> y <code>mods-available/ssl.conf</code></td>
+<td><code>SSLCertificateFile</code>, <code>SSLCertificateKeyFile</code>, <code>SSLProtocol</code></td>
+</tr>
+<tr>
+<td>Postfix entrante</td>
+<td><code>/etc/postfix/main.cf</code></td>
+<td><code>smtpd_tls_cert_file</code>, <code>smtpd_tls_key_file</code>, <code>smtpd_tls_protocols</code>, <code>smtpd_tls_auth_only</code></td>
+</tr>
+<tr>
+<td>Postfix saliente</td>
+<td><code>/etc/postfix/main.cf</code></td>
+<td><code>smtp_tls_security_level</code>, <code>smtp_tls_CApath</code></td>
+</tr>
+<tr>
+<td>Postfix 587 / 465</td>
+<td><code>/etc/postfix/master.cf</code></td>
+<td><code>smtpd_tls_security_level=encrypt</code> / <code>smtpd_tls_wrappermode=yes</code></td>
+</tr>
+<tr>
+<td>Dovecot</td>
+<td><code>/etc/dovecot/conf.d/10-ssl.conf</code></td>
+<td><code>ssl = required</code>, <code>ssl_cert</code>, <code>ssl_key</code>, <code>ssl_min_protocol</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="107-proteccion-de-las-conexiones-de-autenticacion">10.7 Protección de las conexiones de autenticación<a class="headerlink" href="#107-proteccion-de-las-conexiones-de-autenticacion" title="Permanent link">&para;</a></h2>
+<p>Las contraseñas solo deben viajar dentro de TLS. Esta es la lista de comprobación que ya cumple nuestra configuración:</p>
+<table>
+<thead>
+<tr>
+<th>Conexión</th>
+<th>Protección</th>
+<th>Directiva</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inicio de sesión IMAP/POP3</td>
+<td>Solo por 993/995 (TLS implícito); 143/110 deshabilitados.</td>
+<td><code>port = 0</code> en <code>10-master.conf</code></td>
+</tr>
+<tr>
+<td>Cualquier autenticación en Dovecot</td>
+<td>Rechazada sin TLS.</td>
+<td><code>ssl = required</code>, <code>disable_plaintext_auth = yes</code></td>
+</tr>
+<tr>
+<td>Autenticación SMTP en el puerto 25</td>
+<td>Desactivada.</td>
+<td><code>smtpd_sasl_auth_enable = no</code></td>
+</tr>
+<tr>
+<td>Autenticación SMTP en 587</td>
+<td>Solo tras STARTTLS.</td>
+<td><code>smtpd_tls_security_level=encrypt</code>, <code>smtpd_tls_auth_only=yes</code></td>
+</tr>
+<tr>
+<td>Autenticación SMTP en 465</td>
+<td>TLS desde el inicio.</td>
+<td><code>smtpd_tls_wrappermode=yes</code></td>
+</tr>
+<tr>
+<td>Paneles web (si los instalas)</td>
+<td>Solo HTTPS + HSTS.</td>
+<td>Redirección 80→443 y <code>Strict-Transport-Security</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comprobación:</strong> intenta autenticarte en el 587 sin STARTTLS:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>swaks<span class="w"> </span>--server<span class="w"> </span>mail.ejemplo1.com<span class="w"> </span>--port<span class="w"> </span><span class="m">587</span><span class="w"> </span>--auth<span class="w"> </span>LOGIN<span class="w"> </span>--auth-user<span class="w"> </span>info@ejemplo1.com<span class="w"> </span>--auth-password<span class="w"> </span>prueba<span class="w"> </span>--quit-after<span class="w"> </span>AUTH
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>&lt;** 530 5.7.0 Must issue a STARTTLS command first
+</code></pre></div>
+<h2 id="108-operaciones-habituales-con-certificados">10.8 Operaciones habituales con certificados<a class="headerlink" href="#108-operaciones-habituales-con-certificados" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Añadir un nombre a un certificado existente</td>
+<td><code>sudo certbot certonly --webroot -w /var/www/ejemplo1.com/public_html --cert-name ejemplo1.com -d ejemplo1.com -d www.ejemplo1.com -d tienda.ejemplo1.com</code></td>
+</tr>
+<tr>
+<td>Forzar la renovación de uno</td>
+<td><code>sudo certbot renew --cert-name mail.ejemplo1.com --force-renewal</code> (úsalo con moderación: hay límites)</td>
+</tr>
+<tr>
+<td>Revocar (clave comprometida)</td>
+<td><code>sudo certbot revoke --cert-name ejemplo2.com</code></td>
+</tr>
+<tr>
+<td>Borrar un certificado que ya no usas</td>
+<td><code>sudo certbot delete --cert-name ejemplo2.com</code> (antes quítalo de la configuración de Apache)</td>
+</tr>
+<tr>
+<td>Ver los días que le quedan a un certificado</td>
+<td><code>sudo openssl x509 -enddate -noout -in /etc/letsencrypt/live/ejemplo1.com/cert.pem</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Registro CAA (opcional).</strong> Puedes publicar <code>ejemplo1.com. CAA 0 issue "letsencrypt.org"</code> para indicar que solo Let's Encrypt puede emitir certificados para tu dominio. Es una capa adicional de protección frente a emisiones fraudulentas.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Laboratorio.</strong> Si usas el certificado autofirmado y cambias el nombre del servidor, regenera el certificado con <code>sudo make-ssl-cert generate-default-snakeoil --force-overwrite</code> y reinicia Apache, Postfix y Dovecot.</p>
+</div>
+<h2 id="109-ejercicios-practicos-del-modulo-10">10.9 Ejercicios prácticos del Módulo 10<a class="headerlink" href="#109-ejercicios-practicos-del-modulo-10" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Ejecuta <code>sudo ls -l /etc/letsencrypt/live/ejemplo1.com/</code> y explica a qué apunta cada enlace.</li>
+<li>Conéctate al puerto 443 <strong>sin</strong> <code>-servername</code> y observa qué certificado recibes. ¿Por qué es el del comodín <code>default-ssl</code>?</li>
+<li>Configura Thunderbird con el servidor <code>203.0.113.10</code> (la IP) en lugar de <code>mail.ejemplo1.com</code>. ¿Qué aviso aparece y por qué?</li>
+<li>Escribe un pequeño script que muestre los días que quedan para que caduque cada certificado de <code>/etc/letsencrypt/live/*/cert.pem</code> (pista: <code>openssl x509 -checkend</code>).</li>
+<li>Simula una renovación forzada del certificado de correo y verifica en <code>journalctl -t certbot-deploy</code> que se recargaron Postfix y Dovecot.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../09-dns-correo/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 9. DNS del correo">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                9. DNS del correo
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../11-integracion/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 11. Integración completa">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                11. Integración completa
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

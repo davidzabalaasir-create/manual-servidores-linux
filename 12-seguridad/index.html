@@ -1,0 +1,2741 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/12-seguridad/">
+      
+      
+        <link rel="prev" href="../11-integracion/">
+      
+      
+        <link rel="next" href="../13-pruebas/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>12. Seguridad y mantenimiento - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-12-seguridad-y-mantenimiento" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              12. Seguridad y mantenimiento
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#121-el-modelo-de-seguridad-por-capas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 El modelo de seguridad por capas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#122-configuracion-definitiva-de-ufw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 Configuración definitiva de UFW
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.2 Configuración definitiva de UFW">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-121-revisar-y-ordenar-las-reglas-del-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.1 – Revisar y ordenar las reglas del cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#123-proteccion-de-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 Protección de SSH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.3 Protección de SSH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-122-verificar-el-endurecimiento-de-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.2 – Verificar el endurecimiento de SSH
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#124-proteccion-de-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.4 Protección de MariaDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#125-seguridad-de-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.5 Seguridad de Apache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.5 Seguridad de Apache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-123-ocultar-informacion-y-anadir-cabeceras-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.3 – Ocultar información y añadir cabeceras de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#126-seguridad-de-postfix-y-dovecot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.6 Seguridad de Postfix y Dovecot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.6 Seguridad de Postfix y Dovecot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-124-limitar-la-velocidad-de-los-clientes-smtp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.4 – Limitar la velocidad de los clientes SMTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#127-proteccion-contra-fuerza-bruta-con-fail2ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.7 Protección contra fuerza bruta con Fail2ban
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.7 Protección contra fuerza bruta con Fail2ban">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-125-instalar-y-configurar-fail2ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.5 – Instalar y configurar Fail2ban
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#128-actualizaciones-automaticas-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.8 Actualizaciones automáticas de seguridad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.8 Actualizaciones automáticas de seguridad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-126-configurar-unattended-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.6 – Configurar unattended-upgrades
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#129-copias-de-seguridad-automaticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.9 Copias de seguridad automáticas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.9 Copias de seguridad automáticas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-127-crear-el-script-de-copia-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.7 – Crear el script de copia de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-128-programar-la-copia-diaria-con-cron" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.8 – Programar la copia diaria con cron
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-129-sacar-las-copias-del-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.9 – Sacar las copias del servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1210-monitorizacion-de-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.10 Monitorización de servicios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.10 Monitorización de servicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1210-script-de-estado-del-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.10 – Script de estado del servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1211-revision-de-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.11 Revisión de logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1212-recuperacion-ante-fallos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.12 Recuperación ante fallos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1213-ejercicios-practicos-del-modulo-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.13 Ejercicios prácticos del Módulo 12
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#121-el-modelo-de-seguridad-por-capas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 El modelo de seguridad por capas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#122-configuracion-definitiva-de-ufw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 Configuración definitiva de UFW
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.2 Configuración definitiva de UFW">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-121-revisar-y-ordenar-las-reglas-del-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.1 – Revisar y ordenar las reglas del cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#123-proteccion-de-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 Protección de SSH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.3 Protección de SSH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-122-verificar-el-endurecimiento-de-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.2 – Verificar el endurecimiento de SSH
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#124-proteccion-de-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.4 Protección de MariaDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#125-seguridad-de-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.5 Seguridad de Apache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.5 Seguridad de Apache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-123-ocultar-informacion-y-anadir-cabeceras-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.3 – Ocultar información y añadir cabeceras de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#126-seguridad-de-postfix-y-dovecot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.6 Seguridad de Postfix y Dovecot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.6 Seguridad de Postfix y Dovecot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-124-limitar-la-velocidad-de-los-clientes-smtp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.4 – Limitar la velocidad de los clientes SMTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#127-proteccion-contra-fuerza-bruta-con-fail2ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.7 Protección contra fuerza bruta con Fail2ban
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.7 Protección contra fuerza bruta con Fail2ban">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-125-instalar-y-configurar-fail2ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.5 – Instalar y configurar Fail2ban
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#128-actualizaciones-automaticas-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.8 Actualizaciones automáticas de seguridad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.8 Actualizaciones automáticas de seguridad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-126-configurar-unattended-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.6 – Configurar unattended-upgrades
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#129-copias-de-seguridad-automaticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.9 Copias de seguridad automáticas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.9 Copias de seguridad automáticas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-127-crear-el-script-de-copia-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.7 – Crear el script de copia de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-128-programar-la-copia-diaria-con-cron" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.8 – Programar la copia diaria con cron
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-129-sacar-las-copias-del-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.9 – Sacar las copias del servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1210-monitorizacion-de-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.10 Monitorización de servicios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12.10 Monitorización de servicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1210-script-de-estado-del-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 12.10 – Script de estado del servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1211-revision-de-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.11 Revisión de logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1212-recuperacion-ante-fallos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.12 Recuperación ante fallos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1213-ejercicios-practicos-del-modulo-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.13 Ejercicios prácticos del Módulo 12
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/12-seguridad.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-12-seguridad-y-mantenimiento">Módulo 12. Seguridad y mantenimiento<a class="headerlink" href="#modulo-12-seguridad-y-mantenimiento" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Dejar el cortafuegos UFW con solo los puertos imprescindibles.</li>
+<li>Repasar y reforzar la seguridad de SSH, MariaDB, Apache, Postfix y Dovecot.</li>
+<li>Proteger el servidor contra ataques de fuerza bruta con Fail2ban.</li>
+<li>Automatizar las actualizaciones de seguridad y las copias de seguridad.</li>
+<li>Monitorizar los servicios, revisar los logs y saber recuperarse de los fallos más habituales.</li>
+</ul>
+<h2 id="121-el-modelo-de-seguridad-por-capas">12.1 El modelo de seguridad por capas<a class="headerlink" href="#121-el-modelo-de-seguridad-por-capas" title="Permanent link">&para;</a></h2>
+<p>Ninguna medida es infalible. La seguridad profesional se construye en capas: si una falla, la siguiente sigue protegiendo.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Internet
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  [1] Cortafuegos UFW ............ solo 22, 25, 80, 443, 465, 587, 993, 995
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  [2] Fail2ban ................... bloquea IP que fallan contraseñas repetidamente
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  [3] Servicios endurecidos ...... SSH solo con clave, TLS obligatorio, sin relay abierto
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>     │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  [4] Aislamiento ................ un usuario Linux, un pool PHP y un usuario BD por web
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  [5] Mínimo privilegio .......... MariaDB solo local, permisos 640/750/600, open_basedir
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>     │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  [6] Actualizaciones ............ parches de seguridad automáticos
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  [7] Copias de seguridad ........ si todo lo demás falla, se puede reconstruir
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>     │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  [8] Monitorización y logs ...... para enterarte antes que tus usuarios
+</code></pre></div>
+<h2 id="122-configuracion-definitiva-de-ufw">12.2 Configuración definitiva de UFW<a class="headerlink" href="#122-configuracion-definitiva-de-ufw" title="Permanent link">&para;</a></h2>
+<h3 id="paso-121-revisar-y-ordenar-las-reglas-del-cortafuegos">PASO 12.1 – Revisar y ordenar las reglas del cortafuegos<a class="headerlink" href="#paso-121-revisar-y-ordenar-las-reglas-del-cortafuegos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> comprobar que solo están abiertos los puertos necesarios.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>status<span class="w"> </span>numbered
+</code></pre></div>
+<p>Resultado esperado (IPv4; cada regla aparece también con <code>(v6)</code>):</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Status: active
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>     To                         Action      From
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>     --                         ------      ----
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>[ 1] OpenSSH                    ALLOW IN    Anywhere
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>[ 2] Apache Full                ALLOW IN    Anywhere
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>[ 3] 25/tcp                     ALLOW IN    Anywhere      # SMTP recepcion
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>[ 4] 587/tcp                    ALLOW IN    Anywhere      # SMTP submission
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>[ 5] 465/tcp                    ALLOW IN    Anywhere      # SMTPS
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>[ 6] 993/tcp                    ALLOW IN    Anywhere      # IMAPS
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>[ 7] 995/tcp                    ALLOW IN    Anywhere      # POP3S
+</code></pre></div>
+<p>Tabla de referencia de puertos del servidor:</p>
+<table>
+<thead>
+<tr>
+<th>Puerto</th>
+<th>Servicio</th>
+<th>Abierto en UFW</th>
+<th>Escucha en</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22/tcp</td>
+<td>SSH</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Administración (solo con clave).</td>
+</tr>
+<tr>
+<td>25/tcp</td>
+<td>Postfix smtpd</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Recepción de correo desde Internet.</td>
+</tr>
+<tr>
+<td>80/tcp</td>
+<td>Apache</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Redirección a HTTPS y validación de Let's Encrypt.</td>
+</tr>
+<tr>
+<td>443/tcp</td>
+<td>Apache</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Webs HTTPS.</td>
+</tr>
+<tr>
+<td>465/tcp</td>
+<td>Postfix smtps</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Envío autenticado (TLS implícito).</td>
+</tr>
+<tr>
+<td>587/tcp</td>
+<td>Postfix submission</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Envío autenticado (STARTTLS).</td>
+</tr>
+<tr>
+<td>993/tcp</td>
+<td>Dovecot IMAPS</td>
+<td>Sí</td>
+<td>Todas</td>
+<td>Lectura de correo.</td>
+</tr>
+<tr>
+<td>995/tcp</td>
+<td>Dovecot POP3S</td>
+<td>Sí (si usas POP3)</td>
+<td>Todas</td>
+<td>Lectura de correo.</td>
+</tr>
+<tr>
+<td>3306/tcp</td>
+<td>MariaDB</td>
+<td><strong>No</strong></td>
+<td>127.0.0.1</td>
+<td>Solo uso interno.</td>
+</tr>
+<tr>
+<td>8891/tcp</td>
+<td>OpenDKIM</td>
+<td><strong>No</strong></td>
+<td>127.0.0.1</td>
+<td>Solo uso interno.</td>
+</tr>
+<tr>
+<td>110, 143</td>
+<td>POP3/IMAP sin TLS</td>
+<td><strong>No</strong></td>
+<td>(deshabilitados)</td>
+<td>Inseguros.</td>
+</tr>
+</tbody>
+</table>
+<p>Si no usas POP3, cierra el 995 en Dovecot (pon <code>port = 0</code> también en <code>pop3s</code>) y en UFW:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>delete<span class="w"> </span>allow<span class="w"> </span><span class="m">995</span>/tcp
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Restringir SSH a tu IP.</strong> Si administras siempre desde una IP fija (la de tu oficina o una VPN), puedes limitar SSH a ella: <code>sudo ufw allow from 198.51.100.7 to any port 22 proto tcp</code> y después <code>sudo ufw delete allow OpenSSH</code>. Asegúrate antes de que tienes acceso a la consola web del proveedor por si cambia tu IP.</p>
+</div>
+<p>Comprueba también qué escucha realmente el servidor (lo que no aparezca aquí no es accesible aunque el cortafuegos lo permita):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'NR==1 || /LISTEN/'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4
+</code></pre></div>
+<h2 id="123-proteccion-de-ssh">12.3 Protección de SSH<a class="headerlink" href="#123-proteccion-de-ssh" title="Permanent link">&para;</a></h2>
+<p>Ya en el Módulo 1 desactivamos el acceso de root y por contraseña. Repasemos el estado y añadamos Fail2ban más adelante.</p>
+<h3 id="paso-122-verificar-el-endurecimiento-de-ssh">PASO 12.2 – Verificar el endurecimiento de SSH<a class="headerlink" href="#paso-122-verificar-el-endurecimiento-de-ssh" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ei<span class="w"> </span><span class="s1">'^(permitrootlogin|passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication|maxauthtries|allowusers|x11forwarding)'</span>
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>permitrootlogin no
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pubkeyauthentication yes
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>passwordauthentication no
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>kbdinteractiveauthentication no
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>maxauthtries 3
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>x11forwarding no
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>allowusers sysadmin
+</code></pre></div>
+<p>Buenas prácticas adicionales:</p>
+<ul>
+<li>Protege tu clave privada con frase de paso y guarda una copia en lugar seguro.</li>
+<li>Si varias personas administran el servidor, cada una con su propio usuario y su propia clave (nunca compartidas). Así sabrás quién hizo qué (<code>/var/log/auth.log</code>) y podrás revocar a una persona sin afectar al resto.</li>
+<li>Revisa periódicamente <code>~/.ssh/authorized_keys</code> y elimina las claves que ya no se usen.</li>
+<li>Cambiar el puerto 22 reduce el ruido en los logs, pero no es una medida de seguridad real. En Ubuntu 24.04 SSH se activa por socket (<code>ssh.socket</code>): si cambias el puerto debes hacerlo con un <em>drop-in</em> de <code>ssh.socket</code> (<code>ListenStream=</code>), no solo en <code>sshd_config</code>.</li>
+</ul>
+<h2 id="124-proteccion-de-mariadb">12.4 Protección de MariaDB<a class="headerlink" href="#124-proteccion-de-mariadb" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Medida</th>
+<th>Comprobación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solo escucha en local</td>
+<td><code>sudo ss -tlnp \| grep 3306</code> → <code>127.0.0.1:3306</code></td>
+</tr>
+<tr>
+<td>Puerto cerrado en UFW</td>
+<td><code>sudo ufw status \| grep 3306</code> → sin resultados</td>
+</tr>
+<tr>
+<td>root solo por unix_socket</td>
+<td><code>mariadb -u root</code> sin sudo → <code>Access denied</code></td>
+</tr>
+<tr>
+<td>Sin usuarios anónimos ni base <code>test</code></td>
+<td><code>sudo mariadb -e "SELECT user,host FROM mysql.user;"</code></td>
+</tr>
+<tr>
+<td>Sin usuarios con host <code>%</code></td>
+<td>En la consulta anterior no debe haber <code>%</code></td>
+</tr>
+<tr>
+<td>Privilegios mínimos por aplicación</td>
+<td><code>SHOW GRANTS FOR 'web1_user'@'localhost';</code></td>
+</tr>
+<tr>
+<td>Copias diarias</td>
+<td>PASO 12.9</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Si algún día necesitas administrar MariaDB con una herramienta gráfica desde tu ordenador, <strong>no</strong> abras el puerto 3306. Usa un túnel SSH: <code>ssh -L 3307:127.0.0.1:3306 sysadmin@mail.ejemplo1.com</code> y conecta tu herramienta a <code>127.0.0.1:3307</code>. El tráfico viaja cifrado por SSH y MariaDB sigue siendo invisible desde Internet.</p>
+</div>
+<h2 id="125-seguridad-de-apache">12.5 Seguridad de Apache<a class="headerlink" href="#125-seguridad-de-apache" title="Permanent link">&para;</a></h2>
+<h3 id="paso-123-ocultar-informacion-y-anadir-cabeceras-de-seguridad">PASO 12.3 – Ocultar información y añadir cabeceras de seguridad<a class="headerlink" href="#paso-123-ocultar-informacion-y-anadir-cabeceras-de-seguridad" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que Apache no revele su versión ni la del sistema, y que los navegadores apliquen protecciones adicionales.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/apache2/conf-available/security.conf
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/apache2/conf-available/security.conf</code>. Localiza y deja así estas directivas (están en el archivo; cambia su valor y conserva el resto):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ServerTokens Prod
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ServerSignature Off
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>TraceEnable Off
+</code></pre></div>
+<p>Después crea un archivo propio con las cabeceras de seguridad:</p>
+<p><strong>Archivo:</strong> <code>/etc/apache2/conf-available/cabeceras-seguridad.conf</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Cabeceras de seguridad para todas las webs
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>&lt;IfModule mod_headers.c&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    # Impide que el navegador "adivine" tipos de archivo
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    Header always set X-Content-Type-Options "nosniff"
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    # Impide que otras webs muestren las nuestras dentro de un marco (clickjacking)
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    Header always set X-Frame-Options "SAMEORIGIN"
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    # Limita la información de procedencia enviada a otras webs
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    # Desactiva funciones del navegador que nuestras webs no usan
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>&lt;/IfModule&gt;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a># Bloquea el acceso a archivos ocultos y de copia que puedan quedar en las webs
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>&lt;FilesMatch "(^\.(?!well-known)|\.(bak|old|orig|swp|sql|ini|log)$|~$)"&gt;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    Require all denied
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>&lt;/FilesMatch&gt;
+</code></pre></div>
+<p>Análisis:</p>
+<table>
+<thead>
+<tr>
+<th>Directiva</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ServerTokens Prod</code></td>
+<td>La cabecera <code>Server</code> muestra solo <code>Apache</code>, sin versión ni sistema.</td>
+</tr>
+<tr>
+<td><code>ServerSignature Off</code></td>
+<td>Las páginas de error no muestran la versión.</td>
+</tr>
+<tr>
+<td><code>TraceEnable Off</code></td>
+<td>Desactiva el método HTTP TRACE (útil en algunos ataques).</td>
+</tr>
+<tr>
+<td><code>&lt;FilesMatch ...&gt;</code></td>
+<td>Deniega archivos que empiezan por punto (<code>.env</code>, <code>.git</code>...) salvo <code>.well-known</code>, y copias como <code>index.php.bak</code> o volcados <code>.sql</code> olvidados.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>a2enconf<span class="w"> </span>security<span class="w"> </span>cabeceras-seguridad
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>apachectl<span class="w"> </span>configtest<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-sI<span class="w"> </span>https://www.ejemplo1.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ei<span class="w"> </span><span class="s1">'^(server|x-content|x-frame|referrer|strict)'</span>
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>server: Apache
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>strict-transport-security: max-age=15552000
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>x-content-type-options: nosniff
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>x-frame-options: SAMEORIGIN
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>referrer-policy: strict-origin-when-cross-origin
+</code></pre></div>
+<p>Más medidas para Apache:</p>
+<ul>
+<li>Desactiva los módulos que no uses: <code>sudo apachectl -M</code> y <code>sudo a2dismod autoindex status</code> (el módulo <code>status</code> expone información del servidor; <code>autoindex</code> genera listados de carpetas).</li>
+<li>Mantén <code>Options -Indexes</code> y <code>AllowOverride None</code> en todos los VirtualHosts.</li>
+<li>No dejes scripts de prueba (<code>phpinfo()</code>, <code>prueba-bd.php</code>) en producción.</li>
+<li>Mantén actualizadas las aplicaciones web (WordPress, plugins...): son la vía de entrada más frecuente.</li>
+</ul>
+<h2 id="126-seguridad-de-postfix-y-dovecot">12.6 Seguridad de Postfix y Dovecot<a class="headerlink" href="#126-seguridad-de-postfix-y-dovecot" title="Permanent link">&para;</a></h2>
+<p>Lista de comprobación de lo ya configurado:</p>
+<table>
+<thead>
+<tr>
+<th>Medida</th>
+<th>Dónde</th>
+<th>Cómo comprobarla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sin relay abierto</td>
+<td><code>smtpd_relay_restrictions</code></td>
+<td>Conversación manual del PASO 6.9 → <code>Relay access denied</code>.</td>
+</tr>
+<tr>
+<td>Autenticación solo con TLS y solo en 587/465</td>
+<td><code>master.cf</code>, <code>smtpd_tls_auth_only</code></td>
+<td>PASO 10.7.</td>
+</tr>
+<tr>
+<td>Remitente ligado al usuario</td>
+<td><code>reject_sender_login_mismatch</code></td>
+<td>PASO 8.2.</td>
+</tr>
+<tr>
+<td>Direcciones inexistentes rechazadas en el acto</td>
+<td><code>virtual_mailbox_maps</code></td>
+<td><code>noexiste@ejemplo1.com</code> → 550.</td>
+</tr>
+<tr>
+<td>Sin <code>VRFY</code></td>
+<td><code>disable_vrfy_command</code></td>
+<td><code>nc mail.ejemplo1.com 25</code> → <code>VRFY info</code> → <code>502</code>.</td>
+</tr>
+<tr>
+<td>IMAP/POP3 solo cifrados</td>
+<td><code>10-master.conf</code></td>
+<td><code>ss -tlnp</code> no muestra 143 ni 110.</td>
+</tr>
+<tr>
+<td>Contraseñas con hash SHA512-CRYPT</td>
+<td><code>/etc/dovecot/users</code></td>
+<td><code>sudo cut -d: -f2 /etc/dovecot/users \| cut -c1-14</code>.</td>
+</tr>
+<tr>
+<td>Buzones inaccesibles para otros usuarios</td>
+<td><code>/var/mail/vhosts</code> (vmail, 700)</td>
+<td><code>sudo -u web1 ls /var/mail/vhosts</code> → <code>Permission denied</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-124-limitar-la-velocidad-de-los-clientes-smtp">PASO 12.4 – Limitar la velocidad de los clientes SMTP<a class="headerlink" href="#paso-124-limitar-la-velocidad-de-los-clientes-smtp" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> dificultar que una cuenta robada o un atacante envíe miles de correos o pruebe contraseñas sin control.</p>
+<p><strong>Archivo:</strong> <code>/etc/postfix/main.cf</code>. Conserva todo y añade al final:</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># --- Límites de conexión y envío (Módulo 12) ------------------------------
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>smtpd_client_connection_rate_limit = 30
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>smtpd_client_message_rate_limit = 100
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>smtpd_client_recipient_rate_limit = 200
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>anvil_rate_time_unit = 60s
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>smtpd_error_sleep_time = 5s
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>smtpd_soft_error_limit = 5
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>smtpd_hard_error_limit = 10
+</code></pre></div>
+<p>Análisis: cada cliente (IP) puede abrir como máximo 30 conexiones, enviar 100 mensajes y 200 destinatarios por minuto (<code>anvil_rate_time_unit</code>). Tras 5 errores, Postfix espera 5 segundos entre respuestas; tras 10, corta la conexión. Los clientes de <code>mynetworks</code> (el propio servidor) están exentos.</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sudo<span class="w"> </span>postfix<span class="w"> </span>check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>postfix
+</code></pre></div>
+<h2 id="127-proteccion-contra-fuerza-bruta-con-fail2ban">12.7 Protección contra fuerza bruta con Fail2ban<a class="headerlink" href="#127-proteccion-contra-fuerza-bruta-con-fail2ban" title="Permanent link">&para;</a></h2>
+<p><strong>Fail2ban</strong> lee los logs, detecta patrones de fallos de autenticación (contraseñas incorrectas en SSH, SMTP, IMAP...) y, cuando una IP supera un número de intentos en un tiempo dado, la bloquea en el cortafuegos durante un periodo.</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a> /var/log/auth.log, /var/log/mail.log, journal
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>          │ (lee continuamente)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>          ▼
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a> FAIL2BAN ── filtro (expresiones regulares) ── ¿5 fallos de la IP X en 10 min?
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>          │ sí
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>          ▼
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a> Regla de cortafuegos: DROP desde IP X durante 1 hora  →  el atacante deja de llegar
+</code></pre></div>
+<p>Conceptos: un <strong>jail</strong> (cárcel) combina un <strong>filtro</strong> (qué buscar en qué log) con una <strong>acción</strong> (cómo bloquear) y unos parámetros: <code>maxretry</code> (intentos), <code>findtime</code> (ventana de tiempo) y <code>bantime</code> (duración del bloqueo).</p>
+<h3 id="paso-125-instalar-y-configurar-fail2ban">PASO 12.5 – Instalar y configurar Fail2ban<a class="headerlink" href="#paso-125-instalar-y-configurar-fail2ban" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>fail2ban
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Nunca edites <code>/etc/fail2ban/jail.conf</code>: se sobrescribe al actualizar. Las configuraciones propias van en <code>/etc/fail2ban/jail.local</code> o en <code>/etc/fail2ban/jail.d/*.local</code>.</p>
+</div>
+<p><strong>Archivo:</strong> <code>/etc/fail2ban/jail.local</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">[DEFAULT]</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># IP que nunca se bloquean (el propio servidor; añade tu IP fija si la tienes)</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="na">ignoreip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">127.0.0.1/8 ::1</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Bloqueo de 1 hora tras 5 fallos en 10 minutos</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="na">bantime</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">1h</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="na">findtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10m</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="na">maxretry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># --- SSH ---</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="k">[sshd]</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="na">enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="na">backend</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">systemd</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="na">maxretry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># --- Postfix: clientes que provocan rechazos repetidos ---</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="k">[postfix]</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="na">enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="na">mode</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">more</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="na">logpath</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/mail.log</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="na">backend</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">auto</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="c1"># --- Postfix: contraseñas SMTP incorrectas (puertos 587/465) ---</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="k">[postfix-sasl]</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="na">enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="na">logpath</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/mail.log</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="na">backend</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">auto</span>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="c1"># --- Dovecot: contraseñas IMAP/POP3 incorrectas ---</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="k">[dovecot]</span>
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="na">enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="na">logpath</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/mail.log</span>
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="na">backend</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">auto</span>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="c1"># --- Reincidentes: quien es bloqueado 3 veces en un día, 1 semana fuera ---</span>
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="k">[recidive]</span>
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a><span class="na">enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a><span class="na">logpath</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/fail2ban.log</span>
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="na">bantime</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">1w</span>
+<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a><span class="na">findtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1d</span>
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="na">maxretry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+</code></pre></div>
+<p>Análisis:</p>
+<table>
+<thead>
+<tr>
+<th>Jail</th>
+<th>Qué vigila</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd</code></td>
+<td>Fallos de inicio de sesión SSH (lee el journal de systemd).</td>
+</tr>
+<tr>
+<td><code>postfix</code> (<code>mode = more</code>)</td>
+<td>Clientes SMTP rechazados repetidamente (relay denegado, destinatarios inexistentes, HELO inválido...).</td>
+</tr>
+<tr>
+<td><code>postfix-sasl</code></td>
+<td><code>SASL LOGIN authentication failed</code> en los puertos de envío.</td>
+</tr>
+<tr>
+<td><code>dovecot</code></td>
+<td><code>auth failed</code> en IMAP/POP3.</td>
+</tr>
+<tr>
+<td><code>recidive</code></td>
+<td>El propio log de Fail2ban: castiga a los reincidentes con un bloqueo largo.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>fail2ban-client<span class="w"> </span>-t
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>fail2ban
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>fail2ban
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>sudo<span class="w"> </span>fail2ban-client<span class="w"> </span>status
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>OK: configuration test is successful
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Status
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>|- Number of jail:      5
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>`- Jail list:   dovecot, postfix, postfix-sasl, recidive, sshd
+</code></pre></div>
+<p><strong>Comprobación:</strong> consulta un jail concreto:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>fail2ban-client<span class="w"> </span>status<span class="w"> </span>postfix-sasl
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Status for the jail: postfix-sasl
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>|- Filter
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>|  |- Currently failed: 1
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>|  |- Total failed:     14
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>|  `- File list:        /var/log/mail.log
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>`- Actions
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>   |- Currently banned: 2
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>   |- Total banned:     6
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>   `- Banned IP list:   192.0.2.45 198.51.100.200
+</code></pre></div>
+<p>Operaciones habituales:</p>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ver todos los jails</td>
+<td><code>sudo fail2ban-client status</code></td>
+</tr>
+<tr>
+<td>Desbloquear una IP</td>
+<td><code>sudo fail2ban-client set sshd unbanip 198.51.100.7</code></td>
+</tr>
+<tr>
+<td>Bloquear manualmente</td>
+<td><code>sudo fail2ban-client set sshd banip 192.0.2.45</code></td>
+</tr>
+<tr>
+<td>Probar un filtro contra un log</td>
+<td><code>sudo fail2ban-regex /var/log/mail.log /etc/fail2ban/filter.d/dovecot.conf</code></td>
+</tr>
+<tr>
+<td>Ver el log de Fail2ban</td>
+<td><code>sudo tail -f /var/log/fail2ban.log</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li><code>Have not found any log file for ... jail</code>: el archivo indicado en <code>logpath</code> no existe. Comprueba que <code>rsyslog</code> está instalado y activo (<code>systemctl status rsyslog</code>); en Debian 12, que no trae rsyslog por defecto, usa <code>backend = systemd</code> también en los jails de correo.</li>
+<li>Fail2ban no arranca en Ubuntu 24.04 recién instalado con un error de Python (<code>ModuleNotFoundError: No module named 'asynchat'</code>): instala las actualizaciones pendientes (<code>sudo apt update &amp;&amp; sudo apt full-upgrade</code>), que incluyen la versión corregida del paquete.</li>
+<li>Te bloqueas a ti mismo: entra por la consola web del proveedor y usa <code>unbanip</code>; añade tu IP a <code>ignoreip</code>.</li>
+</ul>
+<h2 id="128-actualizaciones-automaticas-de-seguridad">12.8 Actualizaciones automáticas de seguridad<a class="headerlink" href="#128-actualizaciones-automaticas-de-seguridad" title="Permanent link">&para;</a></h2>
+<h3 id="paso-126-configurar-unattended-upgrades">PASO 12.6 – Configurar unattended-upgrades<a class="headerlink" href="#paso-126-configurar-unattended-upgrades" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que los parches de seguridad se instalen solos cada día.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>unattended-upgrades<span class="w"> </span>apt-listchanges
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>sudo<span class="w"> </span>dpkg-reconfigure<span class="w"> </span>-plow<span class="w"> </span>unattended-upgrades
+</code></pre></div>
+<p>Responde <strong>Yes</strong> a «Automatically download and install stable updates?». Esto crea <code>/etc/apt/apt.conf.d/20auto-upgrades</code>.</p>
+<p>Para recibir un aviso por correo cuando se instalen actualizaciones, edita:</p>
+<p><strong>Archivo:</strong> <code>/etc/apt/apt.conf.d/50unattended-upgrades</code>. Busca estas líneas (están comentadas con <code>//</code>), quita las barras y deja estos valores:</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Unattended-Upgrade::Mail "root";
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Unattended-Upgrade::MailReport "on-change";
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Unattended-Upgrade::Remove-Unused-Dependencies "true";
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>Unattended-Upgrade::Automatic-Reboot "false";
+</code></pre></div>
+<p>Análisis: <code>Mail "root"</code> envía el informe a root (que es alias de <code>administracion@ejemplo1.com</code>); <code>on-change</code> solo cuando se instala algo; <code>Automatic-Reboot "false"</code> evita reinicios sorpresa: tú decides cuándo reiniciar (el archivo <code>/var/run/reboot-required</code> te avisa de que hace falta).</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>cat<span class="w"> </span>/etc/apt/apt.conf.d/20auto-upgrades
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>unattended-upgrade<span class="w"> </span>--dry-run<span class="w"> </span>--debug<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>APT::Periodic::Update-Package-Lists "1";
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>APT::Periodic::Unattended-Upgrade "1";
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Las actualizaciones de versión mayor (por ejemplo, de Ubuntu 24.04 a 26.04) <strong>nunca</strong> son automáticas. Requieren planificación, copia de seguridad completa y revisión de los cambios (en este caso, el paso a Dovecot 2.4).</p>
+</div>
+<h2 id="129-copias-de-seguridad-automaticas">12.9 Copias de seguridad automáticas<a class="headerlink" href="#129-copias-de-seguridad-automaticas" title="Permanent link">&para;</a></h2>
+<p>Regla <strong>3-2-1</strong>: al menos 3 copias de los datos, en 2 soportes distintos, y 1 fuera del servidor (en otro centro de datos). Una copia que solo está en el mismo disco no te protege de un fallo del disco, de un borrado del proveedor ni de un ataque de <em>ransomware</em>.</p>
+<p>Qué hay que copiar:</p>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Ruta</th>
+<th>Por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bases de datos</td>
+<td>(volcado con <code>mariadb-dump</code>)</td>
+<td>Los archivos de <code>/var/lib/mysql</code> no se pueden copiar en caliente de forma fiable.</td>
+</tr>
+<tr>
+<td>Webs</td>
+<td><code>/var/www/</code></td>
+<td>Código, configuración y archivos subidos.</td>
+</tr>
+<tr>
+<td>Buzones</td>
+<td><code>/var/mail/vhosts/</code></td>
+<td>Todo el correo.</td>
+</tr>
+<tr>
+<td>Configuración</td>
+<td><code>/etc/</code></td>
+<td>Apache, PHP, Postfix, Dovecot, OpenDKIM, usuarios de correo...</td>
+</tr>
+<tr>
+<td>Certificados y cuenta ACME</td>
+<td><code>/etc/letsencrypt/</code> (incluido en <code>/etc</code>)</td>
+<td>Evita reemitir y conserva la cuenta.</td>
+</tr>
+<tr>
+<td>Claves DKIM</td>
+<td><code>/etc/opendkim/</code> (incluido en <code>/etc</code>)</td>
+<td>Si las pierdes, tendrás que publicar claves nuevas en el DNS.</td>
+</tr>
+<tr>
+<td>Scripts propios</td>
+<td><code>/usr/local/sbin/</code></td>
+<td>Tus herramientas de administración.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-127-crear-el-script-de-copia-de-seguridad">PASO 12.7 – Crear el script de copia de seguridad<a class="headerlink" href="#paso-127-crear-el-script-de-copia-de-seguridad" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/usr/local/sbin/backup-servidor</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1">#  backup-servidor - Copia diaria de bases de datos, webs, correo y configuración</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1">#  Se ejecuta desde cron. Conserva los últimos DIAS días.</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="nv">DESTINO</span><span class="o">=</span>/var/backups/servidor
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="nv">DIAS</span><span class="o">=</span><span class="m">7</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="nv">FECHA</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="nv">DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DESTINO</span><span class="s2">/</span><span class="nv">$FECHA</span><span class="s2">"</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="nv">LOG</span><span class="o">=</span>/var/log/backup-servidor.log
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a><span class="nb">exec</span><span class="w"> </span>&gt;&gt;<span class="s2">"</span><span class="nv">$LOG</span><span class="s2">"</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="k">$(</span>date<span class="w"> </span><span class="s1">'+%F %T'</span><span class="k">)</span><span class="s2"> Inicio de la copia ==="</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="nb">umask</span><span class="w"> </span><span class="m">077</span>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a><span class="c1"># 1. Bases de datos: un archivo por base (excepto las internas)</span>
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a><span class="k">for</span><span class="w"> </span>BD<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>mariadb<span class="w"> </span>-N<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SHOW DATABASES"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s1">'^(information_schema|performance_schema|sys)$'</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a><span class="w">    </span>mariadb-dump<span class="w"> </span>--single-transaction<span class="w"> </span>--routines<span class="w"> </span>--triggers<span class="w"> </span>--events<span class="w"> </span>--databases<span class="w"> </span><span class="s2">"</span><span class="nv">$BD</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">/bd_</span><span class="si">${</span><span class="nv">BD</span><span class="si">}</span><span class="s2">.sql.gz"</span>
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"  Base de datos </span><span class="nv">$BD</span><span class="s2"> copiada"</span>
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a><span class="k">done</span>
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a><span class="c1"># 2. Archivos: webs, buzones, configuración y scripts</span>
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">/www.tar.gz"</span><span class="w">     </span>-C<span class="w"> </span>/<span class="w"> </span>var/www
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">/correo.tar.gz"</span><span class="w">  </span>-C<span class="w"> </span>/<span class="w"> </span>var/mail/vhosts
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">/etc.tar.gz"</span><span class="w">     </span>-C<span class="w"> </span>/<span class="w"> </span>etc
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">/scripts.tar.gz"</span><span class="w"> </span>-C<span class="w"> </span>/<span class="w"> </span>usr/local/sbin
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"  Archivos copiados"</span>
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a><span class="c1"># 3. Lista de paquetes instalados (para reconstruir el servidor)</span>
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>dpkg<span class="w"> </span>--get-selections<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">/paquetes.txt"</span>
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a><span class="c1"># 4. Suma de verificación para detectar copias corruptas</span>
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a><span class="o">(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sha256sum<span class="w"> </span>./*<span class="w"> </span>&gt;<span class="w"> </span>SHA256SUMS<span class="w"> </span><span class="o">)</span>
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a>
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a><span class="c1"># 5. Borrar copias antiguas</span>
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a>find<span class="w"> </span><span class="s2">"</span><span class="nv">$DESTINO</span><span class="s2">"</span><span class="w"> </span>-mindepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+<span class="s2">"</span><span class="nv">$DIAS</span><span class="s2">"</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a>
+<a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"  Tamaño de la copia: </span><span class="k">$(</span>du<span class="w"> </span>-sh<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="k">)</span><span class="s2">"</span>
+<a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="k">$(</span>date<span class="w"> </span><span class="s1">'+%F %T'</span><span class="k">)</span><span class="s2"> Copia terminada correctamente ==="</span>
+</code></pre></div>
+<p>Análisis:</p>
+<table>
+<thead>
+<tr>
+<th>Línea</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exec &gt;&gt;"$LOG" 2&gt;&amp;1</code></td>
+<td>Todo lo que el script escriba (incluidos los errores) va al log.</td>
+</tr>
+<tr>
+<td><code>umask 077</code></td>
+<td>Los archivos creados solo los puede leer root.</td>
+</tr>
+<tr>
+<td><code>mariadb -N -e "SHOW DATABASES"</code></td>
+<td>Lista las bases sin cabecera (<code>-N</code>); así las nuevas se copian automáticamente.</td>
+</tr>
+<tr>
+<td><code>tar -czf archivo -C / var/www</code></td>
+<td>Comprime la carpeta guardando rutas relativas (<code>var/www/...</code>), lo que facilita restaurar.</td>
+</tr>
+<tr>
+<td><code>sha256sum</code></td>
+<td>Huellas para verificar la integridad de la copia antes de restaurarla.</td>
+</tr>
+<tr>
+<td><code>find ... -mtime +7 -exec rm -rf</code></td>
+<td>Elimina las carpetas de más de 7 días.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/usr/local/sbin/backup-servidor
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>sudo<span class="w"> </span>/usr/local/sbin/backup-servidor
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">15</span><span class="w"> </span>/var/log/backup-servidor.log
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span>/var/backups/servidor/<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>/
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>=== 2026-11-09 04:30:00 Inicio de la copia ===
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>  Base de datos mysql copiada
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>  Base de datos web1_db copiada
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>  Base de datos web2_db copiada
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>  Archivos copiados
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>  Tamaño de la copia: 14M
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>=== 2026-11-09 04:30:09 Copia terminada correctamente ===
+</code></pre></div>
+<h3 id="paso-128-programar-la-copia-diaria-con-cron">PASO 12.8 – Programar la copia diaria con cron<a class="headerlink" href="#paso-128-programar-la-copia-diaria-con-cron" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/etc/cron.d/backup-servidor</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Tarea programada (cron)</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a># Copia de seguridad diaria a las 03:30
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>SHELL=/bin/bash
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>MAILTO=root
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>30 3 * * * root /usr/local/sbin/backup-servidor || echo "La copia de seguridad ha fallado. Revisa /var/log/backup-servidor.log"
+</code></pre></div>
+<p>Formato de una línea de cron:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a> 30   3    *    *    *    root  comando
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a> │    │    │    │    │     │
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a> │    │    │    │    │     └─ usuario que lo ejecuta (solo en /etc/cron.d)
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a> │    │    │    │    └─────── día de la semana (0-7, 0 y 7 = domingo)
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a> │    │    │    └──────────── mes (1-12)
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a> │    │    └───────────────── día del mes (1-31)
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a> │    └────────────────────── hora (0-23)
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a> └─────────────────────────── minuto (0-59)
+</code></pre></div>
+<p>Si el script falla, el <code>|| echo ...</code> produce una salida y cron la envía por correo a <code>MAILTO</code> (root → <code>administracion@ejemplo1.com</code>).</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/etc/cron.d/backup-servidor
+</code></pre></div>
+<h3 id="paso-129-sacar-las-copias-del-servidor">PASO 12.9 – Sacar las copias del servidor<a class="headerlink" href="#paso-129-sacar-las-copias-del-servidor" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> cumplir la parte «1 copia fuera» de la regla 3-2-1.</p>
+<p><strong>Explicación:</strong> la forma más sencilla es que <strong>otro</strong> equipo (un segundo servidor o un NAS) descargue las copias por SSH cada día con <code>rsync</code>. Así, si alguien compromete tu servidor, no tiene credenciales para borrar las copias externas. Ejemplo, ejecutado <strong>en el equipo de copias</strong>, con un usuario que tenga una clave autorizada en el servidor:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>rsync<span class="w"> </span>-az<span class="w"> </span>--delete<span class="w"> </span>-e<span class="w"> </span>ssh<span class="w"> </span>sysadmin@mail.ejemplo1.com:/var/backups/servidor/<span class="w"> </span>/srv/copias/mail.ejemplo1.com/
+</code></pre></div>
+<p>Para que <code>sysadmin</code> pueda leer las copias sin ser root, cambia el grupo de la carpeta de destino del script y su <code>umask</code> (por ejemplo, <code>umask 027</code> y <code>chgrp -R sysadmin "$DESTINO"</code>), o usa un usuario dedicado de solo lectura. Otra opción muy extendida es <code>rclone</code>, que envía las copias cifradas a un almacenamiento de objetos.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Prueba la restauración. Al menos una vez al mes, restaura en una máquina de pruebas una base de datos, una web y un buzón. Comprueba antes las sumas con <code>sha256sum -c SHA256SUMS</code>.</p>
+</div>
+<h2 id="1210-monitorizacion-de-servicios">12.10 Monitorización de servicios<a class="headerlink" href="#1210-monitorizacion-de-servicios" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1210-script-de-estado-del-servidor">PASO 12.10 – Script de estado del servidor<a class="headerlink" href="#paso-1210-script-de-estado-del-servidor" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> tener un único comando que revise todo y avise por correo si algo va mal.</p>
+<p><strong>Archivo:</strong> <code>/usr/local/sbin/estado-servidor</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c1">#  estado-servidor - Revisión rápida de la salud del servidor</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1">#  Uso: sudo estado-servidor            (muestra el informe)</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1">#       sudo estado-servidor --avisar   (solo envía correo a root si hay problemas)</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="nv">SERVICIOS</span><span class="o">=</span><span class="s2">"apache2 php8.3-fpm mariadb postfix@- dovecot opendkim fail2ban ssh cron"</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="nv">PUERTOS</span><span class="o">=</span><span class="s2">"22 25 80 443 465 587 993"</span>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="nv">LIMITE_DISCO</span><span class="o">=</span><span class="m">85</span>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="nv">DIAS_CERT</span><span class="o">=</span><span class="m">20</span>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="nv">PROBLEMAS</span><span class="o">=()</span>
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>informe<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"--avisar"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$2</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a><span class="k">for</span><span class="w"> </span>S<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$SERVICIOS</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>--quiet<span class="w"> </span><span class="s2">"</span><span class="nv">$S</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[OK]    servicio </span><span class="nv">$S</span><span class="s2"> activo"</span>
+<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="nv">PROBLEMAS</span><span class="o">+=(</span><span class="s2">"Servicio </span><span class="nv">$S</span><span class="s2"> detenido"</span><span class="o">)</span><span class="p">;</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[FALLO] servicio </span><span class="nv">$S</span><span class="s2"> detenido"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a><span class="k">done</span>
+<a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>
+<a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a><span class="k">for</span><span class="w"> </span>P<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$PUERTOS</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span>ss<span class="w"> </span>-tln<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $4}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-qE<span class="w"> </span><span class="s2">"[:.]</span><span class="nv">$P</span>$<span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[OK]    puerto </span><span class="nv">$P</span><span class="s2"> escuchando"</span>
+<a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="nv">PROBLEMAS</span><span class="o">+=(</span><span class="s2">"Puerto </span><span class="nv">$P</span><span class="s2"> sin escuchar"</span><span class="o">)</span><span class="p">;</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[FALLO] puerto </span><span class="nv">$P</span><span class="s2"> sin escuchar"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a><span class="k">done</span>
+<a id="__codelineno-32-24" name="__codelineno-32-24" href="#__codelineno-32-24"></a>
+<a id="__codelineno-32-25" name="__codelineno-32-25" href="#__codelineno-32-25"></a><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>USO<span class="w"> </span>MONTAJE<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-32-26" name="__codelineno-32-26" href="#__codelineno-32-26"></a><span class="w">    </span><span class="nv">USO</span><span class="o">=</span><span class="si">${</span><span class="nv">USO</span><span class="p">%</span><span class="se">\%</span><span class="si">}</span>
+<a id="__codelineno-32-27" name="__codelineno-32-27" href="#__codelineno-32-27"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USO</span><span class="s2">"</span><span class="w"> </span>-ge<span class="w"> </span><span class="s2">"</span><span class="nv">$LIMITE_DISCO</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nv">PROBLEMAS</span><span class="o">+=(</span><span class="s2">"Disco </span><span class="nv">$MONTAJE</span><span class="s2"> al </span><span class="nv">$USO</span><span class="s2">%"</span><span class="o">)</span><span class="p">;</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[FALLO] disco </span><span class="nv">$MONTAJE</span><span class="s2"> al </span><span class="nv">$USO</span><span class="s2">%"</span>
+<a id="__codelineno-32-28" name="__codelineno-32-28" href="#__codelineno-32-28"></a><span class="w">    </span><span class="k">else</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[OK]    disco </span><span class="nv">$MONTAJE</span><span class="s2"> al </span><span class="nv">$USO</span><span class="s2">%"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<a id="__codelineno-32-29" name="__codelineno-32-29" href="#__codelineno-32-29"></a><span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span>df<span class="w"> </span>-P<span class="w"> </span>-x<span class="w"> </span>tmpfs<span class="w"> </span>-x<span class="w"> </span>devtmpfs<span class="w"> </span>-x<span class="w"> </span>squashfs<span class="w"> </span>-x<span class="w"> </span>overlay<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'NR&gt;1 {print $5, $6}'</span><span class="o">)</span>
+<a id="__codelineno-32-30" name="__codelineno-32-30" href="#__codelineno-32-30"></a>
+<a id="__codelineno-32-31" name="__codelineno-32-31" href="#__codelineno-32-31"></a><span class="k">for</span><span class="w"> </span>C<span class="w"> </span><span class="k">in</span><span class="w"> </span>/etc/letsencrypt/live/*/cert.pem<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-32-32" name="__codelineno-32-32" href="#__codelineno-32-32"></a><span class="w">    </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"</span><span class="nv">$C</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-32-33" name="__codelineno-32-33" href="#__codelineno-32-33"></a><span class="w">    </span><span class="nv">N</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">"</span><span class="nv">$C</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span><span class="k">)</span>
+<a id="__codelineno-32-34" name="__codelineno-32-34" href="#__codelineno-32-34"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-checkend<span class="w"> </span><span class="k">$((</span><span class="nv">DIAS_CERT</span><span class="o">*</span><span class="m">86400</span><span class="k">))</span><span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span><span class="s2">"</span><span class="nv">$C</span><span class="s2">"</span><span class="w"> </span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[OK]    certificado </span><span class="nv">$N</span><span class="s2"> vigente más de </span><span class="nv">$DIAS_CERT</span><span class="s2"> días"</span>
+<a id="__codelineno-32-35" name="__codelineno-32-35" href="#__codelineno-32-35"></a><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="nv">PROBLEMAS</span><span class="o">+=(</span><span class="s2">"Certificado </span><span class="nv">$N</span><span class="s2"> caduca en menos de </span><span class="nv">$DIAS_CERT</span><span class="s2"> días"</span><span class="o">)</span><span class="p">;</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[FALLO] certificado </span><span class="nv">$N</span><span class="s2"> caduca pronto"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<a id="__codelineno-32-36" name="__codelineno-32-36" href="#__codelineno-32-36"></a><span class="k">done</span>
+<a id="__codelineno-32-37" name="__codelineno-32-37" href="#__codelineno-32-37"></a>
+<a id="__codelineno-32-38" name="__codelineno-32-38" href="#__codelineno-32-38"></a><span class="nv">COLA</span><span class="o">=</span><span class="k">$(</span>postqueue<span class="w"> </span>-j<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
+<a id="__codelineno-32-39" name="__codelineno-32-39" href="#__codelineno-32-39"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$COLA</span><span class="s2">"</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nv">PROBLEMAS</span><span class="o">+=(</span><span class="s2">"Cola de correo con </span><span class="nv">$COLA</span><span class="s2"> mensajes"</span><span class="o">)</span><span class="p">;</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[FALLO] cola de correo: </span><span class="nv">$COLA</span><span class="s2"> mensajes"</span>
+<a id="__codelineno-32-40" name="__codelineno-32-40" href="#__codelineno-32-40"></a><span class="k">else</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[OK]    cola de correo: </span><span class="nv">$COLA</span><span class="s2"> mensajes"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<a id="__codelineno-32-41" name="__codelineno-32-41" href="#__codelineno-32-41"></a>
+<a id="__codelineno-32-42" name="__codelineno-32-42" href="#__codelineno-32-42"></a><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>informe<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"[AVISO] el sistema necesita reiniciarse"</span>
+<a id="__codelineno-32-43" name="__codelineno-32-43" href="#__codelineno-32-43"></a>
+<a id="__codelineno-32-44" name="__codelineno-32-44" href="#__codelineno-32-44"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="si">${#</span><span class="nv">PROBLEMAS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"--avisar"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-32-45" name="__codelineno-32-45" href="#__codelineno-32-45"></a><span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PROBLEMAS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">"[</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">] </span><span class="si">${#</span><span class="nv">PROBLEMAS</span><span class="p">[@]</span><span class="si">}</span><span class="s2"> problema(s) detectado(s)"</span><span class="w"> </span>root
+<a id="__codelineno-32-46" name="__codelineno-32-46" href="#__codelineno-32-46"></a><span class="k">fi</span>
+<a id="__codelineno-32-47" name="__codelineno-32-47" href="#__codelineno-32-47"></a><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="si">${#</span><span class="nv">PROBLEMAS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/usr/local/sbin/estado-servidor
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>sudo<span class="w"> </span>estado-servidor
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>[OK]    servicio apache2 activo
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>[OK]    servicio php8.3-fpm activo
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>[OK]    servicio mariadb activo
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>[OK]    servicio postfix@- activo
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>[OK]    servicio dovecot activo
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>[OK]    servicio opendkim activo
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>[OK]    servicio fail2ban activo
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>[OK]    servicio ssh activo
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>[OK]    servicio cron activo
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>[OK]    puerto 22 escuchando
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>...
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>[OK]    disco / al 18%
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>[OK]    certificado ejemplo1.com vigente más de 20 días
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>[OK]    cola de correo: 0 mensajes
+</code></pre></div>
+<p>Prográmalo cada 15 minutos en modo aviso:</p>
+<p><strong>Archivo:</strong> <code>/etc/cron.d/estado-servidor</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Tarea programada (cron)</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>SHELL=/bin/bash
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>*/15 * * * * root /usr/local/sbin/estado-servidor --avisar &gt;/dev/null 2&gt;&amp;1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Un servidor no puede avisar de que él mismo está caído o sin red. Complementa este script con un servicio de monitorización <strong>externo</strong> (hay opciones gratuitas de <em>uptime monitoring</em>) que compruebe cada pocos minutos <code>https://www.ejemplo1.com</code>, <code>https://www.ejemplo2.com</code> y el puerto 25 desde fuera.</p>
+</div>
+<p>Para que systemd reinicie automáticamente un servicio si se cae, puedes añadir un <em>drop-in</em> (ejemplo con Dovecot):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/systemd/system/dovecot.service.d
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'[Service]\nRestart=on-failure\nRestartSec=5s\n'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/systemd/system/dovecot.service.d/reinicio.conf
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+</code></pre></div>
+<h2 id="1211-revision-de-logs">12.11 Revisión de logs<a class="headerlink" href="#1211-revision-de-logs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Contenido</th>
+<th>Comando típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/var/log/auth.log</code></td>
+<td>SSH, sudo, inicios de sesión.</td>
+<td><code>sudo grep 'Failed\|Accepted' /var/log/auth.log \| tail</code></td>
+</tr>
+<tr>
+<td><code>/var/log/mail.log</code></td>
+<td>Postfix, Dovecot, OpenDKIM.</td>
+<td><code>sudo grep -E 'reject\|warning\|error' /var/log/mail.log \| tail -30</code></td>
+</tr>
+<tr>
+<td><code>/var/log/apache2/*-error.log</code></td>
+<td>Errores de cada web.</td>
+<td><code>sudo tail -n 50 /var/log/apache2/ejemplo1.com-error.log</code></td>
+</tr>
+<tr>
+<td><code>/var/log/apache2/*-access.log</code></td>
+<td>Visitas de cada web.</td>
+<td><code>sudo awk '{print $9}' /var/log/apache2/ejemplo1.com-access.log \| sort \| uniq -c</code></td>
+</tr>
+<tr>
+<td><code>/var/www/*/logs/php-error.log</code></td>
+<td>Errores PHP de cada web.</td>
+<td><code>sudo tail /var/www/ejemplo1.com/logs/php-error.log</code></td>
+</tr>
+<tr>
+<td><code>/var/log/mysql/error.log</code></td>
+<td>Errores de MariaDB.</td>
+<td><code>sudo tail /var/log/mysql/error.log</code></td>
+</tr>
+<tr>
+<td><code>/var/log/fail2ban.log</code></td>
+<td>Bloqueos.</td>
+<td><code>sudo grep Ban /var/log/fail2ban.log \| tail</code></td>
+</tr>
+<tr>
+<td><code>/var/log/php8.3-fpm.log</code></td>
+<td>Gestor PHP-FPM.</td>
+<td><code>sudo tail /var/log/php8.3-fpm.log</code></td>
+</tr>
+<tr>
+<td>journal de systemd</td>
+<td>Todo, por servicio.</td>
+<td><code>sudo journalctl -u dovecot --since today</code></td>
+</tr>
+</tbody>
+</table>
+<p>Comandos de journal especialmente útiles:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Errores de todo el sistema desde el último arranque</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-b
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="c1"># Seguir en directo varios servicios a la vez</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-f<span class="w"> </span>-u<span class="w"> </span>apache2<span class="w"> </span>-u<span class="w"> </span>php8.3-fpm<span class="w"> </span>-u<span class="w"> </span>postfix@-<span class="w"> </span>-u<span class="w"> </span>dovecot
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="c1"># Espacio que ocupa el journal y limpiarlo a 500 MB</span>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>journalctl<span class="w"> </span>--disk-usage
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>500M
+</code></pre></div>
+<p>Rutina de revisión recomendada:</p>
+<table>
+<thead>
+<tr>
+<th>Frecuencia</th>
+<th>Tarea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Diaria (automática)</td>
+<td>Copia de seguridad, actualizaciones de seguridad, <code>estado-servidor --avisar</code>.</td>
+</tr>
+<tr>
+<td>Semanal</td>
+<td>Revisar <code>mail.log</code> (rechazos, colas), <code>fail2ban-client status</code>, errores de Apache y PHP, informes DMARC.</td>
+</tr>
+<tr>
+<td>Mensual</td>
+<td>Prueba de restauración, revisar usuarios y claves SSH, espacio en disco, <code>certbot certificates</code>, listas negras de la IP.</td>
+</tr>
+<tr>
+<td>Trimestral</td>
+<td>Revisar versiones de las aplicaciones web, rotar contraseñas sensibles, revisar reglas de UFW.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1212-recuperacion-ante-fallos">12.12 Recuperación ante fallos<a class="headerlink" href="#1212-recuperacion-ante-fallos" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situación</th>
+<th>Procedimiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Un servicio no arranca</strong></td>
+<td>1. <code>systemctl status servicio</code> y <code>journalctl -u servicio -n 50</code>. 2. Prueba la configuración (<code>apachectl configtest</code>, <code>postfix check</code>, <code>doveconf -n</code>, <code>php-fpm8.3 -t</code>, <code>sshd -t</code>). 3. Si cambiaste algo, restaura la copia <code>.original</code>/<code>.bak</code> del archivo.</td>
+</tr>
+<tr>
+<td><strong>Disco lleno</strong></td>
+<td><code>df -h</code> para ver la partición; <code>sudo du -xh / --max-depth=2 \| sort -h \| tail</code> para localizar qué ocupa. Causas típicas: logs, copias antiguas, cola de correo, journal. Nunca borres archivos de <code>/var/lib/mysql</code> a mano.</td>
+</tr>
+<tr>
+<td><strong>Se ha borrado una web</strong></td>
+<td><code>sudo tar -xzf /var/backups/servidor/FECHA/www.tar.gz -C /tmp/restaura var/www/ejemplo1.com</code> y copia lo necesario con <code>rsync -a</code> a su sitio; revisa propietarios (<code>web1:www-data</code>).</td>
+</tr>
+<tr>
+<td><strong>Se ha dañado una base de datos</strong></td>
+<td>PASO 4.13 con el volcado <code>bd_web1_db.sql.gz</code> del día elegido.</td>
+</tr>
+<tr>
+<td><strong>Un usuario ha borrado correos</strong></td>
+<td>Extrae su carpeta de <code>correo.tar.gz</code> en <code>/tmp</code>, copia los archivos de <code>cur/</code> a su Maildir, ajusta propietario <code>vmail:vmail</code> y ejecuta <code>sudo doveadm force-resync -u usuario '*'</code>.</td>
+</tr>
+<tr>
+<td><strong>Contraseña de correo robada</strong> (envía spam)</td>
+<td><code>sudo correo-clave usuario</code>; vacía la cola de spam (<code>mailq</code>, <code>postsuper -d</code>); revisa listas negras; avisa al usuario de que revise su equipo.</td>
+</tr>
+<tr>
+<td><strong>Servidor comprometido</strong></td>
+<td>No intentes «limpiarlo». Aísla el servidor, conserva evidencias, monta uno nuevo desde cero (Módulo 14) y restaura <strong>solo datos</strong> (bases de datos, contenidos, buzones) de copias anteriores al incidente, revisándolos. Cambia todas las contraseñas y claves (incluidas las DKIM).</td>
+</tr>
+<tr>
+<td><strong>Reconstrucción completa</strong></td>
+<td>Instala Ubuntu, sigue los módulos 1-12 o restaura <code>/etc</code> de forma selectiva, reinstala los paquetes (<code>sudo dpkg --set-selections &lt; paquetes.txt &amp;&amp; sudo apt-get dselect-upgrade</code>), restaura bases de datos, <code>/var/www</code> y <code>/var/mail/vhosts</code>, y comprueba todo con el Módulo 13.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1213-ejercicios-practicos-del-modulo-12">12.13 Ejercicios prácticos del Módulo 12<a class="headerlink" href="#1213-ejercicios-practicos-del-modulo-12" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Desde otra IP, falla tres veces la contraseña SSH (o la de IMAP) y comprueba con <code>fail2ban-client status</code> que la IP queda bloqueada. Desbloquéala.</li>
+<li>Ejecuta <code>sudo estado-servidor</code> con Dovecot detenido. ¿Qué muestra? ¿Qué correo llega a root con <code>--avisar</code>?</li>
+<li>Restaura en <code>/tmp/prueba</code> el buzón de <code>soporte@ejemplo2.com</code> de la copia de hoy y comprueba que los mensajes están completos.</li>
+<li>Calcula cuánto espacio ocuparán 7 días de copias y decide si te conviene una partición o disco aparte.</li>
+<li>Usa <code>curl -sI</code> para comprobar que ninguna de tus webs revela la versión de Apache ni de PHP (busca la cabecera <code>X-Powered-By</code>; si aparece, añade <code>php_admin_flag[expose_php] = off</code> en cada pool).</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../11-integracion/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 11. Integración completa">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                11. Integración completa
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../13-pruebas/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 13. Pruebas y diagnóstico">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                13. Pruebas y diagnóstico
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2290 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/04-mariadb/">
+      
+      
+        <link rel="prev" href="../03-virtualhosts/">
+      
+      
+        <link rel="next" href="../05-php-mariadb/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>4. MariaDB - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-4-instalacion-y-configuracion-de-mariadb" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4. MariaDB
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#41-que-es-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Qué es MariaDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Qué es MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-41-instalar-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.1 – Instalar MariaDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-42-verificar-que-mariadb-no-es-accesible-desde-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.2 – Verificar que MariaDB no es accesible desde Internet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-43-proteger-la-instalacion-con-mariadb-secure-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.3 – Proteger la instalación con mariadb-secure-installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-la-consola-de-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 La consola de MariaDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 La consola de MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-44-acceder-a-la-consola-y-orientarse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.4 – Acceder a la consola y orientarse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#43-bases-de-datos-y-usuarios-independientes-para-cada-virtualhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Bases de datos y usuarios independientes para cada VirtualHost
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Bases de datos y usuarios independientes para cada VirtualHost">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-45-generar-contrasenas-seguras-para-los-usuarios-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.5 – Generar contraseñas seguras para los usuarios de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-46-crear-las-bases-de-datos-web1_db-y-web2_db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.6 – Crear las bases de datos web1_db y web2_db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-47-crear-los-usuarios-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.7 – Crear los usuarios de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-48-asignar-permisos-especificos-a-cada-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.8 – Asignar permisos específicos a cada usuario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-49-crear-la-estructura-de-tablas-de-cada-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.9 – Crear la estructura de tablas de cada aplicación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-410-comprobar-las-conexiones-y-el-aislamiento-entre-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.10 – Comprobar las conexiones y el aislamiento entre usuarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-411-modificar-contrasenas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.11 – Modificar contraseñas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#44-copias-de-seguridad-y-restauracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Copias de seguridad y restauración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Copias de seguridad y restauración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-412-hacer-una-copia-de-seguridad-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.12 – Hacer una copia de seguridad manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-413-restaurar-una-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.13 – Restaurar una base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#45-referencia-rapida-de-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Referencia rápida de SQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#46-ejercicios-practicos-del-modulo-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Ejercicios prácticos del Módulo 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#41-que-es-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Qué es MariaDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Qué es MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-41-instalar-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.1 – Instalar MariaDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-42-verificar-que-mariadb-no-es-accesible-desde-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.2 – Verificar que MariaDB no es accesible desde Internet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-43-proteger-la-instalacion-con-mariadb-secure-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.3 – Proteger la instalación con mariadb-secure-installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-la-consola-de-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 La consola de MariaDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 La consola de MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-44-acceder-a-la-consola-y-orientarse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.4 – Acceder a la consola y orientarse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#43-bases-de-datos-y-usuarios-independientes-para-cada-virtualhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Bases de datos y usuarios independientes para cada VirtualHost
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Bases de datos y usuarios independientes para cada VirtualHost">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-45-generar-contrasenas-seguras-para-los-usuarios-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.5 – Generar contraseñas seguras para los usuarios de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-46-crear-las-bases-de-datos-web1_db-y-web2_db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.6 – Crear las bases de datos web1_db y web2_db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-47-crear-los-usuarios-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.7 – Crear los usuarios de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-48-asignar-permisos-especificos-a-cada-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.8 – Asignar permisos específicos a cada usuario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-49-crear-la-estructura-de-tablas-de-cada-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.9 – Crear la estructura de tablas de cada aplicación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-410-comprobar-las-conexiones-y-el-aislamiento-entre-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.10 – Comprobar las conexiones y el aislamiento entre usuarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-411-modificar-contrasenas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.11 – Modificar contraseñas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#44-copias-de-seguridad-y-restauracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Copias de seguridad y restauración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Copias de seguridad y restauración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-412-hacer-una-copia-de-seguridad-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.12 – Hacer una copia de seguridad manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-413-restaurar-una-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 4.13 – Restaurar una base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#45-referencia-rapida-de-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Referencia rápida de SQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#46-ejercicios-practicos-del-modulo-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Ejercicios prácticos del Módulo 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/04-mariadb.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-4-instalacion-y-configuracion-de-mariadb">Módulo 4. Instalación y configuración de MariaDB<a class="headerlink" href="#modulo-4-instalacion-y-configuracion-de-mariadb" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Comprender qué es un sistema gestor de bases de datos relacional y cómo funciona MariaDB.</li>
+<li>Instalar MariaDB, protegerla y dejarla arrancando automáticamente.</li>
+<li>Trabajar en la consola SQL: crear bases de datos, tablas, usuarios y permisos.</li>
+<li>Crear una base de datos y un usuario independientes para cada VirtualHost.</li>
+<li>Cambiar contraseñas, hacer copias de seguridad, restaurarlas y comprobar conexiones.</li>
+</ul>
+<h2 id="41-que-es-mariadb">4.1 Qué es MariaDB<a class="headerlink" href="#41-que-es-mariadb" title="Permanent link">&para;</a></h2>
+<p><strong>MariaDB</strong> es un sistema gestor de bases de datos relacional (SGBD), nacido en 2009 como continuación libre de MySQL por parte de sus creadores originales. Es compatible con MySQL en la práctica totalidad de casos: los mismos comandos, el mismo protocolo y las mismas librerías de conexión. Ubuntu 24.04 incluye MariaDB 10.11, una versión de soporte a largo plazo.</p>
+<p>Conceptos básicos:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué es</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Servidor</td>
+<td>El programa <code>mariadbd</code>, que guarda los datos y atiende conexiones.</td>
+<td>Servicio <code>mariadb</code>.</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td>Un contenedor de tablas, normalmente una por aplicación.</td>
+<td><code>web1_db</code></td>
+</tr>
+<tr>
+<td>Tabla</td>
+<td>Datos organizados en filas y columnas.</td>
+<td><code>contactos</code></td>
+</tr>
+<tr>
+<td>Columna</td>
+<td>Un campo con un tipo de dato.</td>
+<td><code>email VARCHAR(150)</code></td>
+</tr>
+<tr>
+<td>Fila (registro)</td>
+<td>Un elemento concreto.</td>
+<td>(1, 'Ana', 'ana@...')</td>
+</tr>
+<tr>
+<td>Clave primaria</td>
+<td>Columna que identifica de forma única cada fila.</td>
+<td><code>id</code></td>
+</tr>
+<tr>
+<td>Usuario</td>
+<td>Cuenta que se conecta, identificada por nombre <strong>y</strong> origen.</td>
+<td><code>'web1_user'@'localhost'</code></td>
+</tr>
+<tr>
+<td>Privilegio</td>
+<td>Lo que un usuario puede hacer sobre qué objetos.</td>
+<td><code>SELECT</code> en <code>web1_db.*</code></td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>Lenguaje con el que se habla con la base de datos.</td>
+<td><code>SELECT * FROM contactos;</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>En MariaDB un usuario se identifica por <strong>nombre y host</strong> a la vez. <code>'web1_user'@'localhost'</code> y <code>'web1_user'@'%'</code> son dos usuarios distintos, con contraseñas y permisos distintos. <code>localhost</code> significa «conectándose desde el propio servidor»; <code>%</code> significa «desde cualquier sitio». En este manual solo usaremos <code>localhost</code>.</p>
+</div>
+<p>Cómo se conectará cada aplicación:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Pool PHP-FPM web1 (usuario Linux web1)                 Pool PHP-FPM web2 (usuario Linux web2)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           │  usuario BD: web1_user                                │  usuario BD: web2_user
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           │                                                       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>           └──────────────► /run/mysqld/mysqld.sock ◄──────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                                     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                         ┌───────────▼────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                         │   MariaDB (mariadbd)    │  escucha solo en 127.0.0.1:3306
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                         │                         │  y en el socket Unix
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                         │  web1_db  ◄── solo web1_user tiene permisos
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                         │  web2_db  ◄── solo web2_user tiene permisos
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                         │  mysql    ◄── usuarios y privilegios (solo root)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                         └─────────────────────────┘
+</code></pre></div>
+<h3 id="paso-41-instalar-mariadb">PASO 4.1 – Instalar MariaDB<a class="headerlink" href="#paso-41-instalar-mariadb" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> instalar el servidor y el cliente de MariaDB.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mariadb-server<span class="w"> </span>mariadb-client
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>mariadb-server</code> instala el servidor (<code>mariadbd</code>) y sus herramientas; <code>mariadb-client</code> el cliente de consola <code>mariadb</code> y utilidades como <code>mariadb-dump</code>.</p>
+<p><strong>Resultado esperado:</strong> termina con <code>Created symlink ... mariadb.service</code> y sin errores.</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mariadb<span class="w"> </span>--version
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>mariadb<span class="w"> </span>--no-pager
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>systemctl<span class="w"> </span>is-enabled<span class="w"> </span>mariadb
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mariadb  Ver 15.2 Distrib 10.11.13-MariaDB, for debian-linux-gnu (x86_64) using  EditLine wrapper
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>● mariadb.service - MariaDB 10.11.13 database server
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; preset: enabled)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>     Active: active (running) since ...
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>enabled
+</code></pre></div>
+<p>Si no estuviera habilitado: <code>sudo systemctl enable --now mariadb</code>.</p>
+<p><strong>Siguiente paso:</strong> comprobar dónde escucha.</p>
+<h3 id="paso-42-verificar-que-mariadb-no-es-accesible-desde-internet">PASO 4.2 – Verificar que MariaDB no es accesible desde Internet<a class="headerlink" href="#paso-42-verificar-que-mariadb-no-es-accesible-desde-internet" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> confirmar que MariaDB solo escucha en la interfaz local.</p>
+<p><strong>Explicación:</strong> una base de datos expuesta a Internet es uno de los fallos de seguridad más graves y más explotados. Ubuntu configura MariaDB para escuchar solo en <code>127.0.0.1</code>. Lo comprobamos.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'mariadbd|mysqld'</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'^\s*bind-address'</span><span class="w"> </span>/etc/mysql/mariadb.conf.d/50-server.cnf
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>ss -tlnp</code> lista los sockets TCP (<code>t</code>) en escucha (<code>l</code>), en formato numérico (<code>n</code>) y con el proceso (<code>p</code>). El <code>grep</code> busca la directiva <code>bind-address</code> en el archivo de configuración del servidor.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>LISTEN 0  80  127.0.0.1:3306  0.0.0.0:*  users:(("mariadbd",pid=4120,fd=21))
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bind-address            = 127.0.0.1
+</code></pre></div>
+<p><strong>Comprobación:</strong> la dirección debe ser <code>127.0.0.1:3306</code>, <strong>nunca</strong> <code>0.0.0.0:3306</code> ni <code>*:3306</code>.</p>
+<p><strong>Errores habituales:</strong> si aparece <code>0.0.0.0</code>, edita <code>/etc/mysql/mariadb.conf.d/50-server.cnf</code>, deja la línea <code>bind-address = 127.0.0.1</code> dentro de la sección <code>[mysqld]</code> y reinicia con <code>sudo systemctl restart mariadb</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>La estructura de configuración de MariaDB en Ubuntu: <code>/etc/mysql/my.cnf</code> incluye <code>/etc/mysql/conf.d/</code> y <code>/etc/mysql/mariadb.conf.d/</code>. El archivo que más tocarás es <code>50-server.cnf</code> (sección <code>[mysqld]</code>). Para tus ajustes propios es buena práctica crear un archivo nuevo, por ejemplo <code>/etc/mysql/mariadb.conf.d/99-local.cnf</code>, en lugar de modificar los del paquete.</p>
+</div>
+<p><strong>Siguiente paso:</strong> proteger la instalación.</p>
+<h3 id="paso-43-proteger-la-instalacion-con-mariadb-secure-installation">PASO 4.3 – Proteger la instalación con mariadb-secure-installation<a class="headerlink" href="#paso-43-proteger-la-instalacion-con-mariadb-secure-installation" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> eliminar los elementos inseguros de una instalación nueva.</p>
+<p><strong>Explicación:</strong> en Ubuntu, el usuario <code>root</code> de MariaDB se autentica por <strong>unix_socket</strong>: solo puede entrar quien sea root en Linux (con <code>sudo</code>), sin contraseña de MariaDB. Es un método muy seguro y lo mantendremos. El asistente elimina usuarios anónimos, el acceso remoto de root y la base de datos de pruebas.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>mariadb-secure-installation
+</code></pre></div>
+<p>Responde así:</p>
+<table>
+<thead>
+<tr>
+<th>Pregunta</th>
+<th>Respuesta</th>
+<th>Por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enter current password for root (enter for none)</td>
+<td>Intro</td>
+<td>No hay contraseña: root usa unix_socket.</td>
+</tr>
+<tr>
+<td>Switch to unix_socket authentication [Y/n]</td>
+<td>n</td>
+<td>Ya lo usa. Responder <code>n</code> deja la configuración tal cual.</td>
+</tr>
+<tr>
+<td>Change the root password? [Y/n]</td>
+<td>n</td>
+<td>Con unix_socket no hace falta contraseña.</td>
+</tr>
+<tr>
+<td>Remove anonymous users? [Y/n]</td>
+<td>Y</td>
+<td>Los usuarios anónimos permiten entrar sin nombre.</td>
+</tr>
+<tr>
+<td>Disallow root login remotely? [Y/n]</td>
+<td>Y</td>
+<td>Root solo desde el propio servidor.</td>
+</tr>
+<tr>
+<td>Remove test database and access to it? [Y/n]</td>
+<td>Y</td>
+<td>La base <code>test</code> es accesible por cualquiera.</td>
+</tr>
+<tr>
+<td>Reload privilege tables now? [Y/n]</td>
+<td>Y</td>
+<td>Aplica los cambios.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resultado esperado:</strong> termina con <code>Thanks for using MariaDB!</code>.</p>
+<p><strong>Comprobación:</strong> entra como root sin contraseña (gracias a sudo) e intenta entrar como root <strong>sin</strong> sudo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>mariadb<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT user, host, plugin FROM mysql.user;"</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mariadb<span class="w"> </span>-u<span class="w"> </span>root
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>+-------------+-----------+-----------------------+
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>| User        | Host      | plugin                |
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>+-------------+-----------+-----------------------+
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>| mariadb.sys | localhost | mysql_native_password |
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>| root        | localhost | mysql_native_password |
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>| mysql       | localhost | mysql_native_password |
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>+-------------+-----------+-----------------------+
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ERROR 1698 (28000): Access denied for user 'root'@'localhost'
+</code></pre></div>
+<p>El error final es <strong>la prueba de que funciona</strong>: sin ser root en Linux, no se puede entrar como root en MariaDB. (La columna <code>plugin</code> muestra el método principal; root tiene además <code>unix_socket</code> como alternativa, que es la que se usa con sudo.)</p>
+<p><strong>Siguiente paso:</strong> conocer la consola.</p>
+<h2 id="42-la-consola-de-mariadb">4.2 La consola de MariaDB<a class="headerlink" href="#42-la-consola-de-mariadb" title="Permanent link">&para;</a></h2>
+<h3 id="paso-44-acceder-a-la-consola-y-orientarse">PASO 4.4 – Acceder a la consola y orientarse<a class="headerlink" href="#paso-44-acceder-a-la-consola-y-orientarse" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> entrar a la consola SQL y aprender sus comandos básicos.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>mariadb
+</code></pre></div>
+<p>Verás el indicador <code>MariaDB [(none)]&gt;</code>. <code>(none)</code> indica que no has seleccionado ninguna base de datos. Prueba:</p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">VERSION</span><span class="p">();</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="p">();</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">STATUS</span><span class="p">;</span>
+</code></pre></div>
+<p>Reglas de la consola:</p>
+<ul>
+<li>Toda instrucción SQL termina en <strong>punto y coma</strong> <code>;</code>. Si pulsas Intro sin él, verás <code>-&gt;</code>: MariaDB espera que termines. Escribe <code>;</code> e Intro.</li>
+<li>Las palabras clave (<code>SELECT</code>, <code>CREATE</code>) pueden ir en mayúsculas o minúsculas; por convención se escriben en mayúsculas.</li>
+<li>Los nombres de bases de datos y tablas <strong>distinguen mayúsculas</strong> en Linux.</li>
+<li>Los textos van entre comillas simples: <code>'texto'</code>.</li>
+<li>Para salir: <code>EXIT;</code> o <strong>Ctrl+D</strong>. Para cancelar una instrucción a medio escribir: <strong>Ctrl+C</strong>.</li>
+</ul>
+<p>Resultado esperado de <code>SHOW DATABASES;</code>:</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>+--------------------+
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>| Database           |
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>+--------------------+
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>| information_schema |
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>| mysql              |
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>| performance_schema |
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>| sys                |
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>+--------------------+
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>4 rows in set (0.001 sec)
+</code></pre></div>
+<p>Estas bases son internas: <code>mysql</code> guarda usuarios y privilegios; las demás ofrecen información del servidor. No las modifiques directamente.</p>
+<p><strong>Siguiente paso:</strong> generar contraseñas seguras.</p>
+<h2 id="43-bases-de-datos-y-usuarios-independientes-para-cada-virtualhost">4.3 Bases de datos y usuarios independientes para cada VirtualHost<a class="headerlink" href="#43-bases-de-datos-y-usuarios-independientes-para-cada-virtualhost" title="Permanent link">&para;</a></h2>
+<h3 id="paso-45-generar-contrasenas-seguras-para-los-usuarios-de-base-de-datos">PASO 4.5 – Generar contraseñas seguras para los usuarios de base de datos<a class="headerlink" href="#paso-45-generar-contrasenas-seguras-para-los-usuarios-de-base-de-datos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear dos contraseñas aleatorias y robustas.</p>
+<p><strong>Comando (en el terminal de Linux, <strong>fuera</strong> de la consola de MariaDB):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">24</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>openssl rand</code> genera bytes aleatorios criptográficamente seguros; <code>-base64 24</code> genera 24 bytes y los codifica en 32 caracteres legibles.</p>
+<p><strong>Resultado esperado:</strong> dos líneas como <code>p3Q9xV2r...</code> (cada vez distintas). Guárdalas en un gestor de contraseñas: la primera será la de <code>web1_user</code> y la segunda la de <code>web2_user</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>En este manual las representamos como <code>&lt;CLAVE_WEB1&gt;</code> y <code>&lt;CLAVE_WEB2&gt;</code>. Sustitúyelas siempre por las tuyas. Evita contraseñas con comillas simples <code>'</code> o barras invertidas <code>\</code>: complican su uso dentro de SQL y PHP.</p>
+</div>
+<p><strong>Siguiente paso:</strong> crear las bases de datos.</p>
+<h3 id="paso-46-crear-las-bases-de-datos-web1_db-y-web2_db">PASO 4.6 – Crear las bases de datos web1_db y web2_db<a class="headerlink" href="#paso-46-crear-las-bases-de-datos-web1_db-y-web2_db" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear una base de datos independiente para cada sitio.</p>
+<p><strong>Comando (dentro de <code>sudo mariadb</code>):</strong> </p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">web1_db</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">web2_db</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>CREATE DATABASE web1_db</code>: crea la base de datos.</li>
+<li><code>CHARACTER SET utf8mb4</code>: codificación de caracteres. <code>utf8mb4</code> admite todos los caracteres Unicode, incluidas tildes, eñes y emojis. (El antiguo <code>utf8</code> de MySQL solo admite 3 bytes por carácter y falla con emojis.)</li>
+<li><code>COLLATE utf8mb4_unicode_ci</code>: reglas de comparación y ordenación. <code>ci</code> = <em>case insensitive</em>: <code>'Ana'</code> y <code>'ana'</code> se consideran iguales al buscar.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> <code>Query OK, 1 row affected</code> por cada una, y ambas aparecen en <code>SHOW DATABASES</code>.</p>
+<p><strong>Errores habituales:</strong> <code>ERROR 1007 (HY000): Can't create database 'web1_db'; database exists</code>. Ya existía; puedes usar <code>CREATE DATABASE IF NOT EXISTS ...</code> para evitar el error.</p>
+<p><strong>Siguiente paso:</strong> crear los usuarios.</p>
+<h3 id="paso-47-crear-los-usuarios-de-base-de-datos">PASO 4.7 – Crear los usuarios de base de datos<a class="headerlink" href="#paso-47-crear-los-usuarios-de-base-de-datos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear <code>web1_user</code> y <code>web2_user</code>, que solo podrán conectarse desde el propio servidor.</p>
+<p><strong>Comando (dentro de <code>sudo mariadb</code>):</strong> </p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'&lt;CLAVE_WEB1&gt;'</span><span class="p">;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'web2_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'&lt;CLAVE_WEB2&gt;'</span><span class="p">;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="w"> </span><span class="k">host</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'web%'</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>CREATE USER 'web1_user'@'localhost'</code>: crea el usuario <code>web1_user</code> que solo puede conectarse desde <code>localhost</code> (socket Unix o 127.0.0.1).</li>
+<li><code>IDENTIFIED BY '...'</code>: su contraseña. MariaDB no la guarda en claro, sino un <em>hash</em>.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>+-----------+-----------+
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>| User      | Host      |
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>+-----------+-----------+
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>| web1_user | localhost |
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>| web2_user | localhost |
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>+-----------+-----------+
+</code></pre></div>
+<p><strong>Siguiente paso:</strong> asignar permisos limitados.</p>
+<h3 id="paso-48-asignar-permisos-especificos-a-cada-usuario">PASO 4.8 – Asignar permisos específicos a cada usuario<a class="headerlink" href="#paso-48-asignar-permisos-especificos-a-cada-usuario" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que <code>web1_user</code> solo pueda trabajar con <code>web1_db</code> y <code>web2_user</code> solo con <code>web2_db</code>, y con los privilegios mínimos necesarios.</p>
+<p><strong>Explicación:</strong> una aplicación web normal solo necesita leer, insertar, modificar y borrar filas. No necesita borrar tablas enteras, crear usuarios ni tocar otras bases de datos. Si un atacante encontrara una inyección SQL en la web 1, con estos permisos no podría ni ver la base de datos de la web 2.</p>
+<p>Distinguimos dos niveles de permisos:</p>
+<table>
+<thead>
+<tr>
+<th>Privilegio</th>
+<th>Permite</th>
+<th>¿Lo damos?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SELECT</code></td>
+<td>Leer filas.</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>INSERT</code></td>
+<td>Añadir filas.</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>UPDATE</code></td>
+<td>Modificar filas.</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td>Borrar filas.</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>CREATE</code>, <code>ALTER</code>, <code>INDEX</code>, <code>DROP</code></td>
+<td>Crear, modificar y borrar tablas e índices.</td>
+<td>Solo si la aplicación instala o actualiza su propio esquema (WordPress, por ejemplo, los necesita). En nuestro ejemplo, no: creamos las tablas como administradores.</td>
+</tr>
+<tr>
+<td><code>CREATE TEMPORARY TABLES</code>, <code>LOCK TABLES</code></td>
+<td>Tablas temporales y bloqueos.</td>
+<td>Solo si la aplicación lo requiere.</td>
+</tr>
+<tr>
+<td><code>ALL PRIVILEGES</code></td>
+<td>Todo sobre la base indicada.</td>
+<td>No.</td>
+</tr>
+<tr>
+<td><code>GRANT OPTION</code>, <code>SUPER</code>, <code>FILE</code>, <code>PROCESS</code></td>
+<td>Administración del servidor.</td>
+<td><strong>Nunca</strong> a una aplicación.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comando (dentro de <code>sudo mariadb</code>):</strong> </p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">web1_db</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">web2_db</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'web2_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">GRANTS</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">GRANTS</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="s1">'web2_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>GRANT privilegios ON web1_db.* TO usuario</code>: concede esos privilegios sobre todas las tablas (<code>*</code>) de <code>web1_db</code>.</li>
+<li><code>FLUSH PRIVILEGES</code>: recarga las tablas de permisos. Con <code>GRANT</code> no es estrictamente necesario, pero no hace daño y es una buena costumbre.</li>
+<li><code>SHOW GRANTS</code>: muestra los permisos efectivos.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>+------------------------------------------------------------------------------------------------+
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>| Grants for web1_user@localhost                                                                 |
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>+------------------------------------------------------------------------------------------------+
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>| GRANT USAGE ON *.* TO `web1_user`@`localhost` IDENTIFIED BY PASSWORD '*A1B2C3...'              |
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>| GRANT SELECT, INSERT, UPDATE, DELETE ON `web1_db`.* TO `web1_user`@`localhost`                 |
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>+------------------------------------------------------------------------------------------------+
+</code></pre></div>
+<p><code>USAGE ON *.*</code> significa «puede conectarse, pero sin privilegios globales». Es correcto.</p>
+<p><strong>Siguiente paso:</strong> crear las tablas de las aplicaciones.</p>
+<h3 id="paso-49-crear-la-estructura-de-tablas-de-cada-aplicacion">PASO 4.9 – Crear la estructura de tablas de cada aplicación<a class="headerlink" href="#paso-49-crear-la-estructura-de-tablas-de-cada-aplicacion" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear la tabla <code>contactos</code> que usará la aplicación PHP del Módulo 5.</p>
+<p><strong>Explicación:</strong> nuestra aplicación de ejemplo será una agenda de contactos con un pequeño formulario. Cada base de datos tendrá la misma estructura, pero datos completamente independientes.</p>
+<p><strong>Comando (dentro de <code>sudo mariadb</code>):</strong> </p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">USE</span><span class="w"> </span><span class="n">web1_db</span><span class="p">;</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">contactos</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span><span class="n">id</span><span class="w">         </span><span class="nb">INT</span><span class="w"> </span><span class="n">UNSIGNED</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span><span class="n">nombre</span><span class="w">     </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span><span class="n">email</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span><span class="n">telefono</span><span class="w">   </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w">  </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">    </span><span class="n">notas</span><span class="w">      </span><span class="nb">TEXT</span><span class="w">         </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">    </span><span class="n">creado_en</span><span class="w">  </span><span class="k">TIMESTAMP</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">    </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uk_email</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">contactos</span><span class="w"> </span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">telefono</span><span class="p">,</span><span class="w"> </span><span class="n">notas</span><span class="p">)</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'Ana Pérez'</span><span class="p">,</span><span class="w"> </span><span class="s1">'ana@ejemplo1.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'600111222'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Contacto de prueba de la web 1'</span><span class="p">);</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="n">USE</span><span class="w"> </span><span class="n">web2_db</span><span class="p">;</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">contactos</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="n">web1_db</span><span class="p">.</span><span class="n">contactos</span><span class="p">;</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">contactos</span><span class="w"> </span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">telefono</span><span class="p">,</span><span class="w"> </span><span class="n">notas</span><span class="p">)</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'Luis Gómez'</span><span class="p">,</span><span class="w"> </span><span class="s1">'luis@ejemplo2.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'600333444'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Contacto de prueba de la web 2'</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>USE web1_db;</code></td>
+<td>Selecciona la base de datos sobre la que trabajarán las instrucciones siguientes.</td>
+</tr>
+<tr>
+<td><code>INT UNSIGNED</code></td>
+<td>Número entero sin signo (0 a 4.294.967.295).</td>
+</tr>
+<tr>
+<td><code>NOT NULL</code></td>
+<td>El campo es obligatorio.</td>
+</tr>
+<tr>
+<td><code>AUTO_INCREMENT</code></td>
+<td>MariaDB asigna automáticamente 1, 2, 3...</td>
+</tr>
+<tr>
+<td><code>VARCHAR(100)</code></td>
+<td>Texto de longitud variable, hasta 100 caracteres.</td>
+</tr>
+<tr>
+<td><code>TEXT</code></td>
+<td>Texto largo (hasta 64 KB).</td>
+</tr>
+<tr>
+<td><code>TIMESTAMP ... DEFAULT CURRENT_TIMESTAMP</code></td>
+<td>Fecha y hora, rellenada automáticamente al insertar.</td>
+</tr>
+<tr>
+<td><code>PRIMARY KEY (id)</code></td>
+<td><code>id</code> identifica cada fila de forma única.</td>
+</tr>
+<tr>
+<td><code>UNIQUE KEY uk_email (email)</code></td>
+<td>No puede haber dos contactos con el mismo email.</td>
+</tr>
+<tr>
+<td><code>ENGINE=InnoDB</code></td>
+<td>Motor de almacenamiento con transacciones y recuperación ante fallos (el predeterminado).</td>
+</tr>
+<tr>
+<td><code>CREATE TABLE contactos LIKE web1_db.contactos</code></td>
+<td>Copia la estructura (no los datos) de otra tabla.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">web1_db</span><span class="p">.</span><span class="n">contactos</span><span class="p">;</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">web2_db</span><span class="p">.</span><span class="n">contactos</span><span class="p">;</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">web1_db</span><span class="p">.</span><span class="n">contactos</span><span class="p">;</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">EXIT</span><span class="p">;</span>
+</code></pre></div>
+<p>Cada consulta debe devolver su propio contacto.</p>
+<p><strong>Siguiente paso:</strong> comprobar que los permisos funcionan.</p>
+<h3 id="paso-410-comprobar-las-conexiones-y-el-aislamiento-entre-usuarios">PASO 4.10 – Comprobar las conexiones y el aislamiento entre usuarios<a class="headerlink" href="#paso-410-comprobar-las-conexiones-y-el-aislamiento-entre-usuarios" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> demostrar que cada usuario entra en su base de datos y <strong>no</strong> puede acceder a la otra.</p>
+<p><strong>Comando (en el terminal de Linux):</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>mariadb<span class="w"> </span>-u<span class="w"> </span>web1_user<span class="w"> </span>-p<span class="w"> </span>web1_db<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT nombre, email FROM contactos;"</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>mariadb<span class="w"> </span>-u<span class="w"> </span>web1_user<span class="w"> </span>-p<span class="w"> </span>web2_db<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT * FROM contactos;"</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>mariadb<span class="w"> </span>-u<span class="w"> </span>web1_user<span class="w"> </span>-p<span class="w"> </span>web1_db<span class="w"> </span>-e<span class="w"> </span><span class="s2">"DROP TABLE contactos;"</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>-u web1_user</code>: usuario con el que conectar.</li>
+<li><code>-p</code>: pide la contraseña de forma interactiva (no la escribas en la línea de comandos: quedaría en el historial).</li>
+<li><code>web1_db</code>: base de datos a usar.</li>
+<li><code>-e "..."</code>: ejecuta la instrucción y sale.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>+-----------+------------------+
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>| nombre    | email            |
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>+-----------+------------------+
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>| Ana Pérez | ana@ejemplo1.com |
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>+-----------+------------------+
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>ERROR 1044 (42000): Access denied for user 'web1_user'@'localhost' to database 'web2_db'
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>ERROR 1142 (42000): DROP command denied to user 'web1_user'@'localhost' for table `web1_db`.`contactos`
+</code></pre></div>
+<p>Las dos denegaciones son exactamente lo que queremos: aislamiento entre webs y protección contra borrados de tablas.</p>
+<p><strong>Errores habituales:</strong> </p>
+<ul>
+<li><code>ERROR 1045 (28000): Access denied for user 'web1_user'@'localhost' (using password: YES)</code>: contraseña incorrecta o usuario creado con otro host. Revisa con <code>SELECT user,host FROM mysql.user;</code>.</li>
+<li><code>ERROR 2002 (HY000): Can't connect to local server through socket '/run/mysqld/mysqld.sock'</code>: MariaDB no está funcionando (<code>systemctl status mariadb</code>).</li>
+</ul>
+<p><strong>Siguiente paso:</strong> aprender a cambiar contraseñas.</p>
+<h3 id="paso-411-modificar-contrasenas">PASO 4.11 – Modificar contraseñas<a class="headerlink" href="#paso-411-modificar-contrasenas" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> cambiar la contraseña de un usuario de base de datos (por ejemplo, si sospechas que se ha filtrado).</p>
+<p><strong>Comando (dentro de <code>sudo mariadb</code>):</strong> </p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'&lt;NUEVA_CLAVE_WEB1&gt;'</span><span class="p">;</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>ALTER USER ... IDENTIFIED BY</code> sustituye la contraseña. A partir de ese momento, la aplicación dejará de conectar hasta que actualices su archivo de configuración (Módulo 5, <code>config.php</code>).</p>
+<p><strong>Comprobación:</strong> <code>mariadb -u web1_user -p web1_db -e "SELECT 1;"</code> con la nueva clave debe devolver <code>1</code>.</p>
+<p>Otras operaciones de administración de usuarios:</p>
+<div class="highlight"><span class="filename">SQL</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">-- Quitar un privilegio concreto</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">REVOKE</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">web1_db</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1">-- Volver a concederlo</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">web1_db</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1">-- Bloquear temporalmente una cuenta sin borrarla</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">ACCOUNT</span><span class="w"> </span><span class="k">LOCK</span><span class="p">;</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'web1_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">ACCOUNT</span><span class="w"> </span><span class="n">UNLOCK</span><span class="p">;</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="c1">-- Borrar un usuario</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'usuario_obsoleto'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1">-- Ver qué usuarios están conectados ahora mismo</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">PROCESSLIST</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Siguiente paso:</strong> copias de seguridad.</p>
+<h2 id="44-copias-de-seguridad-y-restauracion">4.4 Copias de seguridad y restauración<a class="headerlink" href="#44-copias-de-seguridad-y-restauracion" title="Permanent link">&para;</a></h2>
+<p>Una base de datos sin copia de seguridad es una base de datos que vas a perder. La herramienta estándar es <strong>mariadb-dump</strong> (antes <code>mysqldump</code>), que genera un archivo de texto con todas las instrucciones SQL necesarias para reconstruir la base de datos.</p>
+<h3 id="paso-412-hacer-una-copia-de-seguridad-manual">PASO 4.12 – Hacer una copia de seguridad manual<a class="headerlink" href="#paso-412-hacer-una-copia-de-seguridad-manual" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> exportar <code>web1_db</code> a un archivo comprimido.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/backups/mariadb
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/backups/mariadb
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>sudo<span class="w"> </span>mariadb-dump<span class="w"> </span>--single-transaction<span class="w"> </span>--routines<span class="w"> </span>--triggers<span class="w"> </span>--events<span class="w"> </span>--databases<span class="w"> </span>web1_db<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/var/backups/mariadb/web1_db_<span class="k">$(</span>date<span class="w"> </span>+%F_%H%M<span class="k">)</span>.sql.gz<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/backups/mariadb/
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<ul>
+<li><code>mariadb-dump</code>: exporta la base de datos (lo ejecutamos con sudo para usar la cuenta root por unix_socket).</li>
+<li><code>--single-transaction</code>: hace la copia como una «foto» coherente sin bloquear las tablas InnoDB; la web sigue funcionando mientras tanto.</li>
+<li><code>--routines --triggers --events</code>: incluye procedimientos almacenados, disparadores y eventos programados.</li>
+<li><code>--databases web1_db</code>: incluye en el archivo la instrucción <code>CREATE DATABASE</code> y <code>USE</code>, de modo que la restauración recrea la base si no existe.</li>
+<li><code>| gzip</code>: comprime (los volcados SQL se reducen mucho).</li>
+<li><code>$(date +%F_%H%M)</code>: inserta la fecha y hora actuales en el nombre, por ejemplo <code>2026-11-08_2310</code>.</li>
+<li><code>chmod 700</code> en la carpeta: las copias contienen todos tus datos, solo root debe leerlas.</li>
+</ul>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>-rw-r--r-- 1 root root 1,2K nov  8 23:10 web1_db_2026-11-08_2310.sql.gz
+</code></pre></div>
+<p><strong>Comprobación:</strong> mira el contenido sin descomprimir el archivo:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo<span class="w"> </span>zcat<span class="w"> </span>/var/backups/mariadb/web1_db_*.sql.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+</code></pre></div>
+<p>Verás instrucciones <code>CREATE DATABASE</code>, <code>CREATE TABLE</code> e <code>INSERT INTO</code>.</p>
+<p>Para copiar <strong>todas</strong> las bases de datos de una vez:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo<span class="w"> </span>mariadb-dump<span class="w"> </span>--single-transaction<span class="w"> </span>--routines<span class="w"> </span>--triggers<span class="w"> </span>--events<span class="w"> </span>--all-databases<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/var/backups/mariadb/todas_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.sql.gz<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+</code></pre></div>
+<p><strong>Siguiente paso:</strong> restaurar.</p>
+<h3 id="paso-413-restaurar-una-base-de-datos">PASO 4.13 – Restaurar una base de datos<a class="headerlink" href="#paso-413-restaurar-una-base-de-datos" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> recuperar <code>web1_db</code> desde la copia, simulando una pérdida de datos.</p>
+<p><strong>Comando:</strong> primero simulamos el desastre borrando la base de datos (<strong>solo en tu laboratorio o tras verificar la copia</strong>):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo<span class="w"> </span>mariadb<span class="w"> </span>-e<span class="w"> </span><span class="s2">"DROP DATABASE web1_db;"</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>sudo<span class="w"> </span>mariadb<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SHOW DATABASES;"</span>
+</code></pre></div>
+<p>Ahora restauramos:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'zcat /var/backups/mariadb/web1_db_2026-11-08_2310.sql.gz | mariadb'</span>
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>zcat</code> descomprime y envía el SQL a la consola <code>mariadb</code>, que ejecuta las instrucciones una tras otra. Como el volcado se hizo con <code>--databases</code>, el propio archivo contiene <code>CREATE DATABASE</code> y <code>USE web1_db</code>. Usamos <code>sh -c '...'</code> para que toda la tubería se ejecute con privilegios de root. Sustituye el nombre del archivo por el tuyo.</p>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>mariadb<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT * FROM web1_db.contactos;"</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>mariadb<span class="w"> </span>-u<span class="w"> </span>web1_user<span class="w"> </span>-p<span class="w"> </span>web1_db<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM contactos;"</span>
+</code></pre></div>
+<p>Los datos han vuelto <strong>y</strong> el usuario <code>web1_user</code> sigue pudiendo acceder (los usuarios y permisos viven en la base <code>mysql</code>, que no hemos borrado).</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Si restauras un volcado hecho <strong>sin</strong> <code>--databases</code> (solo con el nombre de la base), el archivo no contiene <code>CREATE DATABASE</code>. En ese caso crea primero la base vacía y restaura indicándola: <code>sudo mariadb -e "CREATE DATABASE web1_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"</code> y después <code>zcat archivo.sql.gz | sudo mariadb web1_db</code>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Una copia que nunca has restaurado es solo una esperanza. Programa una prueba de restauración en un servidor de pruebas al menos una vez al mes. La automatización diaria de las copias se configura en el Módulo 12.</p>
+</div>
+<p><strong>Errores habituales:</strong> <code>ERROR 1049 (42000): Unknown database 'web1_db'</code> al restaurar: el volcado no incluía <code>CREATE DATABASE</code> (ver la nota anterior).</p>
+<p><strong>Siguiente paso:</strong> Módulo 5, conectar PHP con MariaDB.</p>
+<h2 id="45-referencia-rapida-de-sql">4.5 Referencia rápida de SQL<a class="headerlink" href="#45-referencia-rapida-de-sql" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Sintaxis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Crear base de datos</td>
+<td><code>CREATE DATABASE nombre CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</code></td>
+</tr>
+<tr>
+<td>Borrar base de datos</td>
+<td><code>DROP DATABASE nombre;</code></td>
+</tr>
+<tr>
+<td>Crear usuario</td>
+<td><code>CREATE USER 'u'@'localhost' IDENTIFIED BY 'clave';</code></td>
+</tr>
+<tr>
+<td>Conceder permisos</td>
+<td><code>GRANT SELECT, INSERT, UPDATE, DELETE ON bd.* TO 'u'@'localhost';</code></td>
+</tr>
+<tr>
+<td>Ver permisos</td>
+<td><code>SHOW GRANTS FOR 'u'@'localhost';</code></td>
+</tr>
+<tr>
+<td>Retirar permisos</td>
+<td><code>REVOKE DELETE ON bd.* FROM 'u'@'localhost';</code></td>
+</tr>
+<tr>
+<td>Cambiar contraseña</td>
+<td><code>ALTER USER 'u'@'localhost' IDENTIFIED BY 'nueva';</code></td>
+</tr>
+<tr>
+<td>Borrar usuario</td>
+<td><code>DROP USER 'u'@'localhost';</code></td>
+</tr>
+<tr>
+<td>Listar tablas</td>
+<td><code>SHOW TABLES;</code></td>
+</tr>
+<tr>
+<td>Estructura de una tabla</td>
+<td><code>DESCRIBE tabla;</code></td>
+</tr>
+<tr>
+<td>Insertar</td>
+<td><code>INSERT INTO t (c1, c2) VALUES ('a', 'b');</code></td>
+</tr>
+<tr>
+<td>Leer</td>
+<td><code>SELECT c1, c2 FROM t WHERE id = 1 ORDER BY c1 LIMIT 10;</code></td>
+</tr>
+<tr>
+<td>Modificar</td>
+<td><code>UPDATE t SET c1 = 'x' WHERE id = 1;</code></td>
+</tr>
+<tr>
+<td>Borrar filas</td>
+<td><code>DELETE FROM t WHERE id = 1;</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Un <code>UPDATE</code> o <code>DELETE</code> <strong>sin</strong> <code>WHERE</code> afecta a <strong>todas</strong> las filas de la tabla. Antes de ejecutar uno, ejecuta el <code>SELECT</code> equivalente con el mismo <code>WHERE</code> para ver qué filas vas a tocar.</p>
+</div>
+<h2 id="46-ejercicios-practicos-del-modulo-4">4.6 Ejercicios prácticos del Módulo 4<a class="headerlink" href="#46-ejercicios-practicos-del-modulo-4" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Crea una tabla <code>productos</code> (id, nombre, precio DECIMAL(10,2), stock INT) en <code>web2_db</code>, inserta tres productos y practica <code>SELECT</code> con <code>WHERE</code>, <code>ORDER BY</code> y <code>LIMIT</code>.</li>
+<li>Intenta conectar como <code>web2_user</code> a <code>web1_db</code> y documenta el error.</li>
+<li>Quita a <code>web1_user</code> el permiso <code>DELETE</code>, intenta borrar un contacto y vuelve a concederlo.</li>
+<li>Haz una copia de <code>web2_db</code>, borra un registro, restaura la copia y verifica que el registro ha vuelto.</li>
+<li>Explica por qué es más seguro <code>'web1_user'@'localhost'</code> que <code>'web1_user'@'%'</code> y por qué no damos <code>ALL PRIVILEGES</code> a las aplicaciones.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../03-virtualhosts/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 3. Virtual Hosting">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                3. Virtual Hosting
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-php-mariadb/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 5. PHP y MariaDB">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                5. PHP y MariaDB
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

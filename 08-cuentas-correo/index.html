@@ -1,0 +1,2284 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/08-cuentas-correo/">
+      
+      
+        <link rel="prev" href="../07-dovecot/">
+      
+      
+        <link rel="next" href="../09-dns-correo/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>8. Cuentas de correo - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-8-creacion-de-cuentas-de-correo" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              8. Cuentas de correo
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#81-cuentas-del-sistema-frente-a-cuentas-virtuales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Cuentas del sistema frente a cuentas virtuales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-que-hace-falta-para-que-una-direccion-exista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Qué hace falta para que una dirección exista
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-proteger-la-identidad-del-remitente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Proteger la identidad del remitente
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 Proteger la identidad del remitente">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-81-crear-la-tabla-de-remitentes-autorizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.1 – Crear la tabla de remitentes autorizados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-82-exigir-la-coincidencia-en-los-puertos-de-envio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.2 – Exigir la coincidencia en los puertos de envío
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-scripts-de-administracion-de-cuentas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Scripts de administración de cuentas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.4 Scripts de administración de cuentas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-83-script-de-alta-de-cuentas-correo-alta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.3 – Script de alta de cuentas: correo-alta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-84-script-de-cambio-de-contrasena-correo-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.4 – Script de cambio de contraseña: correo-clave
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-85-script-de-baja-de-cuentas-correo-baja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.5 – Script de baja de cuentas: correo-baja
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-crear-las-cuentas-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Crear las cuentas del proyecto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.5 Crear las cuentas del proyecto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-86-registrar-la-cuenta-info-creada-a-mano" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.6 – Registrar la cuenta info@ creada a mano
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-87-crear-administracionejemplo1com-y-soporteejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.7 – Crear administracion@ejemplo1.com y soporte@ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-88-crear-los-alias-obligatorios-y-de-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.8 – Crear los alias obligatorios y de servicio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-89-redirigir-el-correo-del-sistema-a-una-cuenta-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.9 – Redirigir el correo del sistema a una cuenta real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#86-gestion-de-buzones-y-permisos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 Gestión de buzones y permisos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.6 Gestión de buzones y permisos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-810-verificar-la-estructura-y-los-permisos-de-los-buzones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.10 – Verificar la estructura y los permisos de los buzones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#87-configurar-un-cliente-de-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 Configurar un cliente de correo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.7 Configurar un cliente de correo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-811-configurar-thunderbird-o-cualquier-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.11 – Configurar Thunderbird (o cualquier cliente)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#88-ejercicios-practicos-del-modulo-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.8 Ejercicios prácticos del Módulo 8
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#81-cuentas-del-sistema-frente-a-cuentas-virtuales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Cuentas del sistema frente a cuentas virtuales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-que-hace-falta-para-que-una-direccion-exista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Qué hace falta para que una dirección exista
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-proteger-la-identidad-del-remitente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Proteger la identidad del remitente
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 Proteger la identidad del remitente">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-81-crear-la-tabla-de-remitentes-autorizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.1 – Crear la tabla de remitentes autorizados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-82-exigir-la-coincidencia-en-los-puertos-de-envio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.2 – Exigir la coincidencia en los puertos de envío
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-scripts-de-administracion-de-cuentas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Scripts de administración de cuentas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.4 Scripts de administración de cuentas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-83-script-de-alta-de-cuentas-correo-alta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.3 – Script de alta de cuentas: correo-alta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-84-script-de-cambio-de-contrasena-correo-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.4 – Script de cambio de contraseña: correo-clave
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-85-script-de-baja-de-cuentas-correo-baja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.5 – Script de baja de cuentas: correo-baja
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-crear-las-cuentas-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Crear las cuentas del proyecto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.5 Crear las cuentas del proyecto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-86-registrar-la-cuenta-info-creada-a-mano" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.6 – Registrar la cuenta info@ creada a mano
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-87-crear-administracionejemplo1com-y-soporteejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.7 – Crear administracion@ejemplo1.com y soporte@ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-88-crear-los-alias-obligatorios-y-de-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.8 – Crear los alias obligatorios y de servicio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-89-redirigir-el-correo-del-sistema-a-una-cuenta-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.9 – Redirigir el correo del sistema a una cuenta real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#86-gestion-de-buzones-y-permisos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 Gestión de buzones y permisos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.6 Gestión de buzones y permisos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-810-verificar-la-estructura-y-los-permisos-de-los-buzones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.10 – Verificar la estructura y los permisos de los buzones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#87-configurar-un-cliente-de-correo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 Configurar un cliente de correo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.7 Configurar un cliente de correo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-811-configurar-thunderbird-o-cualquier-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 8.11 – Configurar Thunderbird (o cualquier cliente)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#88-ejercicios-practicos-del-modulo-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.8 Ejercicios prácticos del Módulo 8
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/08-cuentas-correo.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-8-creacion-de-cuentas-de-correo">Módulo 8. Creación de cuentas de correo<a class="headerlink" href="#modulo-8-creacion-de-cuentas-de-correo" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Diferenciar con claridad las cuentas del sistema Linux de las cuentas virtuales de correo.</li>
+<li>Entender qué archivos intervienen en la existencia de una dirección de correo.</li>
+<li>Crear las cuentas <code>info@ejemplo1.com</code>, <code>administracion@ejemplo1.com</code> y <code>soporte@ejemplo2.com</code>, y los alias obligatorios.</li>
+<li>Automatizar el alta, la baja y el cambio de contraseña con scripts de administración.</li>
+<li>Impedir que un usuario envíe correo haciéndose pasar por otro.</li>
+<li>Configurar un cliente de correo real.</li>
+</ul>
+<h2 id="81-cuentas-del-sistema-frente-a-cuentas-virtuales">8.1 Cuentas del sistema frente a cuentas virtuales<a class="headerlink" href="#81-cuentas-del-sistema-frente-a-cuentas-virtuales" title="Permanent link">&para;</a></h2>
+<p>Es un error muy frecuente mezclar estos dos conceptos. En nuestra infraestructura están completamente separados:</p>
+<table>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Cuenta del sistema Linux</th>
+<th>Cuenta virtual de correo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ejemplos</td>
+<td><code>sysadmin</code>, <code>web1</code>, <code>vmail</code>, <code>root</code></td>
+<td><code>info@ejemplo1.com</code>, <code>soporte@ejemplo2.com</code></td>
+</tr>
+<tr>
+<td>Dónde se define</td>
+<td><code>/etc/passwd</code> y <code>/etc/shadow</code></td>
+<td><code>/etc/dovecot/users</code> (Dovecot) y <code>/etc/postfix/vmailbox</code> (Postfix)</td>
+</tr>
+<tr>
+<td>Se crea con</td>
+<td><code>adduser</code> / <code>useradd</code></td>
+<td>El script <code>correo-alta</code> (este módulo)</td>
+</tr>
+<tr>
+<td>¿Puede entrar por SSH?</td>
+<td>Sí (si se permite)</td>
+<td><strong>Nunca</strong></td>
+</tr>
+<tr>
+<td>¿Tiene carpeta en /home?</td>
+<td>Normalmente sí</td>
+<td>No. Su buzón está en <code>/var/mail/vhosts/dominio/usuario/</code></td>
+</tr>
+<tr>
+<td>Propietario de sus archivos</td>
+<td>Ella misma</td>
+<td>El usuario técnico <code>vmail</code> (uid 5000)</td>
+</tr>
+<tr>
+<td>Nombre de usuario al autenticarse</td>
+<td><code>sysadmin</code></td>
+<td>La dirección completa: <code>info@ejemplo1.com</code></td>
+</tr>
+<tr>
+<td>Correo que recibe</td>
+<td>El de <code>@mail.ejemplo1.com</code> (dominio local, <code>mydestination</code>)</td>
+<td>El de <code>@ejemplo1.com</code> y <code>@ejemplo2.com</code> (dominios virtuales)</td>
+</tr>
+</tbody>
+</table>
+<p>Ventajas de las cuentas virtuales:</p>
+<ul>
+<li><strong>Seguridad</strong>: robar la contraseña de un buzón no da acceso al servidor.</li>
+<li><strong>Multidominio</strong>: <code>info@ejemplo1.com</code> e <code>info@ejemplo2.com</code> pueden coexistir sin conflicto (en Linux solo puede haber un usuario <code>info</code>).</li>
+<li><strong>Gestión sencilla</strong>: crear 100 buzones no llena el sistema de usuarios Linux.</li>
+</ul>
+<h2 id="82-que-hace-falta-para-que-una-direccion-exista">8.2 Qué hace falta para que una dirección exista<a class="headerlink" href="#82-que-hace-falta-para-que-una-direccion-exista" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> Llega un correo para soporte@ejemplo2.com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> POSTFIX ── ¿ejemplo2.com está en virtual_domains? ───────── no → "Relay access denied"
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        │ sí
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        ├── ¿hay alias en /etc/postfix/virtual? ── sí → se reescribe el destinatario
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ├── ¿la dirección está en /etc/postfix/vmailbox? ─── no → "User unknown" (550)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │ sí
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        ▼ LMTP
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a> DOVECOT ── ¿la dirección está en /etc/dovecot/users? ────── no → rebote
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        │ sí: uid 5000, home /var/mail/vhosts/ejemplo2.com/soporte
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        ▼
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a> Guarda el mensaje en /var/mail/vhosts/ejemplo2.com/soporte/Maildir/new/
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a> Cuando soporte@ejemplo2.com envía por el 587:
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a> POSTFIX ──SASL──► DOVECOT (/etc/dovecot/users: ¿contraseña correcta?)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        └── /etc/postfix/sender_login: ¿soporte@ puede usar este remitente?
+</code></pre></div>
+<p>Resumen de archivos:</p>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Propietario del dato</th>
+<th>Qué contiene</th>
+<th>Tras modificarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/postfix/virtual_domains</code></td>
+<td>Postfix</td>
+<td>Dominios de correo.</td>
+<td><code>postmap</code></td>
+</tr>
+<tr>
+<td><code>/etc/postfix/vmailbox</code></td>
+<td>Postfix</td>
+<td>Direcciones con buzón.</td>
+<td><code>postmap</code></td>
+</tr>
+<tr>
+<td><code>/etc/postfix/virtual</code></td>
+<td>Postfix</td>
+<td>Alias (reenvíos).</td>
+<td><code>postmap</code></td>
+</tr>
+<tr>
+<td><code>/etc/postfix/sender_login</code></td>
+<td>Postfix</td>
+<td>Qué usuario autenticado puede usar cada remitente.</td>
+<td><code>postmap</code></td>
+</tr>
+<tr>
+<td><code>/etc/dovecot/users</code></td>
+<td>Dovecot</td>
+<td>Contraseñas, uid, gid y carpeta de cada cuenta.</td>
+<td>Nada (Dovecot lo relee solo)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="83-proteger-la-identidad-del-remitente">8.3 Proteger la identidad del remitente<a class="headerlink" href="#83-proteger-la-identidad-del-remitente" title="Permanent link">&para;</a></h2>
+<p>Ahora mismo, cualquier usuario autenticado podría enviar un correo con <code>MAIL FROM:&lt;administracion@ejemplo1.com&gt;</code> aunque haya iniciado sesión como <code>info@</code>. Lo impedimos con una tabla que indica qué usuario puede usar cada dirección como remitente.</p>
+<h3 id="paso-81-crear-la-tabla-de-remitentes-autorizados">PASO 8.1 – Crear la tabla de remitentes autorizados<a class="headerlink" href="#paso-81-crear-la-tabla-de-remitentes-autorizados" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/etc/postfix/sender_login</code> (nuevo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Remitente (MAIL FROM)            Usuarios SASL autorizados a usarlo (separados por comas)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>info@ejemplo1.com                  info@ejemplo1.com
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>postmap<span class="w"> </span>/etc/postfix/sender_login
+</code></pre></div>
+<p>Añade a <code>/etc/postfix/main.cf</code> (conserva todo lo anterior y añade al final):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># --- Remitentes autorizados por usuario (Módulo 8) ----------------------
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>smtpd_sender_login_maps = hash:/etc/postfix/sender_login
+</code></pre></div>
+<h3 id="paso-82-exigir-la-coincidencia-en-los-puertos-de-envio">PASO 8.2 – Exigir la coincidencia en los puertos de envío<a class="headerlink" href="#paso-82-exigir-la-coincidencia-en-los-puertos-de-envio" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que en los puertos 587 y 465 se rechace un remitente que no pertenezca al usuario autenticado.</p>
+<p><strong>Archivo:</strong> <code>/etc/postfix/master.cf</code>. En los bloques <code>submission</code> y <code>smtps</code> que escribiste en el PASO 7.14, añade la línea <code>-o smtpd_sender_restrictions=...</code> justo debajo de la línea <code>-o smtpd_client_restrictions=...</code>. Los dos bloques quedan así (el resto del archivo no cambia):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>submission inet n       -       y       -       -       smtpd
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  -o syslog_name=postfix/submission
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  -o smtpd_tls_security_level=encrypt
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  -o smtpd_sasl_auth_enable=yes
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  -o smtpd_tls_auth_only=yes
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  -o smtpd_sender_restrictions=reject_sender_login_mismatch,permit_sasl_authenticated,reject
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  -o milter_macro_daemon_name=ORIGINATING
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>smtps     inet  n       -       y       -       -       smtpd
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  -o syslog_name=postfix/smtps
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  -o smtpd_tls_wrappermode=yes
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  -o smtpd_sasl_auth_enable=yes
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  -o smtpd_sender_restrictions=reject_sender_login_mismatch,permit_sasl_authenticated,reject
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  -o milter_macro_daemon_name=ORIGINATING
+</code></pre></div>
+<p>Análisis: <code>reject_sender_login_mismatch</code> rechaza el mensaje si el usuario autenticado no figura en <code>sender_login</code> como propietario del remitente indicado en <code>MAIL FROM</code>.</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>postfix<span class="w"> </span>check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>postfix
+</code></pre></div>
+<p><strong>Comprobación:</strong> más adelante, cuando exista <code>administracion@</code>, intenta enviar como ella autenticado como <code>info@</code>:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>swaks<span class="w"> </span>--server<span class="w"> </span>mail.ejemplo1.com<span class="w"> </span>--port<span class="w"> </span><span class="m">587</span><span class="w"> </span>--tls<span class="w"> </span>--auth<span class="w"> </span>LOGIN<span class="w"> </span>--auth-user<span class="w"> </span>info@ejemplo1.com<span class="w"> </span>--from<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>--to<span class="w"> </span>tu-direccion@gmail.com
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&lt;** 553 5.7.1 &lt;administracion@ejemplo1.com&gt;: Sender address rejected: not owned by user info@ejemplo1.com
+</code></pre></div>
+<h2 id="84-scripts-de-administracion-de-cuentas">8.4 Scripts de administración de cuentas<a class="headerlink" href="#84-scripts-de-administracion-de-cuentas" title="Permanent link">&para;</a></h2>
+<p>Hacer las altas a mano en cuatro archivos es lento y propenso a errores (una cuenta en Postfix pero no en Dovecot provoca rebotes). Un administrador automatiza las tareas repetitivas. Crearemos tres scripts en <code>/usr/local/sbin/</code>, la carpeta estándar para herramientas de administración propias (solo root puede ejecutarlas con sentido, porque modifican archivos protegidos).</p>
+<h3 id="paso-83-script-de-alta-de-cuentas-correo-alta">PASO 8.3 – Script de alta de cuentas: correo-alta<a class="headerlink" href="#paso-83-script-de-alta-de-cuentas-correo-alta" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/usr/local/sbin/correo-alta
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/usr/local/sbin/correo-alta</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">#  correo-alta  -  Crea una cuenta de correo virtual</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">#  Uso: sudo correo-alta usuario@dominio</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nv">USERS</span><span class="o">=</span>/etc/dovecot/users
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nv">VMAILBOX</span><span class="o">=</span>/etc/postfix/vmailbox
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nv">DOMINIOS</span><span class="o">=</span>/etc/postfix/virtual_domains
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nv">SENDERS</span><span class="o">=</span>/etc/postfix/sender_login
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nv">VMAIL_UID</span><span class="o">=</span><span class="m">5000</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nv">VMAIL_GID</span><span class="o">=</span><span class="m">5000</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="nv">BASE</span><span class="o">=</span>/var/mail/vhosts
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">"</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: ejecuta este script con sudo."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="o">[</span><span class="w"> </span><span class="nv">$#</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Uso: </span><span class="nv">$0</span><span class="s2"> usuario@dominio"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="nv">DIRECCION</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="p">,,</span><span class="si">}</span><span class="s2">"</span><span class="w">                       </span><span class="c1"># a minúsculas</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[</span>a-z0-9._-<span class="o">]</span>+@<span class="o">[</span>a-z0-9.-<span class="o">]</span>+<span class="se">\.</span><span class="o">[</span>a-z<span class="o">]{</span><span class="m">2</span>,<span class="o">}</span>$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: '</span><span class="nv">$DIRECCION</span><span class="s2">' no es una dirección válida."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="k">fi</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="nv">USUARIO</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="p">%@*</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="nv">DOMINIO</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="p">#*@</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="c1"># El dominio debe estar dado de alta en Postfix</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">d</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DOMINIO</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1==d {f=1} END {exit !f}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DOMINIOS</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: el dominio </span><span class="nv">$DOMINIO</span><span class="s2"> no está en </span><span class="nv">$DOMINIOS</span><span class="s2">."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="k">fi</span>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="c1"># La cuenta no debe existir</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="k">if</span><span class="w"> </span>awk<span class="w"> </span>-F:<span class="w"> </span>-v<span class="w"> </span><span class="nv">a</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1==a {f=1} END {exit !f}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: la cuenta </span><span class="nv">$DIRECCION</span><span class="s2"> ya existe."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="k">fi</span>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Introduce la contraseña para </span><span class="nv">$DIRECCION</span><span class="s2"> (mínimo 12 caracteres):"</span>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="nv">HASH</span><span class="o">=</span><span class="k">$(</span>doveadm<span class="w"> </span>pw<span class="w"> </span>-s<span class="w"> </span>SHA512-CRYPT<span class="k">)</span>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="c1"># Copias de seguridad antes de modificar</span>
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>cp<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">.bak"</span><span class="p">;</span><span class="w"> </span>cp<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$VMAILBOX</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$VMAILBOX</span><span class="s2">.bak"</span><span class="p">;</span><span class="w"> </span>cp<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$SENDERS</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SENDERS</span><span class="s2">.bak"</span>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">HASH</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">VMAIL_UID</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">VMAIL_GID</span><span class="si">}</span><span class="s2">::</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">DOMINIO</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">USUARIO</span><span class="si">}</span><span class="s2">::"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span>
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%-35s %s\n'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DOMINIO</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">USUARIO</span><span class="si">}</span><span class="s2">/"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$VMAILBOX</span><span class="s2">"</span>
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%-35s %s\n'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$SENDERS</span><span class="s2">"</span>
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>postmap<span class="w"> </span><span class="s2">"</span><span class="nv">$VMAILBOX</span><span class="s2">"</span>
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>postmap<span class="w"> </span><span class="s2">"</span><span class="nv">$SENDERS</span><span class="s2">"</span>
+<a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a>
+<a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Cuenta </span><span class="nv">$DIRECCION</span><span class="s2"> creada correctamente."</span>
+<a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"El buzón se creará en </span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">DOMINIO</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">USUARIO</span><span class="si">}</span><span class="s2">/Maildir al recibir el primer correo o iniciar sesión."</span>
+</code></pre></div>
+<p>Análisis del script:</p>
+<table>
+<thead>
+<tr>
+<th>Línea</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#!/bin/bash</code></td>
+<td>Indica que el script se ejecuta con bash.</td>
+</tr>
+<tr>
+<td><code>set -euo pipefail</code></td>
+<td>Detiene el script ante cualquier error (<code>-e</code>), variable no definida (<code>-u</code>) o fallo en una tubería (<code>pipefail</code>). Evita dejar las cosas a medias.</td>
+</tr>
+<tr>
+<td><code>${1,,}</code></td>
+<td>Convierte el argumento a minúsculas.</td>
+</tr>
+<tr>
+<td><code>[[ ... =~ ... ]]</code></td>
+<td>Comprueba con una expresión regular que la dirección tiene un formato válido.</td>
+</tr>
+<tr>
+<td><code>${DIRECCION%@*}</code> / <code>${DIRECCION#*@}</code></td>
+<td>Extrae la parte antes y después de la <code>@</code>.</td>
+</tr>
+<tr>
+<td><code>awk -v d=... '$1==d'</code></td>
+<td>Busca coincidencias exactas en la primera columna (más seguro que <code>grep</code>, donde el punto significa «cualquier carácter»).</td>
+</tr>
+<tr>
+<td><code>doveadm pw</code></td>
+<td>Pide la contraseña dos veces y devuelve su hash. La contraseña nunca se escribe en disco ni en el historial.</td>
+</tr>
+<tr>
+<td><code>cp -p ... .bak</code></td>
+<td>Copia de seguridad conservando permisos.</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>Añade una línea al final del archivo (nunca uses <code>&gt;</code> aquí: borraría el contenido).</td>
+</tr>
+<tr>
+<td><code>postmap</code></td>
+<td>Recompila las tablas de Postfix.</td>
+</tr>
+</tbody>
+</table>
+<p>Hazlo ejecutable:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/usr/local/sbin/correo-alta
+</code></pre></div>
+<h3 id="paso-84-script-de-cambio-de-contrasena-correo-clave">PASO 8.4 – Script de cambio de contraseña: correo-clave<a class="headerlink" href="#paso-84-script-de-cambio-de-contrasena-correo-clave" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/usr/local/sbin/correo-clave</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">#  correo-clave  -  Cambia la contraseña de una cuenta de correo virtual</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">#  Uso: sudo correo-clave usuario@dominio</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">USERS</span><span class="o">=</span>/etc/dovecot/users
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">"</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: ejecuta este script con sudo."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="o">[</span><span class="w"> </span><span class="nv">$#</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Uso: </span><span class="nv">$0</span><span class="s2"> usuario@dominio"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="nv">DIRECCION</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="p">,,</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span>awk<span class="w"> </span>-F:<span class="w"> </span>-v<span class="w"> </span><span class="nv">a</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1==a {f=1} END {exit !f}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: la cuenta </span><span class="nv">$DIRECCION</span><span class="s2"> no existe."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="k">fi</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Nueva contraseña para </span><span class="nv">$DIRECCION</span><span class="s2">:"</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="nv">HASH</span><span class="o">=</span><span class="k">$(</span>doveadm<span class="w"> </span>pw<span class="w"> </span>-s<span class="w"> </span>SHA512-CRYPT<span class="k">)</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>cp<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">.bak"</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="nv">TMP</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>awk<span class="w"> </span>-F:<span class="w"> </span>-v<span class="w"> </span><span class="nv">OFS</span><span class="o">=</span>:<span class="w"> </span>-v<span class="w"> </span><span class="nv">a</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span>-v<span class="w"> </span><span class="nv">h</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HASH</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1==a {$2=h} {print}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>cat<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="w">      </span><span class="c1"># conserva propietario y permisos del archivo original</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>rm<span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="c1"># Cierra las sesiones abiertas para que vuelvan a autenticarse</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>doveadm<span class="w"> </span>kick<span class="w"> </span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Contraseña de </span><span class="nv">$DIRECCION</span><span class="s2"> actualizada."</span>
+</code></pre></div>
+<p>Análisis: <code>awk -F: -v OFS=:</code> lee y escribe el archivo con <code>:</code> como separador y sustituye solo el segundo campo de la línea de esa cuenta. Escribir con <code>cat "$TMP" &gt; "$USERS"</code> (en lugar de mover el archivo) conserva el propietario <code>root:dovecot</code> y los permisos <code>640</code>. <code>doveadm kick</code> desconecta las sesiones IMAP/POP3 activas de ese usuario.</p>
+<h3 id="paso-85-script-de-baja-de-cuentas-correo-baja">PASO 8.5 – Script de baja de cuentas: correo-baja<a class="headerlink" href="#paso-85-script-de-baja-de-cuentas-correo-baja" title="Permanent link">&para;</a></h3>
+<p><strong>Archivo:</strong> <code>/usr/local/sbin/correo-baja</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1">#  correo-baja  -  Elimina una cuenta de correo virtual</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1">#  Uso: sudo correo-baja usuario@dominio</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1">#  El buzón NO se borra: se mueve a /var/mail/bajas para poder recuperarlo.</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># =====================================================================</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nv">USERS</span><span class="o">=</span>/etc/dovecot/users
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nv">VMAILBOX</span><span class="o">=</span>/etc/postfix/vmailbox
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nv">SENDERS</span><span class="o">=</span>/etc/postfix/sender_login
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="nv">BASE</span><span class="o">=</span>/var/mail/vhosts
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="nv">BAJAS</span><span class="o">=</span>/var/mail/bajas
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">"</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: ejecuta este script con sudo."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="o">[</span><span class="w"> </span><span class="nv">$#</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Uso: </span><span class="nv">$0</span><span class="s2"> usuario@dominio"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nv">DIRECCION</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="p">,,</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nv">USUARIO</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="p">%@*</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="nv">DOMINIO</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="p">#*@</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span>awk<span class="w"> </span>-F:<span class="w"> </span>-v<span class="w"> </span><span class="nv">a</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1==a {f=1} END {exit !f}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: la cuenta </span><span class="nv">$DIRECCION</span><span class="s2"> no existe."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="k">fi</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>-p<span class="w"> </span><span class="s2">"¿Seguro que quieres dar de baja </span><span class="nv">$DIRECCION</span><span class="s2">? Escribe SI para confirmar: "</span><span class="w"> </span>RESP
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$RESP</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SI"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Cancelado."</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="k">for</span><span class="w"> </span>F<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$VMAILBOX</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SENDERS</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">    </span>cp<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$F</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$F</span><span class="s2">.bak"</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">    </span><span class="nv">TMP</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$F</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"</span><span class="nv">$USERS</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">        </span>awk<span class="w"> </span>-F:<span class="w"> </span>-v<span class="w"> </span><span class="nv">a</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1!=a'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$F</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="w">    </span><span class="k">else</span>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="w">        </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">a</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span><span class="s1">'$1!=a'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$F</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="w">    </span>cat<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$F</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$TMP</span><span class="s2">"</span>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="k">done</span>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>postmap<span class="w"> </span><span class="s2">"</span><span class="nv">$VMAILBOX</span><span class="s2">"</span>
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>postmap<span class="w"> </span><span class="s2">"</span><span class="nv">$SENDERS</span><span class="s2">"</span>
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>doveadm<span class="w"> </span>kick<span class="w"> </span><span class="s2">"</span><span class="nv">$DIRECCION</span><span class="s2">"</span><span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/</span><span class="nv">$DOMINIO</span><span class="s2">/</span><span class="nv">$USUARIO</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="w">    </span>install<span class="w"> </span>-d<span class="w"> </span>-o<span class="w"> </span>vmail<span class="w"> </span>-g<span class="w"> </span>vmail<span class="w"> </span>-m<span class="w"> </span><span class="m">750</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BAJAS</span><span class="s2">"</span>
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="w">    </span>mv<span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/</span><span class="nv">$DOMINIO</span><span class="s2">/</span><span class="nv">$USUARIO</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BAJAS</span><span class="s2">/</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="si">}</span><span class="s2">_</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">"</span>
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Buzón movido a </span><span class="nv">$BAJAS</span><span class="s2">/</span><span class="si">${</span><span class="nv">DIRECCION</span><span class="si">}</span><span class="s2">_</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">"</span>
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a><span class="k">fi</span>
+<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Cuenta </span><span class="nv">$DIRECCION</span><span class="s2"> dada de baja. Revisa si tenía alias en /etc/postfix/virtual."</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/usr/local/sbin/correo-clave<span class="w"> </span>/usr/local/sbin/correo-baja
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ls<span class="w"> </span>-l<span class="w"> </span>/usr/local/sbin/correo-*
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Los scripts guardan una copia <code>.bak</code> de cada archivo antes de modificarlo. Si algo sale mal, puedes restaurarla con <code>sudo cp -p /etc/dovecot/users.bak /etc/dovecot/users</code> (y lo mismo con los demás archivos, seguido de <code>postmap</code>).</p>
+</div>
+<h2 id="85-crear-las-cuentas-del-proyecto">8.5 Crear las cuentas del proyecto<a class="headerlink" href="#85-crear-las-cuentas-del-proyecto" title="Permanent link">&para;</a></h2>
+<h3 id="paso-86-registrar-la-cuenta-info-creada-a-mano">PASO 8.6 – Registrar la cuenta info@ creada a mano<a class="headerlink" href="#paso-86-registrar-la-cuenta-info-creada-a-mano" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> añadir la cuenta del Módulo 7 a la tabla de remitentes (se creó antes de existir el script).</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>grep<span class="w"> </span>-q<span class="w"> </span><span class="s1">'^info@ejemplo1.com'</span><span class="w"> </span>/etc/postfix/sender_login<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'info@ejemplo1.com                  info@ejemplo1.com'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/postfix/sender_login
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>postmap<span class="w"> </span>/etc/postfix/sender_login
+</code></pre></div>
+<h3 id="paso-87-crear-administracionejemplo1com-y-soporteejemplo2com">PASO 8.7 – Crear administracion@ejemplo1.com y soporte@ejemplo2.com<a class="headerlink" href="#paso-87-crear-administracionejemplo1com-y-soporteejemplo2com" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>correo-alta<span class="w"> </span>administracion@ejemplo1.com
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>sudo<span class="w"> </span>correo-alta<span class="w"> </span>soporte@ejemplo2.com
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Introduce la contraseña para administracion@ejemplo1.com (mínimo 12 caracteres):
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Enter new password:
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Retype new password:
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Cuenta administracion@ejemplo1.com creada correctamente.
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>El buzón se creará en /var/mail/vhosts/ejemplo1.com/administracion/Maildir al recibir el primer correo o iniciar sesión.
+</code></pre></div>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>doveadm<span class="w"> </span>user<span class="w"> </span><span class="s1">'*'</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>doveadm<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>soporte@ejemplo2.com
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>postmap<span class="w"> </span>-q<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span>hash:/etc/postfix/vmailbox
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>administracion@ejemplo1.com
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>info@ejemplo1.com
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>soporte@ejemplo2.com
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Password:
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>passdb: soporte@ejemplo2.com auth succeeded
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>ejemplo2.com/soporte/
+</code></pre></div>
+<p>Análisis: <code>doveadm user '*'</code> lista todos los usuarios que conoce Dovecot. <code>postmap -q clave tabla</code> consulta una tabla de Postfix exactamente igual que lo haría Postfix al recibir un correo: es la mejor forma de comprobar las tablas.</p>
+<h3 id="paso-88-crear-los-alias-obligatorios-y-de-servicio">PASO 8.8 – Crear los alias obligatorios y de servicio<a class="headerlink" href="#paso-88-crear-los-alias-obligatorios-y-de-servicio" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> crear las direcciones que todo dominio debe tener y las que usaremos en módulos siguientes.</p>
+<p><strong>Explicación:</strong> los estándares (RFC 2142 y RFC 5321) exigen que exista <code>postmaster@</code> en todo dominio que recibe correo, y es muy recomendable <code>abuse@</code>. También crearemos <code>dmarc@</code> para los informes DMARC (Módulo 9) y <code>noreply@</code>, el remitente que usarán las aplicaciones web (Módulo 11), para que cualquier rebote o respuesta llegue a una persona.</p>
+<p><strong>Archivo:</strong> <code>/etc/postfix/virtual</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># =====================================================================
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>#  Alias virtuales:  dirección_alias        destino[, destino2...]
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>#  Tras modificar:   sudo postmap /etc/postfix/virtual
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a># =====================================================================
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a># ---- ejemplo1.com ----
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>postmaster@ejemplo1.com      administracion@ejemplo1.com
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>abuse@ejemplo1.com           administracion@ejemplo1.com
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>dmarc@ejemplo1.com           administracion@ejemplo1.com
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>noreply@ejemplo1.com         administracion@ejemplo1.com
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>root@ejemplo1.com            administracion@ejemplo1.com
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a># Ejemplo de lista de distribución: llega a dos buzones
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>equipo@ejemplo1.com          info@ejemplo1.com, administracion@ejemplo1.com
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a># ---- ejemplo2.com ----
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>postmaster@ejemplo2.com      soporte@ejemplo2.com
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>abuse@ejemplo2.com           soporte@ejemplo2.com
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>dmarc@ejemplo2.com           soporte@ejemplo2.com
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>noreply@ejemplo2.com         soporte@ejemplo2.com
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>postmap<span class="w"> </span>/etc/postfix/virtual
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>postmap<span class="w"> </span>-q<span class="w"> </span>equipo@ejemplo1.com<span class="w"> </span>hash:/etc/postfix/virtual
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>info@ejemplo1.com, administracion@ejemplo1.com
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Un alias <strong>no</strong> es una cuenta: no tiene contraseña ni buzón propio. Si quieres que <code>administracion@</code> pueda <strong>enviar</strong> como <code>postmaster@ejemplo1.com</code> o <code>noreply@ejemplo1.com</code>, añade esa relación a <code>/etc/postfix/sender_login</code>, por ejemplo: <code>postmaster@ejemplo1.com  administracion@ejemplo1.com</code> (y <code>postmap</code>).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Evita los alias <em>catch-all</em> (<code>@ejemplo1.com  info@ejemplo1.com</code>), que recogen el correo de cualquier dirección inventada. Atraen enormes cantidades de spam y anulan el rechazo de direcciones inexistentes.</p>
+</div>
+<h3 id="paso-89-redirigir-el-correo-del-sistema-a-una-cuenta-real">PASO 8.9 – Redirigir el correo del sistema a una cuenta real<a class="headerlink" href="#paso-89-redirigir-el-correo-del-sistema-a-una-cuenta-real" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que los avisos del servidor (cron, Fail2ban, actualizaciones) lleguen a <code>administracion@ejemplo1.com</code>.</p>
+<p><strong>Archivo:</strong> <code>/etc/aliases</code> (modifica solo la última línea; el resto se conserva):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>postmaster:    root
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>abuse:         root
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>webmaster:     root
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>www-data:      root
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>root:          administracion@ejemplo1.com
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>newaliases
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Aviso de prueba del sistema"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">"Prueba correo de root"</span><span class="w"> </span>root
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>sudo<span class="w"> </span>grep<span class="w"> </span><span class="s1">'orig_to=&lt;root&gt;'</span><span class="w"> </span>/var/log/mail.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> una línea con <code>to=&lt;administracion@ejemplo1.com&gt;, orig_to=&lt;root&gt;, relay=...dovecot-lmtp..., status=sent</code>.</p>
+<h2 id="86-gestion-de-buzones-y-permisos">8.6 Gestión de buzones y permisos<a class="headerlink" href="#86-gestion-de-buzones-y-permisos" title="Permanent link">&para;</a></h2>
+<h3 id="paso-810-verificar-la-estructura-y-los-permisos-de-los-buzones">PASO 8.10 – Verificar la estructura y los permisos de los buzones<a class="headerlink" href="#paso-810-verificar-la-estructura-y-los-permisos-de-los-buzones" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span>info@ejemplo1.com<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>soporte@ejemplo2.com<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Bienvenida a </span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">"Bienvenida"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="k">done</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>sleep<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/var/mail/vhosts/<span class="w"> </span>/var/mail/vhosts/ejemplo1.com/
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>sudo<span class="w"> </span>doveadm<span class="w"> </span>mailbox<span class="w"> </span>status<span class="w"> </span>-u<span class="w"> </span>soporte@ejemplo2.com<span class="w"> </span>messages<span class="w"> </span>INBOX
+</code></pre></div>
+<p>Análisis: el bucle <code>for</code> envía un correo a cada cuenta, lo que provoca la creación de su buzón. <code>doveadm mailbox status</code> muestra cuántos mensajes hay en una carpeta.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>drwx------ 3 vmail vmail 4096 nov  9 02:10 ejemplo1.com
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>drwx------ 3 vmail vmail 4096 nov  9 02:10 ejemplo2.com
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>drwx------ 3 vmail vmail 4096 nov  9 02:10 administracion
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>drwx------ 3 vmail vmail 4096 nov  9 01:40 info
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>INBOX messages=1
+</code></pre></div>
+<p>Todo pertenece a <code>vmail</code> con permisos <code>700</code>: ni las webs (<code>web1</code>, <code>web2</code>) ni Apache pueden leer el correo.</p>
+<p>Otras operaciones útiles con buzones:</p>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Espacio usado por cada buzón</td>
+<td><code>sudo du -sh /var/mail/vhosts/*/*</code></td>
+</tr>
+<tr>
+<td>Carpetas de un buzón</td>
+<td><code>sudo doveadm mailbox list -u info@ejemplo1.com</code></td>
+</tr>
+<tr>
+<td>Buscar mensajes de un remitente</td>
+<td><code>sudo doveadm search -u info@ejemplo1.com mailbox INBOX from pepe@gmail.com</code></td>
+</tr>
+<tr>
+<td>Vaciar la papelera</td>
+<td><code>sudo doveadm expunge -u info@ejemplo1.com mailbox Trash all</code></td>
+</tr>
+<tr>
+<td>Borrar mensajes de más de 30 días en Spam</td>
+<td><code>sudo doveadm expunge -u info@ejemplo1.com mailbox Junk savedbefore 30d</code></td>
+</tr>
+<tr>
+<td>Reconstruir índices dañados</td>
+<td><code>sudo doveadm force-resync -u info@ejemplo1.com '*'</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Cuotas.</strong> Dovecot puede limitar el tamaño de cada buzón con el plugin <code>quota</code>, añadiendo en el campo 8 de <code>/etc/dovecot/users</code> algo como <code>userdb_quota_rule=*:storage=2G</code> y activando el plugin en la configuración. Es una ampliación recomendable cuando tengas muchos usuarios; consulta la documentación de Dovecot 2.3 sobre «Quota».</p>
+</div>
+<h2 id="87-configurar-un-cliente-de-correo">8.7 Configurar un cliente de correo<a class="headerlink" href="#87-configurar-un-cliente-de-correo" title="Permanent link">&para;</a></h2>
+<h3 id="paso-811-configurar-thunderbird-o-cualquier-cliente">PASO 8.11 – Configurar Thunderbird (o cualquier cliente)<a class="headerlink" href="#paso-811-configurar-thunderbird-o-cualquier-cliente" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> usar la cuenta desde un programa de correo real.</p>
+<p>Datos de configuración para los usuarios de <strong>ejemplo1.com</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Entrante (IMAP)</th>
+<th>Saliente (SMTP)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Servidor</td>
+<td><code>mail.ejemplo1.com</code></td>
+<td><code>mail.ejemplo1.com</code></td>
+</tr>
+<tr>
+<td>Puerto</td>
+<td>993</td>
+<td>587 (o 465)</td>
+</tr>
+<tr>
+<td>Seguridad de la conexión</td>
+<td>SSL/TLS</td>
+<td>STARTTLS (con 587) o SSL/TLS (con 465)</td>
+</tr>
+<tr>
+<td>Método de autenticación</td>
+<td>Contraseña normal</td>
+<td>Contraseña normal</td>
+</tr>
+<tr>
+<td>Nombre de usuario</td>
+<td>La dirección completa: <code>info@ejemplo1.com</code></td>
+<td>La dirección completa</td>
+</tr>
+</tbody>
+</table>
+<p>Para los usuarios de <strong>ejemplo2.com</strong> los datos son idénticos, pero con el servidor <code>mail.ejemplo2.com</code> (el certificado incluye ambos nombres, así que no habrá avisos).</p>
+<p>Si prefieres POP3: servidor <code>mail.ejemplo1.com</code>, puerto 995, SSL/TLS.</p>
+<p>En Thunderbird: «Cuentas» → «Nueva cuenta de correo» → introduce nombre, dirección y contraseña → pulsa «Configurar manualmente» y escribe los valores de la tabla → «Volver a probar» → «Hecho».</p>
+<p><strong>Comprobación:</strong> </p>
+<ol>
+<li>Debe aparecer la bandeja de entrada con el mensaje «Bienvenida».</li>
+<li>Envía un correo a tu dirección de Gmail y comprueba que llega (aunque aún pueda ir a spam).</li>
+<li>Responde desde Gmail y comprueba que la respuesta llega a Thunderbird. Para que esto funcione con la dirección <code>@ejemplo1.com</code> necesitas el registro <strong>MX</strong> (Módulo 9).</li>
+<li>En el servidor, mira el log mientras envías: <code>sudo tail -f /var/log/mail.log | grep -E 'submission|smtps|sasl'</code>. Verás <code>sasl_method=PLAIN, sasl_username=info@ejemplo1.com</code>.</li>
+</ol>
+<p><strong>Errores habituales:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Síntoma en el cliente</th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«No se puede conectar»</td>
+<td>Puerto cerrado en UFW o en el cortafuegos del proveedor.</td>
+<td><code>sudo ufw status</code>; prueba con <code>openssl s_client</code>.</td>
+</tr>
+<tr>
+<td>«Usuario o contraseña incorrectos»</td>
+<td>Usaste solo <code>info</code> en vez de <code>info@ejemplo1.com</code>.</td>
+<td>El usuario siempre es la dirección completa.</td>
+</tr>
+<tr>
+<td>Aviso de certificado no válido</td>
+<td>Usaste la IP o un nombre que no está en el certificado.</td>
+<td>Usa <code>mail.ejemplo1.com</code> o <code>mail.ejemplo2.com</code>.</td>
+</tr>
+<tr>
+<td>Recibe pero no envía</td>
+<td>El cliente usa el puerto 25.</td>
+<td>Cambia a 587/STARTTLS o 465/SSL.</td>
+</tr>
+<tr>
+<td>«Sender address rejected: not owned by user»</td>
+<td>El remitente configurado en el cliente no coincide con el usuario.</td>
+<td>Corrige la dirección del remitente o añádela en <code>sender_login</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="88-ejercicios-practicos-del-modulo-8">8.8 Ejercicios prácticos del Módulo 8<a class="headerlink" href="#88-ejercicios-practicos-del-modulo-8" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Crea la cuenta <code>ventas@ejemplo2.com</code>, comprueba que recibe correo y después dala de baja con <code>correo-baja</code>. Verifica dónde ha quedado su buzón.</li>
+<li>Cambia la contraseña de <code>info@ejemplo1.com</code> con <code>correo-clave</code> y comprueba que la antigua ya no funciona con <code>doveadm auth test</code>.</li>
+<li>Crea un alias <code>facturas@ejemplo1.com</code> que entregue en <code>administracion@</code> y autoriza a <code>administracion@</code> a enviar como <code>facturas@</code>. Pruébalo con swaks.</li>
+<li>Intenta crear una cuenta en un dominio no registrado (<code>prueba@ejemplo3.com</code>). ¿Qué hace el script? ¿Qué tendrías que modificar para alojar un tercer dominio de correo?</li>
+<li>Explica por qué la cuenta Linux <code>web1</code> no puede leer los correos de <code>info@ejemplo1.com</code> (pista: <code>ls -ld /var/mail/vhosts</code>).</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../07-dovecot/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 7. Dovecot">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                7. Dovecot
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../09-dns-correo/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 9. DNS del correo">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                9. DNS del correo
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
