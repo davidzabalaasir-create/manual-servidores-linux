@@ -914,6 +914,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../15-ftp-vsftpd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Servidor FTP (vsftpd)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../glosario/" class="md-nav__link">
         
   
@@ -1162,6 +1189,14 @@
 </thead>
 <tbody>
 <tr>
+<td>21</td>
+<td>TCP</td>
+<td>FTP control (FTPS explícito)</td>
+<td>vsftpd</td>
+<td>TLS obligatorio</td>
+<td>Sí (Módulo 15)</td>
+</tr>
+<tr>
 <td>22</td>
 <td>TCP</td>
 <td>SSH</td>
@@ -1256,6 +1291,14 @@
 <td>opendkim</td>
 <td>—</td>
 <td><strong>No</strong> (127.0.0.1)</td>
+</tr>
+<tr>
+<td>40000–40100</td>
+<td>TCP</td>
+<td>FTP pasivo (datos)</td>
+<td>vsftpd</td>
+<td>TLS obligatorio</td>
+<td>Sí (Módulo 15)</td>
 </tr>
 </tbody>
 </table>
@@ -1409,6 +1452,26 @@
 <td>Copias de seguridad</td>
 <td>12</td>
 </tr>
+<tr>
+<td><code>/etc/vsftpd.conf</code></td>
+<td>Configuración de vsftpd</td>
+<td>15</td>
+</tr>
+<tr>
+<td><code>/etc/vsftpd.userlist</code></td>
+<td>Usuarios con acceso FTP</td>
+<td>15</td>
+</tr>
+<tr>
+<td><code>/etc/pam.d/vsftpd</code></td>
+<td>Autenticación PAM del FTP</td>
+<td>15</td>
+</tr>
+<tr>
+<td><code>/var/log/vsftpd.log</code></td>
+<td>Registro del FTP</td>
+<td>15</td>
+</tr>
 </tbody>
 </table>
 <h2 id="anexo-c-comandos-esenciales-por-servicio">Anexo C. Comandos esenciales por servicio<a class="headerlink" href="#anexo-c-comandos-esenciales-por-servicio" title="Permanent link">&para;</a></h2>
@@ -1477,6 +1540,12 @@
 <td><code>sudo ufw status verbose</code></td>
 </tr>
 <tr>
+<td>vsftpd</td>
+<td>— (comprobar con <code>journalctl -u vsftpd</code> tras reiniciar)</td>
+<td><code>sudo systemctl restart vsftpd</code></td>
+<td><code>sudo tail /var/log/vsftpd.log</code></td>
+</tr>
+<tr>
 <td>Certbot</td>
 <td>—</td>
 <td>—</td>
@@ -1495,6 +1564,7 @@
 <li>Correo: añadir el dominio a <code>/etc/postfix/virtual_domains</code> + <code>postmap</code>; crear cuentas con <code>correo-alta</code>; alias <code>postmaster@</code>, <code>abuse@</code>, <code>dmarc@</code>, <code>noreply@</code>.</li>
 <li>Ampliar el certificado del correo con <code>mail.nuevodominio</code> (<code>certbot certonly --webroot -w /var/www/html --cert-name mail.ejemplo1.com -d mail.ejemplo1.com -d mail.ejemplo2.com -d mail.nuevodominio</code>).</li>
 <li>DKIM: generar clave, añadirla a <code>key.table</code> y <code>signing.table</code>, reiniciar OpenDKIM, publicar el TXT.</li>
+<li>Si usas FTP: PASOS 15.4 y 15.5 para el nuevo usuario, añadirlo a <code>/etc/vsftpd.userlist</code> y ampliar el certificado <code>ftp.ejemplo1.com</code> con <code>ftp.nuevodominio</code>.</li>
 <li>Verificar con la batería del Módulo 13.</li>
 </ol>
 

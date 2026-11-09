@@ -2,70 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/01-fundamentos/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/02-apache/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/03-virtualhosts/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/04-mariadb/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/05-php-mariadb/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/06-postfix/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/07-dovecot/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/08-cuentas-correo/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/09-dns-correo/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/10-ssl-tls/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/11-integracion/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/12-seguridad/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/13-pruebas/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/14-proyecto-final/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
+    </url>
+    <url>
+         <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/15-ftp-vsftpd/</loc>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/anexos/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
     <url>
          <loc>https://davidzabalaasir-create.github.io/manual-servidores-linux/glosario/</loc>
-         <lastmod>2026-11-08</lastmod>
+         <lastmod>2026-11-09</lastmod>
     </url>
 </urlset>

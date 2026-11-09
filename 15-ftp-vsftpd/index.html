@@ -1,0 +1,2817 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual de formación para montar desde cero un servidor Linux con webs, bases de datos y correo electrónico.">
+      
+      
+      
+        <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/15-ftp-vsftpd/">
+      
+      
+        <link rel="prev" href="../14-proyecto-final/">
+      
+      
+        <link rel="next" href="../glosario/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>15. Servidor FTP (vsftpd) - Administración de Servidores Linux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modulo-15-servidor-ftp-con-vsftpd-complementario" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Administración de Servidores Linux" class="md-header__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Administración de Servidores Linux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              15. Servidor FTP (vsftpd)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="light-blue"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Administración de Servidores Linux" class="md-nav__button md-logo" aria-label="Administración de Servidores Linux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"/></svg>
+
+    </a>
+    Administración de Servidores Linux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manual-servidores-linux
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos y web
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos y web
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Fundamentos de infraestructura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-apache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Apache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-virtualhosts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Virtual Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bases de datos y PHP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bases de datos y PHP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-php-mariadb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. PHP y MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Correo electrónico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Correo electrónico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-postfix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Postfix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-dovecot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Dovecot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cuentas-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Cuentas de correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-dns-correo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DNS del correo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Seguridad y operación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Seguridad y operación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ssl-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Certificados SSL/TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-integracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Integración completa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Seguridad y mantenimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-pruebas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Pruebas y diagnóstico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Proyecto final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Servidor FTP (vsftpd)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Servidor FTP (vsftpd)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#151-que-es-ftp-y-para-que-lo-queremos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1 Qué es FTP y para qué lo queremos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1 Qué es FTP y para qué lo queremos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-ftp-dos-conexiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo funciona FTP: dos conexiones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-problema-de-seguridad-de-ftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El problema de seguridad de FTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vsftpd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#152-preparar-el-dns-y-el-certificado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2 Preparar el DNS y el certificado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2 Preparar el DNS y el certificado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-151-crear-los-registros-dns-de-ftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.1 – Crear los registros DNS de FTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-152-obtener-el-certificado-de-ftpejemplo1com-y-ftpejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.2 – Obtener el certificado de ftp.ejemplo1.com y ftp.ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#153-instalacion-de-vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3 Instalación de vsftpd
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3 Instalación de vsftpd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-153-instalar-vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.3 – Instalar vsftpd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#154-usuarios-ftp-y-jaula-chroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4 Usuarios FTP y jaula chroot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4 Usuarios FTP y jaula chroot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-usamos-los-usuarios-de-las-webs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por qué usamos los usuarios de las webs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-154-asignar-contrasena-a-los-usuarios-ftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.4 – Asignar contraseña a los usuarios FTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-155-preparar-la-carpeta-de-cada-web-como-jaula-chroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.5 – Preparar la carpeta de cada web como jaula chroot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-156-permitir-el-inicio-de-sesion-a-usuarios-con-shell-nologin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.6 – Permitir el inicio de sesión a usuarios con shell nologin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-157-crear-la-lista-de-usuarios-autorizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.7 – Crear la lista de usuarios autorizados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#155-configuracion-de-vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.5 Configuración de vsftpd
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.5 Configuración de vsftpd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-158-escribir-la-configuracion-vsftpdconf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.8 – Escribir la configuración vsftpd.conf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-159-abrir-los-puertos-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.9 – Abrir los puertos en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#156-pruebas-de-funcionamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.6 Pruebas de funcionamiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.6 Pruebas de funcionamiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1510-probar-el-acceso-con-curl-y-lftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.10 – Probar el acceso con curl y lftp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1511-configurar-filezilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.11 – Configurar FileZilla
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#157-integracion-con-la-infraestructura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.7 Integración con la infraestructura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.7 Integración con la infraestructura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1512-recargar-vsftpd-cuando-se-renueve-su-certificado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.12 – Recargar vsftpd cuando se renueve su certificado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1513-proteger-el-ftp-con-fail2ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.13 – Proteger el FTP con Fail2ban
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1514-anadir-vsftpd-a-la-monitorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.14 – Añadir vsftpd a la monitorización
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#158-gestion-del-dia-a-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.8 Gestión del día a día
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#159-diagrama-de-la-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.9 Diagrama de la integración
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1510-alternativa-sftp-con-openssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.10 Alternativa: SFTP con OpenSSH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1511-ejercicios-practicos-del-modulo-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.11 Ejercicios prácticos del Módulo 15
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glosario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glosario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anexos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-del-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos del módulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#151-que-es-ftp-y-para-que-lo-queremos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1 Qué es FTP y para qué lo queremos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1 Qué es FTP y para qué lo queremos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-ftp-dos-conexiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo funciona FTP: dos conexiones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-problema-de-seguridad-de-ftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El problema de seguridad de FTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vsftpd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#152-preparar-el-dns-y-el-certificado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2 Preparar el DNS y el certificado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2 Preparar el DNS y el certificado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-151-crear-los-registros-dns-de-ftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.1 – Crear los registros DNS de FTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-152-obtener-el-certificado-de-ftpejemplo1com-y-ftpejemplo2com" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.2 – Obtener el certificado de ftp.ejemplo1.com y ftp.ejemplo2.com
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#153-instalacion-de-vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3 Instalación de vsftpd
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3 Instalación de vsftpd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-153-instalar-vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.3 – Instalar vsftpd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#154-usuarios-ftp-y-jaula-chroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4 Usuarios FTP y jaula chroot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4 Usuarios FTP y jaula chroot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-usamos-los-usuarios-de-las-webs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por qué usamos los usuarios de las webs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-154-asignar-contrasena-a-los-usuarios-ftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.4 – Asignar contraseña a los usuarios FTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-155-preparar-la-carpeta-de-cada-web-como-jaula-chroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.5 – Preparar la carpeta de cada web como jaula chroot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-156-permitir-el-inicio-de-sesion-a-usuarios-con-shell-nologin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.6 – Permitir el inicio de sesión a usuarios con shell nologin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-157-crear-la-lista-de-usuarios-autorizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.7 – Crear la lista de usuarios autorizados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#155-configuracion-de-vsftpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.5 Configuración de vsftpd
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.5 Configuración de vsftpd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-158-escribir-la-configuracion-vsftpdconf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.8 – Escribir la configuración vsftpd.conf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-159-abrir-los-puertos-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.9 – Abrir los puertos en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#156-pruebas-de-funcionamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.6 Pruebas de funcionamiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.6 Pruebas de funcionamiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1510-probar-el-acceso-con-curl-y-lftp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.10 – Probar el acceso con curl y lftp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1511-configurar-filezilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.11 – Configurar FileZilla
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#157-integracion-con-la-infraestructura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.7 Integración con la infraestructura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.7 Integración con la infraestructura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1512-recargar-vsftpd-cuando-se-renueve-su-certificado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.12 – Recargar vsftpd cuando se renueve su certificado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1513-proteger-el-ftp-con-fail2ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.13 – Proteger el FTP con Fail2ban
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-1514-anadir-vsftpd-a-la-monitorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PASO 15.14 – Añadir vsftpd a la monitorización
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#158-gestion-del-dia-a-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.8 Gestión del día a día
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#159-diagrama-de-la-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.9 Diagrama de la integración
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1510-alternativa-sftp-con-openssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.10 Alternativa: SFTP con OpenSSH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1511-ejercicios-practicos-del-modulo-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.11 Ejercicios prácticos del Módulo 15
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/davidzabalaasir-create/manual-servidores-linux/edit/main/docs/15-ftp-vsftpd.md" title="Editar esta página" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modulo-15-servidor-ftp-con-vsftpd-complementario">Módulo 15. Servidor FTP con vsftpd (complementario)<a class="headerlink" href="#modulo-15-servidor-ftp-con-vsftpd-complementario" title="Permanent link">&para;</a></h1>
+<h2 id="objetivos-del-modulo">Objetivos del módulo<a class="headerlink" href="#objetivos-del-modulo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Entender cómo funciona FTP, sus modos activo y pasivo y sus riesgos de seguridad.</li>
+<li>Decidir con criterio entre FTP cifrado (FTPS) y SFTP.</li>
+<li>Instalar y configurar <strong>vsftpd</strong> para que cada web tenga su propio acceso FTP cifrado.</li>
+<li>Encerrar a cada usuario en la carpeta de su web (<em>chroot</em>) sin debilitar la seguridad.</li>
+<li>Obtener un certificado para <code>ftp.ejemplo1.com</code> y <code>ftp.ejemplo2.com</code> e integrarlo en la renovación automática.</li>
+<li>Proteger el servicio con UFW y Fail2ban, y probarlo desde la línea de comandos y desde FileZilla.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Este módulo amplía la infraestructura del proyecto final. Requiere haber completado los módulos 1 a 5 (usuarios <code>web1</code>/<code>web2</code> y carpetas de las webs), 10 (Certbot) y 12 (UFW y Fail2ban).</p>
+</div>
+<h2 id="151-que-es-ftp-y-para-que-lo-queremos">15.1 Qué es FTP y para qué lo queremos<a class="headerlink" href="#151-que-es-ftp-y-para-que-lo-queremos" title="Permanent link">&para;</a></h2>
+<p><strong>FTP</strong> (<em>File Transfer Protocol</em>) es uno de los protocolos más antiguos de Internet (1971). Sirve para subir y descargar archivos entre un cliente y un servidor. En un alojamiento web se usa para que la persona responsable de cada web pueda <strong>subir sus archivos</strong> (HTML, imágenes, una aplicación PHP) sin tener acceso de administrador al servidor.</p>
+<p>Nuestro objetivo:</p>
+<table>
+<thead>
+<tr>
+<th>Usuario FTP</th>
+<th>Accede a</th>
+<th>Lo que ve como «/»</th>
+<th>Puede escribir en</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web1</code></td>
+<td>ejemplo1.com</td>
+<td><code>/var/www/ejemplo1.com</code></td>
+<td><code>public_html</code>, <code>app</code>, <code>config</code>, <code>tmp</code>, <code>logs</code></td>
+</tr>
+<tr>
+<td><code>web2</code></td>
+<td>ejemplo2.com</td>
+<td><code>/var/www/ejemplo2.com</code></td>
+<td>Las mismas carpetas de su web</td>
+</tr>
+<tr>
+<td><code>sysadmin</code>, <code>root</code> y cualquier otro</td>
+<td>—</td>
+<td>Acceso denegado</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Así, los archivos subidos pertenecen automáticamente al usuario de la web (<code>web1</code>), que es el mismo con el que se ejecuta su PHP. No hay que corregir propietarios después de cada subida.</p>
+<h3 id="como-funciona-ftp-dos-conexiones">Cómo funciona FTP: dos conexiones<a class="headerlink" href="#como-funciona-ftp-dos-conexiones" title="Permanent link">&para;</a></h3>
+<p>A diferencia de HTTP, FTP usa <strong>dos</strong> conexiones TCP:</p>
+<ul>
+<li>La <strong>conexión de control</strong> (puerto 21): por ella viajan los comandos (<code>USER</code>, <code>PASS</code>, <code>LIST</code>, <code>STOR</code>...) y las respuestas.</li>
+<li>La <strong>conexión de datos</strong>: se abre una nueva para cada listado de carpeta y cada archivo transferido.</li>
+</ul>
+<p>La conexión de datos puede abrirse de dos formas:</p>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> MODO ACTIVO (el servidor llama al cliente) – problemático con NAT y cortafuegos
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   Cliente:5001 ──── control ────► Servidor:21     "PORT 192.168.1.5,19,137"
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   Cliente:5001 ◄─── datos ─────── Servidor:20     el servidor se conecta al cliente
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> MODO PASIVO (el cliente llama al servidor) – el que usaremos
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   Cliente:5001 ──── control ────► Servidor:21     "PASV"
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                                                     "227 Entering Passive Mode (...,156,64)"
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   Cliente:5002 ──── datos ──────► Servidor:40000  el servidor abre un puerto del rango pasivo
+</code></pre></div>
+<p>En <strong>modo pasivo</strong> es el cliente quien abre las dos conexiones, lo que funciona detrás de los routers domésticos. A cambio, el servidor necesita un <strong>rango de puertos</strong> abierto en el cortafuegos para las conexiones de datos (usaremos 40000–40100).</p>
+<h3 id="el-problema-de-seguridad-de-ftp">El problema de seguridad de FTP<a class="headerlink" href="#el-problema-de-seguridad-de-ftp" title="Permanent link">&para;</a></h3>
+<p>El FTP clásico envía <strong>todo en texto plano</strong>, incluidos el usuario y la contraseña. Cualquiera que pueda observar el tráfico (una red Wi-Fi pública, un equipo comprometido en el camino) las lee directamente. Por eso <strong>nunca</strong> debe usarse FTP sin cifrar en un servidor público.</p>
+<p>Hay dos alternativas seguras:</p>
+<table>
+<thead>
+<tr>
+<th>Característica</th>
+<th>FTPS (FTP sobre TLS)</th>
+<th>SFTP (SSH File Transfer Protocol)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué es</td>
+<td>FTP de siempre con cifrado TLS (como HTTPS).</td>
+<td>Un protocolo distinto que funciona dentro de SSH.</td>
+</tr>
+<tr>
+<td>Servidor</td>
+<td>vsftpd</td>
+<td>OpenSSH (ya instalado)</td>
+</tr>
+<tr>
+<td>Puertos</td>
+<td>21 + rango pasivo (40000–40100)</td>
+<td>Solo el 22</td>
+</tr>
+<tr>
+<td>Certificado</td>
+<td>Sí (Let's Encrypt)</td>
+<td>No (usa las claves del servidor SSH)</td>
+</tr>
+<tr>
+<td>Compatibilidad</td>
+<td>Cualquier cliente FTP con «FTP explícito sobre TLS»</td>
+<td>FileZilla, WinSCP, Cyberduck, <code>sftp</code>, <code>scp</code>...</td>
+</tr>
+<tr>
+<td>Complejidad</td>
+<td>Mayor (dos conexiones, rango pasivo, NAT)</td>
+<td>Menor</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Recomendación profesional:</strong> si puedes elegir, SFTP es más sencillo de proteger porque solo usa el puerto 22. FTPS sigue siendo muy útil cuando los usuarios o las herramientas (editores web, aplicaciones antiguas, algunos servicios de despliegue) solo hablan FTP. En este módulo montamos <strong>FTPS con vsftpd</strong> y en el apartado 15.10 verás cómo ofrecer SFTP con la misma separación por webs.</p>
+</div>
+<h3 id="vsftpd">vsftpd<a class="headerlink" href="#vsftpd" title="Permanent link">&para;</a></h3>
+<p><strong>vsftpd</strong> (<em>Very Secure FTP Daemon</em>) es el servidor FTP de referencia en Linux: pequeño, rápido y diseñado con la seguridad como prioridad (separación de privilegios, <em>chroot</em>, procesos sin permisos). Ubuntu 24.04 incluye vsftpd 3.0.5.</p>
+<h2 id="152-preparar-el-dns-y-el-certificado">15.2 Preparar el DNS y el certificado<a class="headerlink" href="#152-preparar-el-dns-y-el-certificado" title="Permanent link">&para;</a></h2>
+<h3 id="paso-151-crear-los-registros-dns-de-ftp">PASO 15.1 – Crear los registros DNS de FTP<a class="headerlink" href="#paso-151-crear-los-registros-dns-de-ftp" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que los usuarios se conecten a un nombre propio de su dominio.</p>
+<p>Registros (en el panel DNS de cada dominio):</p>
+<table>
+<thead>
+<tr>
+<th>Dominio</th>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ejemplo1.com</td>
+<td>A</td>
+<td>ftp</td>
+<td>203.0.113.10</td>
+</tr>
+<tr>
+<td>ejemplo2.com</td>
+<td>A</td>
+<td>ftp</td>
+<td>203.0.113.10</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comprobación:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>ftp.ejemplo1.com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>A<span class="w"> </span>ftp.ejemplo2.com
+</code></pre></div>
+<p>Ambos deben devolver <code>203.0.113.10</code>.</p>
+<h3 id="paso-152-obtener-el-certificado-de-ftpejemplo1com-y-ftpejemplo2com">PASO 15.2 – Obtener el certificado de ftp.ejemplo1.com y ftp.ejemplo2.com<a class="headerlink" href="#paso-152-obtener-el-certificado-de-ftpejemplo1com-y-ftpejemplo2com" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> tener un certificado válido para los dos nombres FTP.</p>
+<p><strong>Explicación:</strong> igual que con el correo (PASO 6.2), validamos a través del sitio comodín de Apache. Los nombres <code>ftp.*</code> no están en ningún VirtualHost, así que Apache los atiende con <code>000-default.conf</code>, cuyo DocumentRoot es <code>/var/www/html</code>.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/html<span class="w"> </span>-d<span class="w"> </span>ftp.ejemplo1.com<span class="w"> </span>-d<span class="w"> </span>ftp.ejemplo2.com<span class="w"> </span>--email<span class="w"> </span>administracion@ejemplo1.com<span class="w"> </span>--agree-tos<span class="w"> </span>--no-eff-email
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Successfully received certificate.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Certificate is saved at: /etc/letsencrypt/live/ftp.ejemplo1.com/fullchain.pem
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Key is saved at:         /etc/letsencrypt/live/ftp.ejemplo1.com/privkey.pem
+</code></pre></div>
+<p><strong>Errores habituales:</strong> los mismos del PASO 3.11 (DNS aún no propagado, puerto 80 cerrado).</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p><strong>Laboratorio sin dominio real:</strong> usa en el PASO 15.6 el certificado autofirmado (<code>/etc/ssl/certs/ssl-cert-snakeoil.pem</code> y <code>/etc/ssl/private/ssl-cert-snakeoil.key</code>). Los clientes FTP te pedirán aceptar el certificado la primera vez.</p>
+</div>
+<h2 id="153-instalacion-de-vsftpd">15.3 Instalación de vsftpd<a class="headerlink" href="#153-instalacion-de-vsftpd" title="Permanent link">&para;</a></h2>
+<h3 id="paso-153-instalar-vsftpd">PASO 15.3 – Instalar vsftpd<a class="headerlink" href="#paso-153-instalar-vsftpd" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>vsftpd<span class="w"> </span>acl
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vsftpd<span class="w"> </span>-v
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vsftpd<span class="w"> </span>--no-pager
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> <code>vsftpd</code> es el servidor; <code>acl</code> aporta los comandos <code>setfacl</code> y <code>getfacl</code>, que necesitaremos en el PASO 15.5.</p>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vsftpd: version 3.0.5
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>● vsftpd.service - vsftpd FTP server
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>     Loaded: loaded (/usr/lib/systemd/system/vsftpd.service; enabled; preset: enabled)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>     Active: active (running) since ...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Tras la instalación, vsftpd arranca con una configuración por defecto que <strong>todavía no cifra</strong>. El puerto 21 aún está cerrado en UFW, así que no es accesible desde fuera; no lo abras hasta terminar el PASO 15.7.</p>
+</div>
+<p>Archivos de vsftpd en Ubuntu:</p>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/vsftpd.conf</code></td>
+<td>Configuración principal.</td>
+</tr>
+<tr>
+<td><code>/etc/pam.d/vsftpd</code></td>
+<td>Cómo se autentican los usuarios (PAM).</td>
+</tr>
+<tr>
+<td><code>/etc/ftpusers</code></td>
+<td>Usuarios a los que PAM <strong>prohíbe</strong> el FTP (root, daemon...).</td>
+</tr>
+<tr>
+<td><code>/etc/vsftpd.userlist</code></td>
+<td>(Lo crearemos) usuarios a los que vsftpd <strong>permite</strong> el FTP.</td>
+</tr>
+<tr>
+<td><code>/var/log/vsftpd.log</code></td>
+<td>Registro de conexiones y transferencias.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="154-usuarios-ftp-y-jaula-chroot">15.4 Usuarios FTP y jaula chroot<a class="headerlink" href="#154-usuarios-ftp-y-jaula-chroot" title="Permanent link">&para;</a></h2>
+<h3 id="por-que-usamos-los-usuarios-de-las-webs">Por qué usamos los usuarios de las webs<a class="headerlink" href="#por-que-usamos-los-usuarios-de-las-webs" title="Permanent link">&para;</a></h3>
+<p>Podríamos crear usuarios FTP aparte (<code>ftp_web1</code>...), pero entonces los archivos subidos tendrían un propietario distinto del que ejecuta PHP y habría que ajustar permisos constantemente. Usar directamente <code>web1</code> y <code>web2</code> mantiene el diseño del Módulo 3: <strong>un usuario por web, dueño de todos sus archivos</strong>.</p>
+<p>Recuerda que estos usuarios tienen como shell <code>/usr/sbin/nologin</code> y que SSH solo admite a <code>sysadmin</code> (<code>AllowUsers</code>, PASO 1.7). Darles contraseña les permitirá <strong>solo</strong> usar FTP: no podrán iniciar sesión en el servidor.</p>
+<h3 id="paso-154-asignar-contrasena-a-los-usuarios-ftp">PASO 15.4 – Asignar contraseña a los usuarios FTP<a class="headerlink" href="#paso-154-asignar-contrasena-a-los-usuarios-ftp" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que <code>web1</code> y <code>web2</code> puedan autenticarse en FTP.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>web1
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>web2
+</code></pre></div>
+<p>Elige contraseñas largas y distintas (puedes generarlas con <code>openssl rand -base64 18</code>).</p>
+<p><strong>Comprobación:</strong> el shell sigue siendo <code>nologin</code> y SSH sigue cerrado para ellos:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>getent<span class="w"> </span>passwd<span class="w"> </span>web1
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>allowusers
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>web1:x:998:998::/var/www/ejemplo1.com:/usr/sbin/nologin
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>allowusers sysadmin
+</code></pre></div>
+<h3 id="paso-155-preparar-la-carpeta-de-cada-web-como-jaula-chroot">PASO 15.5 – Preparar la carpeta de cada web como jaula chroot<a class="headerlink" href="#paso-155-preparar-la-carpeta-de-cada-web-como-jaula-chroot" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que cada usuario quede encerrado en la carpeta de su web y que vsftpd acepte esa carpeta como raíz.</p>
+<p><strong>Explicación:</strong> con <code>chroot_local_user=YES</code>, vsftpd encierra a cada usuario en su carpeta personal (<em>home</em>), que para <code>web1</code> es <code>/var/www/ejemplo1.com</code>. Por seguridad, vsftpd <strong>se niega</strong> a usar como raíz de la jaula una carpeta en la que el propio usuario puede escribir, y da este error al conectar:</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>500 OOPS: vsftpd: refusing to run with writable root inside chroot()
+</code></pre></div>
+<p>El motivo es que un usuario que puede escribir en la raíz de la jaula podría crear allí carpetas como <code>etc</code> o <code>lib</code> y engañar a programas del sistema que se ejecuten dentro de ella. Existe la opción <code>allow_writeable_chroot=YES</code> para saltarse la comprobación, pero <strong>no la usaremos</strong>: hacemos que la raíz no sea escribible y mantenemos la protección.</p>
+<p>Ahora <code>/var/www/ejemplo1.com</code> pertenece a <code>web1</code> (PASO 3.2). La cambiamos a <code>root</code>, conservando el acceso de Apache (grupo <code>www-data</code>) y dando a <code>web1</code> permiso de <strong>lectura y paso</strong> (sin escritura) mediante una <strong>ACL</strong> (<em>Access Control List</em>, lista de control de acceso): un permiso adicional para un usuario concreto, más allá de propietario, grupo y otros.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>chown<span class="w"> </span>root:www-data<span class="w"> </span>/var/www/ejemplo1.com<span class="w"> </span>/var/www/ejemplo2.com
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/www/ejemplo1.com<span class="w"> </span>/var/www/ejemplo2.com
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>sudo<span class="w"> </span>setfacl<span class="w"> </span>-m<span class="w"> </span>u:web1:rx<span class="w"> </span>/var/www/ejemplo1.com
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>sudo<span class="w"> </span>setfacl<span class="w"> </span>-m<span class="w"> </span>u:web2:rx<span class="w"> </span>/var/www/ejemplo2.com
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>getfacl<span class="w"> </span>/var/www/ejemplo1.com
+</code></pre></div>
+<p><strong>Análisis del comando:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Orden</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chown root:www-data</code></td>
+<td>El dueño pasa a ser root (nadie más puede escribir en la raíz); el grupo sigue siendo <code>www-data</code>.</td>
+</tr>
+<tr>
+<td><code>chmod 750</code></td>
+<td>root: todo; <code>www-data</code>: entrar y listar (Apache sigue llegando a <code>public_html</code>); otros (por ejemplo <code>web2</code>): nada.</td>
+</tr>
+<tr>
+<td><code>setfacl -m u:web1:rx</code></td>
+<td>Añade (<code>-m</code>, <em>modify</em>) una entrada para el usuario <code>web1</code> con lectura y paso, sin escritura.</td>
+</tr>
+<tr>
+<td><code>getfacl</code></td>
+<td>Muestra todos los permisos, incluidas las ACL.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># file: var/www/ejemplo1.com
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a># owner: root
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a># group: www-data
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>user::rwx
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>user:web1:r-x
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>group::r-x
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>mask::r-x
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>other::---
+</code></pre></div>
+<p>Las subcarpetas <strong>no cambian</strong>: <code>public_html</code> sigue siendo de <code>web1</code> (con setgid y grupo <code>www-data</code>), y <code>config</code>, <code>app</code>, <code>tmp</code> y <code>logs</code> siguen siendo de <code>web1</code> con permisos <code>700</code>. Por tanto <code>web1</code> puede escribir en todas ellas, pero no crear archivos sueltos en la raíz de su web (no lo necesita).</p>
+<p><strong>Comprobación:</strong> la web y PHP deben seguir funcionando exactamente igual:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>www-data<span class="w"> </span>ls<span class="w"> </span>/var/www/ejemplo1.com/public_html<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Apache llega a public_html"</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>ls<span class="w"> </span>/var/www/ejemplo1.com<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"web1 puede listar su carpeta"</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>sudo<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>touch<span class="w"> </span>/var/www/ejemplo1.com/prueba<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>sudo<span class="w"> </span>-u<span class="w"> </span>web2<span class="w"> </span>ls<span class="w"> </span>/var/www/ejemplo1.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}\n"</span><span class="w"> </span>https://www.ejemplo1.com/
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Apache llega a public_html
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>app  config  logs  public_html  tmp
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>web1 puede listar su carpeta
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>touch: cannot touch '/var/www/ejemplo1.com/prueba': Permission denied
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ls: cannot open directory '/var/www/ejemplo1.com': Permission denied
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>200
+</code></pre></div>
+<p><strong>Errores habituales:</strong> <code>setfacl: command not found</code> (falta el paquete <code>acl</code>); si la web da 403 o 503 tras el cambio, revisa con <code>namei -l /var/www/ejemplo1.com/public_html/index.php</code> y con <code>getfacl</code> que el grupo es <code>www-data</code> y la ACL de <code>web1</code> existe.</p>
+<h3 id="paso-156-permitir-el-inicio-de-sesion-a-usuarios-con-shell-nologin">PASO 15.6 – Permitir el inicio de sesión a usuarios con shell nologin<a class="headerlink" href="#paso-156-permitir-el-inicio-de-sesion-a-usuarios-con-shell-nologin" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que PAM no rechace a <code>web1</code> y <code>web2</code> por tener <code>/usr/sbin/nologin</code> como shell.</p>
+<p><strong>Explicación:</strong> el archivo PAM de vsftpd en Ubuntu termina con la línea <code>auth required pam_shells.so</code>, que solo deja entrar a usuarios cuyo shell esté en <code>/etc/shells</code>. <code>nologin</code> no está (y no debe añadirse, porque otros servicios usan esa lista). Desactivamos esa comprobación <strong>solo para vsftpd</strong>; el control de quién puede usar FTP lo haremos con una lista explícita (PASO 15.7).</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/pam.d/vsftpd<span class="w"> </span>/etc/pam.d/vsftpd.original
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/^auth\s\+required\s\+pam_shells.so/# auth required pam_shells.so  (desactivado: los usuarios FTP usan nologin)/'</span><span class="w"> </span>/etc/pam.d/vsftpd
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>cat<span class="w"> </span>/etc/pam.d/vsftpd
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Standard behaviour for ftpd(8).
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>auth    required    pam_listfile.so item=user sense=deny file=/etc/ftpusers onerr=succeed
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a># Note: vsftpd handles anonymous logins on its own. Do not enable pam_ftp.so.
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a># Standard pam includes
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>@include common-account
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>@include common-session
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>@include common-auth
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a># auth required pam_shells.so  (desactivado: los usuarios FTP usan nologin)
+</code></pre></div>
+<p>La primera línea se mantiene: los usuarios de <code>/etc/ftpusers</code> (root y las cuentas del sistema) siguen sin poder usar FTP.</p>
+<h3 id="paso-157-crear-la-lista-de-usuarios-autorizados">PASO 15.7 – Crear la lista de usuarios autorizados<a class="headerlink" href="#paso-157-crear-la-lista-de-usuarios-autorizados" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que <strong>solo</strong> <code>web1</code> y <code>web2</code> puedan conectarse por FTP.</p>
+<p><strong>Archivo:</strong> <code>/etc/vsftpd.userlist</code> (nuevo, contenido completo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>web1
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>web2
+</code></pre></div>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/etc/vsftpd.userlist
+</code></pre></div>
+<p>Con la configuración del paso siguiente (<code>userlist_deny=NO</code>), esta lista funciona como «lista blanca»: cualquier otro usuario (incluido <code>sysadmin</code>) es rechazado <strong>antes</strong> de pedir la contraseña, así que su contraseña nunca viaja por FTP.</p>
+<h2 id="155-configuracion-de-vsftpd">15.5 Configuración de vsftpd<a class="headerlink" href="#155-configuracion-de-vsftpd" title="Permanent link">&para;</a></h2>
+<h3 id="paso-158-escribir-la-configuracion-vsftpdconf">PASO 15.8 – Escribir la configuración vsftpd.conf<a class="headerlink" href="#paso-158-escribir-la-configuracion-vsftpdconf" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> configurar vsftpd con usuarios locales enjaulados, TLS obligatorio y modo pasivo.</p>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/vsftpd.conf<span class="w"> </span>/etc/vsftpd.conf.original
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/vsftpd.conf
+</code></pre></div>
+<p><strong>Archivo:</strong> <code>/etc/vsftpd.conf</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># =====================================================================
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>#  /etc/vsftpd.conf - FTPS para ejemplo1.com y ejemplo2.com
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a># =====================================================================
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a># --- Escucha ------------------------------------------------------------
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a># Un único proceso que escucha en IPv6 y también en IPv4
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>listen=NO
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>listen_ipv6=YES
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a># --- Usuarios -----------------------------------------------------------
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a># Sin acceso anónimo
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>anonymous_enable=NO
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a># Usuarios locales de Linux (web1, web2) con permiso de escritura
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>local_enable=YES
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>write_enable=YES
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a># Archivos nuevos 640 y carpetas nuevas 750
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>local_umask=027
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a># Solo pueden entrar los usuarios de /etc/vsftpd.userlist
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>userlist_enable=YES
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>userlist_deny=NO
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>userlist_file=/etc/vsftpd.userlist
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>pam_service_name=vsftpd
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a># --- Jaula chroot -------------------------------------------------------
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a># Cada usuario queda encerrado en su carpeta personal (/var/www/ejemploN.com)
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>chroot_local_user=YES
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a># La raíz de la jaula NO debe ser escribible (ver PASO 15.5)
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>allow_writeable_chroot=NO
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>secure_chroot_dir=/var/run/vsftpd/empty
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a># Los listados muestran "ftp" en lugar de los nombres reales de usuario y grupo
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>hide_ids=YES
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a># --- Cifrado TLS obligatorio (FTPS explícito) ---------------------------
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>ssl_enable=YES
+<a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a>rsa_cert_file=/etc/letsencrypt/live/ftp.ejemplo1.com/fullchain.pem
+<a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a>rsa_private_key_file=/etc/letsencrypt/live/ftp.ejemplo1.com/privkey.pem
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>allow_anon_ssl=NO
+<a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a>force_local_logins_ssl=YES
+<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a>force_local_data_ssl=YES
+<a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a>ssl_sslv2=NO
+<a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a>ssl_sslv3=NO
+<a id="__codelineno-19-42" name="__codelineno-19-42" href="#__codelineno-19-42"></a>ssl_ciphers=HIGH
+<a id="__codelineno-19-43" name="__codelineno-19-43" href="#__codelineno-19-43"></a># Algunos clientes (FileZilla) fallan si se exige reutilizar la sesión TLS
+<a id="__codelineno-19-44" name="__codelineno-19-44" href="#__codelineno-19-44"></a>require_ssl_reuse=NO
+<a id="__codelineno-19-45" name="__codelineno-19-45" href="#__codelineno-19-45"></a>
+<a id="__codelineno-19-46" name="__codelineno-19-46" href="#__codelineno-19-46"></a># --- Modo pasivo ----------------------------------------------------------
+<a id="__codelineno-19-47" name="__codelineno-19-47" href="#__codelineno-19-47"></a>pasv_enable=YES
+<a id="__codelineno-19-48" name="__codelineno-19-48" href="#__codelineno-19-48"></a>pasv_min_port=40000
+<a id="__codelineno-19-49" name="__codelineno-19-49" href="#__codelineno-19-49"></a>pasv_max_port=40100
+<a id="__codelineno-19-50" name="__codelineno-19-50" href="#__codelineno-19-50"></a># Si el servidor está detrás de NAT (IP privada en la nube), descomenta y
+<a id="__codelineno-19-51" name="__codelineno-19-51" href="#__codelineno-19-51"></a># pon la IP pública:
+<a id="__codelineno-19-52" name="__codelineno-19-52" href="#__codelineno-19-52"></a>#pasv_address=203.0.113.10
+<a id="__codelineno-19-53" name="__codelineno-19-53" href="#__codelineno-19-53"></a>
+<a id="__codelineno-19-54" name="__codelineno-19-54" href="#__codelineno-19-54"></a># --- Modo activo ----------------------------------------------------------
+<a id="__codelineno-19-55" name="__codelineno-19-55" href="#__codelineno-19-55"></a>connect_from_port_20=YES
+<a id="__codelineno-19-56" name="__codelineno-19-56" href="#__codelineno-19-56"></a>
+<a id="__codelineno-19-57" name="__codelineno-19-57" href="#__codelineno-19-57"></a># --- Registro --------------------------------------------------------------
+<a id="__codelineno-19-58" name="__codelineno-19-58" href="#__codelineno-19-58"></a>xferlog_enable=YES
+<a id="__codelineno-19-59" name="__codelineno-19-59" href="#__codelineno-19-59"></a>xferlog_std_format=NO
+<a id="__codelineno-19-60" name="__codelineno-19-60" href="#__codelineno-19-60"></a>vsftpd_log_file=/var/log/vsftpd.log
+<a id="__codelineno-19-61" name="__codelineno-19-61" href="#__codelineno-19-61"></a>log_ftp_protocol=NO
+<a id="__codelineno-19-62" name="__codelineno-19-62" href="#__codelineno-19-62"></a>use_localtime=YES
+<a id="__codelineno-19-63" name="__codelineno-19-63" href="#__codelineno-19-63"></a>
+<a id="__codelineno-19-64" name="__codelineno-19-64" href="#__codelineno-19-64"></a># --- Límites y cortesía ------------------------------------------------------
+<a id="__codelineno-19-65" name="__codelineno-19-65" href="#__codelineno-19-65"></a>ftpd_banner=Servidor FTP. Solo se admiten conexiones cifradas.
+<a id="__codelineno-19-66" name="__codelineno-19-66" href="#__codelineno-19-66"></a>idle_session_timeout=600
+<a id="__codelineno-19-67" name="__codelineno-19-67" href="#__codelineno-19-67"></a>data_connection_timeout=120
+<a id="__codelineno-19-68" name="__codelineno-19-68" href="#__codelineno-19-68"></a>max_clients=50
+<a id="__codelineno-19-69" name="__codelineno-19-69" href="#__codelineno-19-69"></a>max_per_ip=5
+<a id="__codelineno-19-70" name="__codelineno-19-70" href="#__codelineno-19-70"></a>dirmessage_enable=NO
+</code></pre></div>
+<p>Análisis de las directivas principales:</p>
+<table>
+<thead>
+<tr>
+<th>Directiva</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listen=NO</code> + <code>listen_ipv6=YES</code></td>
+<td>Un solo socket IPv6 que acepta también IPv4. Si activaras las dos, vsftpd fallaría con <code>could not bind listening IPv4 socket</code>.</td>
+</tr>
+<tr>
+<td><code>anonymous_enable=NO</code></td>
+<td>Nadie puede entrar como <code>anonymous</code>.</td>
+</tr>
+<tr>
+<td><code>local_enable</code> / <code>write_enable</code></td>
+<td>Los usuarios locales pueden entrar y subir, modificar y borrar archivos.</td>
+</tr>
+<tr>
+<td><code>local_umask=027</code></td>
+<td>Permisos de lo que se sube: archivos <code>640</code> y carpetas <code>750</code>, iguales a los del Módulo 3. Gracias al bit setgid de <code>public_html</code>, el grupo será <code>www-data</code>.</td>
+</tr>
+<tr>
+<td><code>userlist_enable=YES</code> + <code>userlist_deny=NO</code></td>
+<td>La lista <code>/etc/vsftpd.userlist</code> es una lista de <strong>permitidos</strong>.</td>
+</tr>
+<tr>
+<td><code>chroot_local_user=YES</code></td>
+<td>Cada usuario ve su carpeta personal como <code>/</code> y no puede salir de ella.</td>
+</tr>
+<tr>
+<td><code>allow_writeable_chroot=NO</code></td>
+<td>Mantiene la comprobación de seguridad del PASO 15.5.</td>
+</tr>
+<tr>
+<td><code>hide_ids=YES</code></td>
+<td>Los listados no revelan nombres de usuarios del sistema.</td>
+</tr>
+<tr>
+<td><code>ssl_enable=YES</code></td>
+<td>Activa TLS.</td>
+</tr>
+<tr>
+<td><code>force_local_logins_ssl</code> / <code>force_local_data_ssl</code></td>
+<td>Exige cifrado para la contraseña <strong>y</strong> para los datos. Un cliente sin TLS recibe <code>530 Non-anonymous sessions must use encryption.</code></td>
+</tr>
+<tr>
+<td><code>ssl_sslv2=NO</code>, <code>ssl_sslv3=NO</code></td>
+<td>Desactiva los protocolos obsoletos.</td>
+</tr>
+<tr>
+<td><code>ssl_ciphers=HIGH</code></td>
+<td>Solo cifrados robustos.</td>
+</tr>
+<tr>
+<td><code>require_ssl_reuse=NO</code></td>
+<td>Por defecto vsftpd exige que la conexión de datos reutilice la sesión TLS de la de control; es más seguro, pero muchos clientes fallan con <code>425 Unable to build data connection</code>.</td>
+</tr>
+<tr>
+<td><code>pasv_min_port</code> / <code>pasv_max_port</code></td>
+<td>Rango de puertos de datos en modo pasivo (101 puertos: suficiente para 50 transferencias simultáneas).</td>
+</tr>
+<tr>
+<td><code>pasv_address</code></td>
+<td>Solo si el servidor no tiene la IP pública en su interfaz (NAT de algunos proveedores de nube).</td>
+</tr>
+<tr>
+<td><code>xferlog_std_format=NO</code></td>
+<td>Registro en el formato propio de vsftpd en <code>/var/log/vsftpd.log</code>, que es el que entiende Fail2ban.</td>
+</tr>
+<tr>
+<td><code>max_clients</code> / <code>max_per_ip</code></td>
+<td>Máximo de conexiones totales y por IP.</td>
+</tr>
+</tbody>
+</table>
+<p>Comprueba y aplica:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>vsftpd
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vsftpd<span class="w"> </span>--no-pager
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vsftpd
+</code></pre></div>
+<p><strong>Resultado esperado:</strong> </p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>● vsftpd.service - vsftpd FTP server
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>     Active: active (running) since ...
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>LISTEN 0  32  *:21  *:*  users:(("vsftpd",pid=10240,fd=3))
+</code></pre></div>
+<p><code>*:21</code> significa que escucha en IPv4 e IPv6.</p>
+<p><strong>Errores habituales:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Mensaje</th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>500 OOPS: could not bind listening IPv4 socket</code></td>
+<td><code>listen=YES</code> y <code>listen_ipv6=YES</code> a la vez.</td>
+<td>Deja solo <code>listen_ipv6=YES</code>.</td>
+</tr>
+<tr>
+<td><code>500 OOPS: SSL: cannot load RSA certificate</code></td>
+<td>Ruta del certificado incorrecta.</td>
+<td><code>sudo ls -l /etc/letsencrypt/live/ftp.ejemplo1.com/</code>.</td>
+</tr>
+<tr>
+<td><code>500 OOPS: unrecognised variable in config file: ...</code></td>
+<td>Errata en un nombre de directiva.</td>
+<td>Corrige la línea indicada.</td>
+</tr>
+<tr>
+<td>El servicio no arranca sin mensaje claro</td>
+<td>Error de sintaxis (vsftpd no admite espacios alrededor del <code>=</code>).</td>
+<td><code>sudo journalctl -u vsftpd -n 20 --no-pager</code>; escribe <code>opcion=valor</code> sin espacios.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-159-abrir-los-puertos-en-el-cortafuegos">PASO 15.9 – Abrir los puertos en el cortafuegos<a class="headerlink" href="#paso-159-abrir-los-puertos-en-el-cortafuegos" title="Permanent link">&para;</a></h3>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">21</span>/tcp<span class="w"> </span>comment<span class="w"> </span><span class="s1">'FTP control (FTPS explicito)'</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">40000</span>:40100/tcp<span class="w"> </span>comment<span class="w"> </span><span class="s1">'FTP pasivo'</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>status<span class="w"> </span>numbered
+</code></pre></div>
+<p>Análisis: <code>40000:40100/tcp</code> abre el rango completo de puertos pasivos. Si tu proveedor tiene un cortafuegos externo, ábrelos también allí.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>No abras el puerto 20: en modo pasivo no se usa, y en modo activo es el <strong>servidor</strong> quien sale desde él (UFW permite todo el tráfico saliente). Tampoco abras el 990 (FTPS implícito): no lo hemos configurado.</p>
+</div>
+<h2 id="156-pruebas-de-funcionamiento">15.6 Pruebas de funcionamiento<a class="headerlink" href="#156-pruebas-de-funcionamiento" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1510-probar-el-acceso-con-curl-y-lftp">PASO 15.10 – Probar el acceso con curl y lftp<a class="headerlink" href="#paso-1510-probar-el-acceso-con-curl-y-lftp" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> verificar el cifrado, la autenticación, la jaula y la subida de archivos. Haz estas pruebas desde <strong>otro equipo</strong> (tu ordenador con Linux, macOS o WSL en Windows).</p>
+<p>Comprobar el certificado del puerto 21 con STARTTLS:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>ftp.ejemplo1.com:21<span class="w"> </span>-starttls<span class="w"> </span>ftp<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>subject=CN = ftp.ejemplo1.com
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>X509v3 Subject Alternative Name:
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>    DNS:ftp.ejemplo1.com, DNS:ftp.ejemplo2.com
+</code></pre></div>
+<p>Listar la carpeta con conexión cifrada (curl pedirá la contraseña):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>curl<span class="w"> </span>--ssl-reqd<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>ftp://ftp.ejemplo1.com/
+</code></pre></div>
+<p>Análisis: <code>--ssl-reqd</code> exige FTPS explícito (<code>AUTH TLS</code> sobre el puerto 21) y aborta si el servidor no lo admite. Como <code>-u web1</code> no lleva contraseña, curl la pide sin que quede en el historial.</p>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>drwx------    2 ftp      ftp          4096 Nov 09 10:12 app
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>drwx------    2 ftp      ftp          4096 Nov 09 10:12 config
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>drwx------    2 ftp      ftp          4096 Nov 09 10:12 logs
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>drwxr-s---    2 ftp      ftp          4096 Nov 09 10:12 public_html
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>drwx------    2 ftp      ftp          4096 Nov 09 10:12 tmp
+</code></pre></div>
+<p>Subir un archivo a la web:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'&lt;h1&gt;Subido por FTPS&lt;/h1&gt;'</span><span class="w"> </span>&gt;<span class="w"> </span>subida.html
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span>--ssl-reqd<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>-T<span class="w"> </span>subida.html<span class="w"> </span>ftp://ftp.ejemplo1.com/public_html/
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://www.ejemplo1.com/subida.html
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>&lt;h1&gt;Subido por FTPS&lt;/h1&gt;
+</code></pre></div>
+<p>Comprobaciones de seguridad (todas deben <strong>fallar</strong>):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># 1. Sin cifrado</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>ftp://ftp.ejemplo1.com/
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="c1"># 2. Usuario no autorizado</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>curl<span class="w"> </span>--ssl-reqd<span class="w"> </span>-u<span class="w"> </span>sysadmin<span class="w"> </span>ftp://ftp.ejemplo1.com/
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># 3. Salir de la jaula</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>curl<span class="w"> </span>--ssl-reqd<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>ftp://ftp.ejemplo1.com/../../etc/
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>curl: (67) Access denied: 530           ← 530 Non-anonymous sessions must use encryption.
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>curl: (67) Access denied: 530           ← 530 Permission denied. (sin llegar a pedir la contraseña)
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>                                          ← muestra de nuevo /var/www/ejemplo1.com: "/" es la raíz de la jaula
+</code></pre></div>
+<p>Con <strong>lftp</strong>, un cliente FTP de terminal muy completo, puedes trabajar de forma interactiva:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>lftp<span class="w"> </span>-u<span class="w"> </span>web1<span class="w"> </span>-e<span class="w"> </span><span class="s2">"set ftp:ssl-force true; set ssl:verify-certificate yes"</span><span class="w"> </span>ftp.ejemplo1.com
+</code></pre></div>
+<p>Dentro de lftp: <code>ls</code>, <code>cd public_html</code>, <code>put archivo</code>, <code>get archivo</code>, <code>mirror -R carpeta_local carpeta_remota</code> (sube una carpeta entera) y <code>bye</code> para salir.</p>
+<p>Comprobación en el servidor: propietario y permisos de lo subido, y registro:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/var/www/ejemplo1.com/public_html/subida.html
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span>/var/log/vsftpd.log
+</code></pre></div>
+<div class="highlight"><span class="filename">Salida esperada</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>-rw-r----- 1 web1 www-data 25 nov  9 10:20 /var/www/ejemplo1.com/public_html/subida.html
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Mon Nov  9 10:20:01 2026 [pid 10301] [web1] OK LOGIN: Client "::ffff:198.51.100.7"
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Mon Nov  9 10:20:02 2026 [pid 10303] [web1] OK UPLOAD: Client "::ffff:198.51.100.7", "/public_html/subida.html", 25 bytes, 0.41Kbyte/sec
+</code></pre></div>
+<p>El archivo pertenece a <code>web1</code>, su grupo es <code>www-data</code> y sus permisos <code>640</code>: exactamente lo que necesita Apache para servirlo. Bórralo al terminar:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>sudo<span class="w"> </span>rm<span class="w"> </span>/var/www/ejemplo1.com/public_html/subida.html
+</code></pre></div>
+<p><strong>Errores habituales:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>530 Login incorrect.</code></td>
+<td>Contraseña errónea, o PAM rechaza el shell.</td>
+<td><code>sudo passwd web1</code>; revisa el PASO 15.6. En <code>/var/log/auth.log</code> verás el motivo.</td>
+</tr>
+<tr>
+<td><code>500 OOPS: vsftpd: refusing to run with writable root inside chroot()</code></td>
+<td>La raíz de la web es escribible por el usuario.</td>
+<td>PASO 15.5.</td>
+</tr>
+<tr>
+<td>El login funciona pero el listado se queda colgado o da <code>425</code></td>
+<td>Puertos pasivos cerrados, o <code>pasv_address</code> necesario por NAT.</td>
+<td>UFW y cortafuegos del proveedor (40000–40100); configura <code>pasv_address</code>.</td>
+</tr>
+<tr>
+<td><code>425 Unable to build data connection: ... SSL</code></td>
+<td>El cliente no reutiliza la sesión TLS.</td>
+<td><code>require_ssl_reuse=NO</code>.</td>
+</tr>
+<tr>
+<td><code>553 Could not create file.</code></td>
+<td>El usuario no puede escribir en esa carpeta (por ejemplo, en la raíz de la jaula).</td>
+<td>Sube a <code>public_html/</code>.</td>
+</tr>
+<tr>
+<td>Error de certificado en el cliente</td>
+<td>Conectaste con la IP o con <code>mail.*</code> en lugar de <code>ftp.*</code>.</td>
+<td>Usa <code>ftp.ejemplo1.com</code> o <code>ftp.ejemplo2.com</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-1511-configurar-filezilla">PASO 15.11 – Configurar FileZilla<a class="headerlink" href="#paso-1511-configurar-filezilla" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> dar acceso a la persona responsable de cada web con un cliente gráfico.</p>
+<p>En FileZilla: «Archivo» → «Gestor de sitios» → «Nuevo sitio» y rellena:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor para ejemplo1.com</th>
+<th>Valor para ejemplo2.com</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Protocolo</td>
+<td>FTP – Protocolo de transferencia de archivos</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>Servidor</td>
+<td><code>ftp.ejemplo1.com</code></td>
+<td><code>ftp.ejemplo2.com</code></td>
+</tr>
+<tr>
+<td>Puerto</td>
+<td>21 (o vacío)</td>
+<td>21 (o vacío)</td>
+</tr>
+<tr>
+<td>Cifrado</td>
+<td><strong>Requiere FTP explícito sobre TLS</strong></td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>Modo de acceso</td>
+<td>Normal</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>Usuario</td>
+<td><code>web1</code></td>
+<td><code>web2</code></td>
+</tr>
+<tr>
+<td>Contraseña</td>
+<td>La del PASO 15.4</td>
+<td>La del PASO 15.4</td>
+</tr>
+</tbody>
+</table>
+<p>En la pestaña «Opciones de transferencia», el modo debe ser <strong>Pasivo</strong> (es el predeterminado).</p>
+<p><strong>Comprobación:</strong> al conectar, FileZilla muestra el certificado; comprueba que está emitido para <code>ftp.ejemplo1.com</code>, acéptalo y verás las carpetas de la web. Arrastra un archivo a <code>public_html</code> y ábrelo en el navegador.</p>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>Explica a los usuarios que <strong>nunca</strong> elijan «Usar FTP plano (inseguro)». Con nuestra configuración el servidor lo rechazaría, pero el cliente habría enviado ya el nombre de usuario sin cifrar.</p>
+</div>
+<h2 id="157-integracion-con-la-infraestructura">15.7 Integración con la infraestructura<a class="headerlink" href="#157-integracion-con-la-infraestructura" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1512-recargar-vsftpd-cuando-se-renueve-su-certificado">PASO 15.12 – Recargar vsftpd cuando se renueve su certificado<a class="headerlink" href="#paso-1512-recargar-vsftpd-cuando-se-renueve-su-certificado" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> incluir vsftpd en el script de renovación del Módulo 10.</p>
+<p><strong>Archivo:</strong> <code>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh</code> (sustituye todo el contenido):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1"># Se ejecuta tras cada renovación correcta de un certificado.</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="c1"># Certbot define RENEWED_LINEAGE, por ejemplo /etc/letsencrypt/live/mail.ejemplo1.com</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="nb">set</span><span class="w"> </span>-u
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"Certificado renovado: </span><span class="si">${</span><span class="nv">RENEWED_LINEAGE</span><span class="si">}</span><span class="s2">"</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="k">case</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">RENEWED_LINEAGE</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="w">    </span>*/mail.ejemplo1.com<span class="o">)</span>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="w">        </span><span class="c1"># Certificado del correo: Postfix y Dovecot</span>
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="w">        </span>systemctl<span class="w"> </span>reload<span class="w"> </span>postfix
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a><span class="w">        </span>systemctl<span class="w"> </span>reload<span class="w"> </span>dovecot
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a><span class="w">        </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"Postfix y Dovecot recargados"</span>
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a><span class="w">        </span><span class="p">;;</span>
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a><span class="w">    </span>*/ftp.ejemplo1.com<span class="o">)</span>
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a><span class="w">        </span><span class="c1"># Certificado del FTP: vsftpd lo carga al arrancar</span>
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a><span class="w">        </span>systemctl<span class="w"> </span>restart<span class="w"> </span>vsftpd
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a><span class="w">        </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"vsftpd reiniciado"</span>
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a><span class="w">        </span><span class="p">;;</span>
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a><span class="w">    </span>*<span class="o">)</span>
+<a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a><span class="w">        </span><span class="c1"># Certificados de las webs: Apache</span>
+<a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span>apachectl<span class="w"> </span>configtest<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a><span class="w">            </span>systemctl<span class="w"> </span>reload<span class="w"> </span>apache2
+<a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a><span class="w">            </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"Apache recargado"</span>
+<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a><span class="w">        </span><span class="k">else</span>
+<a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a><span class="w">            </span>logger<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span><span class="s2">"ERROR: configuración de Apache inválida, no se recarga"</span>
+<a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a><span class="w">        </span><span class="k">fi</span>
+<a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a><span class="w">        </span><span class="p">;;</span>
+<a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a><span class="k">esac</span>
+</code></pre></div>
+<p>Análisis: el nuevo caso reinicia vsftpd cuando se renueva el certificado <code>ftp.ejemplo1.com</code>. El reinicio corta las transferencias en curso, pero Certbot renueva de madrugada y solo una vez cada dos meses.</p>
+<p>Prueba el script:</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>sudo<span class="w"> </span><span class="nv">RENEWED_LINEAGE</span><span class="o">=</span>/etc/letsencrypt/live/ftp.ejemplo1.com<span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/recargar-servicios.sh
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-t<span class="w"> </span>certbot-deploy<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span>--no-pager
+</code></pre></div>
+<h3 id="paso-1513-proteger-el-ftp-con-fail2ban">PASO 15.13 – Proteger el FTP con Fail2ban<a class="headerlink" href="#paso-1513-proteger-el-ftp-con-fail2ban" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> bloquear las IP que prueban contraseñas en el FTP.</p>
+<p><strong>Archivo:</strong> <code>/etc/fail2ban/jail.local</code>. Conserva todo lo del PASO 12.5 y <strong>añade al final</strong>:</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># --- vsftpd: contraseñas FTP incorrectas ---</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="k">[vsftpd]</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="na">enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="na">logpath</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/vsftpd.log</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="na">backend</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">auto</span>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="na">maxretry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+</code></pre></div>
+<p><strong>Comando:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>sudo<span class="w"> </span>fail2ban-client<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>fail2ban
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>sudo<span class="w"> </span>fail2ban-client<span class="w"> </span>status<span class="w"> </span>vsftpd
+</code></pre></div>
+<p>Análisis: el filtro <code>vsftpd</code> incluido en Fail2ban busca las líneas <code>FAIL LOGIN</code> de <code>/var/log/vsftpd.log</code>. Al bloquear una IP, se cierran a la vez el puerto 21 y el rango pasivo, porque la acción bloquea todo el tráfico de esa IP hacia los puertos indicados en el jail (que por defecto incluye <code>ftp</code>, <code>ftp-data</code> y <code>ftps</code>) y, sin el 21, el resto queda inservible.</p>
+<p><strong>Comprobación:</strong> falla la contraseña cuatro veces desde una IP de pruebas y comprueba que aparece en <code>Banned IP list</code>. Desbloquéala con <code>sudo fail2ban-client set vsftpd unbanip IP</code>.</p>
+<h3 id="paso-1514-anadir-vsftpd-a-la-monitorizacion">PASO 15.14 – Añadir vsftpd a la monitorización<a class="headerlink" href="#paso-1514-anadir-vsftpd-a-la-monitorizacion" title="Permanent link">&para;</a></h3>
+<p><strong>Objetivo:</strong> que el script de estado del Módulo 12 vigile también el FTP.</p>
+<p><strong>Archivo:</strong> <code>/usr/local/sbin/estado-servidor</code>. Modifica solo estas dos líneas del principio (el resto se conserva):</p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nv">SERVICIOS</span><span class="o">=</span><span class="s2">"apache2 php8.3-fpm mariadb postfix@- dovecot opendkim fail2ban ssh cron vsftpd"</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="nv">PUERTOS</span><span class="o">=</span><span class="s2">"21 22 25 80 443 465 587 993"</span>
+</code></pre></div>
+<p><strong>Comprobación:</strong> <code>sudo estado-servidor | grep -E 'vsftpd|puerto 21'</code> debe mostrar dos líneas <code>[OK]</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejo</p>
+<p>Las copias de seguridad no necesitan cambios: el script del PASO 12.7 ya incluye <code>/var/www</code> (los archivos subidos) y <code>/etc</code> (la configuración de vsftpd y PAM).</p>
+</div>
+<h2 id="158-gestion-del-dia-a-dia">15.8 Gestión del día a día<a class="headerlink" href="#158-gestion-del-dia-a-dia" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Cómo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cambiar la contraseña FTP de una web</td>
+<td><code>sudo passwd web1</code></td>
+</tr>
+<tr>
+<td>Quitar temporalmente el FTP a una web</td>
+<td>Borra su línea de <code>/etc/vsftpd.userlist</code> (efecto inmediato en nuevas conexiones).</td>
+</tr>
+<tr>
+<td>Bloquear la cuenta sin tocar la lista</td>
+<td><code>sudo passwd -l web1</code> (y <code>sudo passwd -u web1</code> para desbloquearla).</td>
+</tr>
+<tr>
+<td>Dar FTP a una nueva web (<code>web3</code>)</td>
+<td>Crea la web (Anexo D), haz los PASOS 15.4 y 15.5 para <code>web3</code>, añádela a <code>vsftpd.userlist</code> y amplía el certificado con <code>ftp.ejemplo3.com</code>.</td>
+</tr>
+<tr>
+<td>Ver quién está conectado</td>
+<td><code>ps -eo user,cmd \| grep '[v]sftpd'</code></td>
+</tr>
+<tr>
+<td>Ver las subidas de hoy</td>
+<td><code>sudo grep "$(date '+%a %b %e')" /var/log/vsftpd.log \| grep UPLOAD</code></td>
+</tr>
+<tr>
+<td>Ver los fallos de acceso</td>
+<td><code>sudo grep 'FAIL LOGIN' /var/log/vsftpd.log \| tail</code></td>
+</tr>
+<tr>
+<td>Desactivar el FTP por completo</td>
+<td><code>sudo systemctl disable --now vsftpd</code> y cierra los puertos con <code>sudo ufw delete allow 21/tcp</code> y <code>sudo ufw delete allow 40000:40100/tcp</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="159-diagrama-de-la-integracion">15.9 Diagrama de la integración<a class="headerlink" href="#159-diagrama-de-la-integracion" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">Diagrama</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a> FileZilla / lftp (persona responsable de ejemplo1.com)
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>     │ 1. TCP 21 · AUTH TLS · certificado ftp.ejemplo1.com
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>     │ 2. USER web1 → ¿está en /etc/vsftpd.userlist? → PASS (cifrada)
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>     ▼
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a> ┌──────────────────────────────── SERVIDOR ──────────────────────────────────┐
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a> │  UFW: 21 y 40000-40100 permitidos · Fail2ban vigila /var/log/vsftpd.log    │
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a> │                                                                            │
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a> │  VSFTPD ── PAM (/etc/pam.d/vsftpd): /etc/ftpusers + contraseña de web1     │
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a> │     │ 3. chroot en /var/www/ejemplo1.com (raíz root:www-data + ACL web1)   │
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a> │     │ 4. PASV → conexión de datos cifrada por un puerto 40000-40100        │
+<a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a> │     ▼                                                                      │
+<a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a> │  /var/www/ejemplo1.com/public_html/nuevo.php  (web1:www-data, 640)         │
+<a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a> │     │                                                                      │
+<a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a> │     ├──► APACHE lo sirve (grupo www-data)                                  │
+<a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a> │     └──► PHP-FPM pool web1 lo ejecuta (usuario web1)                       │
+<a id="__codelineno-40-16" name="__codelineno-40-16" href="#__codelineno-40-16"></a> └────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="1510-alternativa-sftp-con-openssh">15.10 Alternativa: SFTP con OpenSSH<a class="headerlink" href="#1510-alternativa-sftp-con-openssh" title="Permanent link">&para;</a></h2>
+<p>Si prefieres no abrir el puerto 21 ni el rango pasivo, OpenSSH puede ofrecer SFTP con la misma separación por webs. Esquema de la configuración (sustituye a vsftpd; no uses ambos sin necesidad):</p>
+<p><strong>Archivo:</strong> <code>/etc/ssh/sshd_config.d/10-sftp-webs.conf</code> (nuevo):</p>
+<div class="highlight"><span class="filename">Archivo de configuración</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a># Los usuarios del grupo sftpwebs solo pueden usar SFTP, encerrados en su web
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>Match Group sftpwebs
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    ChrootDirectory %h
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>    ForceCommand internal-sftp -u 0027
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>    PasswordAuthentication yes
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>    AllowTcpForwarding no
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>    X11Forwarding no
+</code></pre></div>
+<p><strong>Comandos:</strong> </p>
+<div class="highlight"><span class="filename">Terminal</span><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>sudo<span class="w"> </span>groupadd<span class="w"> </span>sftpwebs
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>sftpwebs<span class="w"> </span>web1
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>sftpwebs<span class="w"> </span>web2
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/^AllowUsers .*/AllowUsers sysadmin web1 web2/'</span><span class="w"> </span>/etc/ssh/sshd_config.d/00-endurecimiento.conf
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ssh
+</code></pre></div>
+<p>Análisis:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Match Group sftpwebs</code></td>
+<td>Lo que sigue solo se aplica a los miembros de ese grupo.</td>
+</tr>
+<tr>
+<td><code>ChrootDirectory %h</code></td>
+<td>Encierra al usuario en su carpeta personal. OpenSSH exige que esa carpeta <strong>y todas las superiores</strong> pertenezcan a root y no sean escribibles por nadie más: el PASO 15.5 ya lo cumple.</td>
+</tr>
+<tr>
+<td><code>ForceCommand internal-sftp -u 0027</code></td>
+<td>Solo SFTP (nunca un terminal), con archivos nuevos <code>640</code>.</td>
+</tr>
+<tr>
+<td><code>PasswordAuthentication yes</code></td>
+<td>Permite contraseña solo a estos usuarios (lo ideal es usar también claves).</td>
+</tr>
+<tr>
+<td><code>AllowUsers</code></td>
+<td>Hay que añadir <code>web1</code> y <code>web2</code>, porque en el PASO 1.7 limitamos SSH a <code>sysadmin</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Los clientes se conectan con protocolo <strong>SFTP</strong>, puerto 22 y servidor <code>ftp.ejemplo1.com</code> (o cualquier nombre del servidor). Fail2ban ya protege el puerto 22 con el jail <code>sshd</code>.</p>
+<h2 id="1511-ejercicios-practicos-del-modulo-15">15.11 Ejercicios prácticos del Módulo 15<a class="headerlink" href="#1511-ejercicios-practicos-del-modulo-15" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Conecta con FileZilla como <code>web2</code> y comprueba que no puedes ver ni entrar en <code>/var/www/ejemplo1.com</code>. ¿Qué ves como carpeta raíz?</li>
+<li>Sube con <code>lftp mirror -R</code> una carpeta con varios archivos HTML a <code>public_html</code> de ejemplo2.com y verifica sus permisos en el servidor.</li>
+<li>Cambia temporalmente <code>allow_writeable_chroot</code> y la propiedad de <code>/var/www/ejemplo1.com</code> para provocar el error <code>refusing to run with writable root inside chroot()</code>. Explica por qué existe esa protección y restaura la configuración.</li>
+<li>Comenta el rango pasivo en UFW y observa qué hace FileZilla al listar una carpeta. Restaura la regla.</li>
+<li>Configura la alternativa SFTP del apartado 15.10 en una máquina de pruebas y compara ambos métodos: puertos abiertos, configuración necesaria y experiencia de uso.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../14-proyecto-final/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 14. Proyecto final">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                14. Proyecto final
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../glosario/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Glosario">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Glosario
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Manual de Administración de Servidores Linux · Edición 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.sections", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

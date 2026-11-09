@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://davidzabalaasir-create.github.io/manual-servidores-linux/glosario/">
       
       
-        <link rel="prev" href="../14-proyecto-final/">
+        <link rel="prev" href="../15-ftp-vsftpd/">
       
       
         <link rel="next" href="../anexos/">
@@ -913,6 +913,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-ftp-vsftpd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Servidor FTP (vsftpd)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -1030,6 +1057,10 @@
 <td>Registro DNS que asocia un nombre a una dirección IPv4.</td>
 </tr>
 <tr>
+<td><strong>ACL (permisos)</strong></td>
+<td>Lista de control de acceso: permisos adicionales para usuarios o grupos concretos sobre un archivo, más allá de propietario, grupo y otros (<code>setfacl</code>, <code>getfacl</code>).</td>
+</tr>
+<tr>
 <td><strong>AAAA (registro)</strong></td>
 <td>Registro DNS que asocia un nombre a una dirección IPv6.</td>
 </tr>
@@ -1122,6 +1153,14 @@
 <td>Nombre de dominio completo (<code>mail.ejemplo1.com</code>).</td>
 </tr>
 <tr>
+<td><strong>FTP</strong></td>
+<td>Protocolo de transferencia de archivos con una conexión de control (puerto 21) y conexiones de datos aparte. Sin cifrar es inseguro.</td>
+</tr>
+<tr>
+<td><strong>FTPS</strong></td>
+<td>FTP protegido con TLS. En modo explícito, el cliente pide el cifrado con <code>AUTH TLS</code> en el puerto 21.</td>
+</tr>
+<tr>
 <td><strong>Hash</strong></td>
 <td>Resultado de una función criptográfica de un solo sentido; se usa para guardar contraseñas sin almacenarlas en claro.</td>
 </tr>
@@ -1172,6 +1211,10 @@
 <tr>
 <td><strong>MPM</strong></td>
 <td>Módulo de Apache que define cómo atiende peticiones concurrentes (<code>event</code>, <code>prefork</code>, <code>worker</code>).</td>
+</tr>
+<tr>
+<td><strong>Modo pasivo (FTP)</strong></td>
+<td>Forma de abrir la conexión de datos FTP en la que el cliente se conecta a un puerto del rango que indica el servidor. Funciona detrás de NAT.</td>
 </tr>
 <tr>
 <td><strong>MX (registro)</strong></td>
@@ -1228,6 +1271,10 @@
 <tr>
 <td><strong>Selector DKIM</strong></td>
 <td>Nombre que identifica una clave DKIM (<code>mail</code> en <code>mail._domainkey</code>).</td>
+</tr>
+<tr>
+<td><strong>SFTP</strong></td>
+<td>Transferencia de archivos dentro de una conexión SSH (puerto 22). No tiene relación con FTP salvo el propósito.</td>
 </tr>
 <tr>
 <td><strong>SMTP</strong></td>
@@ -1290,6 +1337,10 @@
 <td>Usuario técnico de Linux propietario de todos los buzones virtuales.</td>
 </tr>
 <tr>
+<td><strong>vsftpd</strong></td>
+<td>Servidor FTP de Linux orientado a la seguridad; en este manual sirve FTPS con usuarios enjaulados en su web.</td>
+</tr>
+<tr>
 <td><strong>XSS</strong></td>
 <td>Ataque que inyecta JavaScript en una página; se evita escapando la salida con <code>htmlspecialchars</code>.</td>
 </tr>
@@ -1330,7 +1381,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Pie" >
         
           
-          <a href="../14-proyecto-final/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 14. Proyecto final">
+          <a href="../15-ftp-vsftpd/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 15. Servidor FTP (vsftpd)">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1340,7 +1391,7 @@
                 Anterior
               </span>
               <div class="md-ellipsis">
-                14. Proyecto final
+                15. Servidor FTP (vsftpd)
               </div>
             </div>
           </a>

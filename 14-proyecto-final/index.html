@@ -16,7 +16,7 @@
         <link rel="prev" href="../13-pruebas/">
       
       
-        <link rel="next" href="../glosario/">
+        <link rel="next" href="../15-ftp-vsftpd/">
       
       
         
@@ -1070,6 +1070,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#fase-9-opcional-servidor-ftp-cifrado-modulo-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 9 (opcional) – Servidor FTP cifrado (Módulo 15)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1134,6 +1145,33 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-ftp-vsftpd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Servidor FTP (vsftpd)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1334,6 +1372,17 @@
     <span class="md-ellipsis">
       
         Fase 8 – TLS, integración y seguridad (Módulos 10, 11 y 12)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fase-9-opcional-servidor-ftp-cifrado-modulo-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 9 (opcional) – Servidor FTP cifrado (Módulo 15)
       
     </span>
   </a>
@@ -1762,6 +1811,38 @@
 </tbody>
 </table>
 <p>Verificación: PASOS 13.8, 13.10 y la hoja de verificación completa del apartado 13.3.</p>
+<h3 id="fase-9-opcional-servidor-ftp-cifrado-modulo-15">Fase 9 (opcional) – Servidor FTP cifrado (Módulo 15)<a class="headerlink" href="#fase-9-opcional-servidor-ftp-cifrado-modulo-15" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Referencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registros DNS <code>ftp</code> y certificado <code>ftp.ejemplo1.com</code></td>
+<td>PASOS 15.1 y 15.2</td>
+</tr>
+<tr>
+<td>Instalar vsftpd, contraseñas y jaula chroot con ACL</td>
+<td>PASOS 15.3 a 15.5</td>
+</tr>
+<tr>
+<td>PAM y lista de usuarios autorizados</td>
+<td>PASOS 15.6 y 15.7</td>
+</tr>
+<tr>
+<td><code>vsftpd.conf</code> y puertos en UFW</td>
+<td>PASOS 15.8 y 15.9</td>
+</tr>
+<tr>
+<td>Renovación, Fail2ban y monitorización</td>
+<td>PASOS 15.12 a 15.14</td>
+</tr>
+</tbody>
+</table>
+<p>Verificación: PASO 15.10 (cifrado obligatorio, usuario no autorizado rechazado, jaula y subida con permisos correctos) y conexión desde FileZilla (PASO 15.11).</p>
 <h2 id="143-pruebas-de-aceptacion">14.3 Pruebas de aceptación<a class="headerlink" href="#143-pruebas-de-aceptacion" title="Permanent link">&para;</a></h2>
 <p>El proyecto se considera superado cuando se cumplen <strong>todas</strong> estas pruebas, realizadas desde fuera del servidor salvo indicación:</p>
 <table>
@@ -1852,6 +1933,11 @@
 <td>16</td>
 <td>Borrar <code>web2_db</code> y restaurarla desde la copia automática de la noche</td>
 <td>La web 2 vuelve a mostrar sus datos.</td>
+</tr>
+<tr>
+<td>17 (Fase 9)</td>
+<td>Subir por FTPS con FileZilla un archivo a <code>public_html</code> de ejemplo2.com como <code>web2</code></td>
+<td>Se ve en <code>https://www.ejemplo2.com</code>; <code>web2</code> no puede ver la carpeta de ejemplo1.com y el FTP sin cifrar es rechazado.</td>
 </tr>
 </tbody>
 </table>
@@ -2030,13 +2116,13 @@
         
         
           
-          <a href="../glosario/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Glosario">
+          <a href="../15-ftp-vsftpd/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 15. Servidor FTP (vsftpd)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Glosario
+                15. Servidor FTP (vsftpd)
               </div>
             </div>
             <div class="md-footer__button md-icon">

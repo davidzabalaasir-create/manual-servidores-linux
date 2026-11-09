@@ -1044,6 +1044,33 @@
   
   
     <li class="md-nav__item">
+      <a href="15-ftp-vsftpd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Servidor FTP (vsftpd)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="glosario/" class="md-nav__link">
         
   
@@ -1242,9 +1269,10 @@
 <li>Firma DKIM, políticas SPF y DMARC, y DNS inverso para que tus correos no acaben en la carpeta de spam.</li>
 <li>Certificados SSL/TLS gratuitos de Let's Encrypt para la web y el correo, con renovación automática.</li>
 <li>Cortafuegos UFW, protección contra fuerza bruta con Fail2ban, copias de seguridad automáticas y procedimientos de diagnóstico.</li>
+<li>Como complemento, un servidor FTP cifrado (FTPS) con vsftpd para que el responsable de cada web suba sus archivos, encerrado en su propia carpeta.</li>
 </ul>
 <h2 id="como-esta-organizado">Cómo está organizado<a class="headerlink" href="#como-esta-organizado" title="Permanent link">&para;</a></h2>
-<p>El manual tiene 14 módulos que se apoyan unos en otros. Cada módulo empieza con sus objetivos y termina con ejercicios prácticos. Las operaciones están divididas en <strong>PASOS</strong> que siempre siguen la misma estructura:</p>
+<p>El manual tiene 14 módulos que se apoyan unos en otros, más un módulo complementario (el 15) dedicado al servidor FTP. Cada módulo empieza con sus objetivos y termina con ejercicios prácticos. Las operaciones están divididas en <strong>PASOS</strong> que siempre siguen la misma estructura:</p>
 <table>
 <thead>
 <tr>
@@ -1362,6 +1390,10 @@
 <tr>
 <td>Anti fuerza bruta</td>
 <td>Fail2ban 1.0</td>
+</tr>
+<tr>
+<td>FTP (módulo complementario)</td>
+<td>vsftpd 3.0.5</td>
 </tr>
 </tbody>
 </table>
@@ -1530,6 +1562,11 @@
 <td>Servidor de correo (MX)</td>
 <td>mail.ejemplo1.com</td>
 <td>mail.ejemplo2.com (misma IP)</td>
+</tr>
+<tr>
+<td>Acceso FTP (Módulo 15)</td>
+<td>ftp.ejemplo1.com, usuario web1</td>
+<td>ftp.ejemplo2.com, usuario web2</td>
 </tr>
 </tbody>
 </table>
