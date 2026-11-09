@@ -130,6 +130,18 @@ Verificación: PASO 13.9 y «Mostrar original» en Gmail con SPF, DKIM y DMARC e
 
 Verificación: PASOS 13.8, 13.10 y la hoja de verificación completa del apartado 13.3.
 
+### Fase 9 (opcional) – Servidor FTP cifrado (Módulo 15)
+
+| Tarea | Referencia |
+|---|---|
+| Registros DNS `ftp` y certificado `ftp.ejemplo1.com` | PASOS 15.1 y 15.2 |
+| Instalar vsftpd, contraseñas y jaula chroot con ACL | PASOS 15.3 a 15.5 |
+| PAM y lista de usuarios autorizados | PASOS 15.6 y 15.7 |
+| `vsftpd.conf` y puertos en UFW | PASOS 15.8 y 15.9 |
+| Renovación, Fail2ban y monitorización | PASOS 15.12 a 15.14 |
+
+Verificación: PASO 15.10 (cifrado obligatorio, usuario no autorizado rechazado, jaula y subida con permisos correctos) y conexión desde FileZilla (PASO 15.11).
+
 ## 14.3 Pruebas de aceptación
 
 El proyecto se considera superado cuando se cumplen **todas** estas pruebas, realizadas desde fuera del servidor salvo indicación:
@@ -152,6 +164,7 @@ El proyecto se considera superado cuando se cumplen **todas** estas pruebas, rea
 | 14 | Reiniciar el servidor | Todo vuelve a funcionar sin intervención; `estado-servidor` todo en `[OK]`. |
 | 15 | Puntuación en mail-tester.com | 9/10 o superior desde ambos dominios. |
 | 16 | Borrar `web2_db` y restaurarla desde la copia automática de la noche | La web 2 vuelve a mostrar sus datos. |
+| 17 (Fase 9) | Subir por FTPS con FileZilla un archivo a `public_html` de ejemplo2.com como `web2` | Se ve en `https://www.ejemplo2.com`; `web2` no puede ver la carpeta de ejemplo1.com y el FTP sin cifrar es rechazado. |
 
 ## 14.4 Entregables del proyecto
 

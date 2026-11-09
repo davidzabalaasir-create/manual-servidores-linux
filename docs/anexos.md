@@ -4,6 +4,7 @@
 
 | Puerto | Protocolo | Servicio | Programa | Cifrado | Abierto a Internet |
 |---|---|---|---|---|---|
+| 21 | TCP | FTP control (FTPS explícito) | vsftpd | TLS obligatorio | Sí (Módulo 15) |
 | 22 | TCP | SSH | sshd | Sí | Sí |
 | 25 | TCP | SMTP (recepción entre servidores) | Postfix | STARTTLS opcional | Sí |
 | 80 | TCP | HTTP | Apache | No (redirige a 443) | Sí |
@@ -16,6 +17,7 @@
 | 995 | TCP | POP3S | Dovecot | TLS implícito | Sí (opcional) |
 | 3306 | TCP | MariaDB | mariadbd | — | **No** (127.0.0.1) |
 | 8891 | TCP | Milter OpenDKIM | opendkim | — | **No** (127.0.0.1) |
+| 40000–40100 | TCP | FTP pasivo (datos) | vsftpd | TLS obligatorio | Sí (Módulo 15) |
 
 ## Anexo B. Mapa de archivos de la infraestructura
 
@@ -49,6 +51,10 @@
 | `/usr/local/sbin/backup-servidor`, `estado-servidor` | Copias y monitorización | 12 |
 | `/etc/cron.d/backup-servidor`, `/etc/cron.d/estado-servidor` | Tareas programadas | 12 |
 | `/var/backups/servidor/` | Copias de seguridad | 12 |
+| `/etc/vsftpd.conf` | Configuración de vsftpd | 15 |
+| `/etc/vsftpd.userlist` | Usuarios con acceso FTP | 15 |
+| `/etc/pam.d/vsftpd` | Autenticación PAM del FTP | 15 |
+| `/var/log/vsftpd.log` | Registro del FTP | 15 |
 
 ## Anexo C. Comandos esenciales por servicio
 
@@ -63,6 +69,7 @@
 | SSH | `sudo sshd -t` | `sudo systemctl restart ssh` | `sudo sshd -T` |
 | Fail2ban | `sudo fail2ban-client -t` | `sudo fail2ban-client reload` | `sudo fail2ban-client status` |
 | UFW | — | `sudo ufw reload` | `sudo ufw status verbose` |
+| vsftpd | — (comprobar con `journalctl -u vsftpd` tras reiniciar) | `sudo systemctl restart vsftpd` | `sudo tail /var/log/vsftpd.log` |
 | Certbot | — | — | `sudo certbot certificates`, `renew --dry-run` |
 
 ## Anexo D. Lista de tareas para añadir un nuevo dominio
@@ -76,4 +83,5 @@
 7. Correo: añadir el dominio a `/etc/postfix/virtual_domains` + `postmap`; crear cuentas con `correo-alta`; alias `postmaster@`, `abuse@`, `dmarc@`, `noreply@`.
 8. Ampliar el certificado del correo con `mail.nuevodominio` (`certbot certonly --webroot -w /var/www/html --cert-name mail.ejemplo1.com -d mail.ejemplo1.com -d mail.ejemplo2.com -d mail.nuevodominio`).
 9. DKIM: generar clave, añadirla a `key.table` y `signing.table`, reiniciar OpenDKIM, publicar el TXT.
-10. Verificar con la batería del Módulo 13.
+10. Si usas FTP: PASOS 15.4 y 15.5 para el nuevo usuario, añadirlo a `/etc/vsftpd.userlist` y ampliar el certificado `ftp.ejemplo1.com` con `ftp.nuevodominio`.
+11. Verificar con la batería del Módulo 13.

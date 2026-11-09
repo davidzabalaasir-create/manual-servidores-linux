@@ -63,6 +63,7 @@ Tabla de referencia de puertos del servidor:
 
 | Puerto | Servicio | Abierto en UFW | Escucha en | Motivo |
 |---|---|---|---|---|
+| 21/tcp | vsftpd (FTPS) | Solo con el Módulo 15 | Todas | Subida de archivos de las webs, cifrada. |
 | 22/tcp | SSH | Sí | Todas | Administración (solo con clave). |
 | 25/tcp | Postfix smtpd | Sí | Todas | Recepción de correo desde Internet. |
 | 80/tcp | Apache | Sí | Todas | Redirección a HTTPS y validación de Let's Encrypt. |
@@ -73,6 +74,7 @@ Tabla de referencia de puertos del servidor:
 | 995/tcp | Dovecot POP3S | Sí (si usas POP3) | Todas | Lectura de correo. |
 | 3306/tcp | MariaDB | **No** | 127.0.0.1 | Solo uso interno. |
 | 8891/tcp | OpenDKIM | **No** | 127.0.0.1 | Solo uso interno. |
+| 40000–40100/tcp | vsftpd (pasivo) | Solo con el Módulo 15 | Todas | Conexiones de datos FTP. |
 | 110, 143 | POP3/IMAP sin TLS | **No** | (deshabilitados) | Inseguros. |
 
 Si no usas POP3, cierra el 995 en Dovecot (pon `port = 0` también en `pop3s`) y en UFW:

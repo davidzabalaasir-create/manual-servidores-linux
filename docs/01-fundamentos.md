@@ -130,6 +130,7 @@ La IP lleva el paquete hasta el servidor; el **puerto** indica a qué programa d
 
 | Puerto | Protocolo | Servicio | ¿Abierto a Internet en este manual? |
 |---|---|---|---|
+| 21 | TCP | FTP con TLS (FTPS explícito, Módulo 15) | Solo si instalas el FTP |
 | 22 | TCP | SSH (administración remota) | Sí (protegido con claves y Fail2ban) |
 | 25 | TCP | SMTP entre servidores (recepción de correo) | Sí |
 | 53 | UDP/TCP | DNS | No (no montamos DNS propio) |
@@ -143,6 +144,7 @@ La IP lleva el paquete hasta el servidor; el **puerto** indica a qué programa d
 | 995 | TCP | POP3S: POP3 cifrado | Sí |
 | 3306 | TCP | MariaDB | **No, nunca** (solo 127.0.0.1) |
 | 8891 | TCP | OpenDKIM (milter) | **No** (solo 127.0.0.1) |
+| 40000–40100 | TCP | FTP pasivo: conexiones de datos (Módulo 15) | Solo si instalas el FTP |
 
 ## 1.8 TCP y UDP
 

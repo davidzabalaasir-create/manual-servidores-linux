@@ -3,6 +3,7 @@
 | Término | Definición |
 |---|---|
 | **A (registro)** | Registro DNS que asocia un nombre a una dirección IPv4. |
+| **ACL (permisos)** | Lista de control de acceso: permisos adicionales para usuarios o grupos concretos sobre un archivo, más allá de propietario, grupo y otros (`setfacl`, `getfacl`). |
 | **AAAA (registro)** | Registro DNS que asocia un nombre a una dirección IPv6. |
 | **ACME** | Protocolo con el que Let's Encrypt verifica el control de un dominio y emite certificados. |
 | **Alias (correo)** | Dirección sin buzón propio que reenvía a una o varias direcciones. |
@@ -26,6 +27,8 @@
 | **Fail2ban** | Herramienta que bloquea IP tras detectar fallos de autenticación repetidos en los logs. |
 | **FCrDNS** | Coincidencia entre el DNS inverso de una IP y el DNS directo de ese nombre. |
 | **FQDN** | Nombre de dominio completo (`mail.ejemplo1.com`). |
+| **FTP** | Protocolo de transferencia de archivos con una conexión de control (puerto 21) y conexiones de datos aparte. Sin cifrar es inseguro. |
+| **FTPS** | FTP protegido con TLS. En modo explícito, el cliente pide el cifrado con `AUTH TLS` en el puerto 21. |
 | **Hash** | Resultado de una función criptográfica de un solo sentido; se usa para guardar contraseñas sin almacenarlas en claro. |
 | **HSTS** | Cabecera que obliga al navegador a usar siempre HTTPS con un sitio. |
 | **IMAP** | Protocolo para consultar el correo manteniéndolo sincronizado en el servidor. |
@@ -39,6 +42,7 @@
 | **MDA / MTA / MUA / MSA** | Agente de entrega, de transferencia, de usuario y de envío de correo (ver Módulo 6). |
 | **Milter** | Protocolo para que Postfix pase los correos a filtros externos (OpenDKIM, antispam). |
 | **MPM** | Módulo de Apache que define cómo atiende peticiones concurrentes (`event`, `prefork`, `worker`). |
+| **Modo pasivo (FTP)** | Forma de abrir la conexión de datos FTP en la que el cliente se conecta a un puerto del rango que indica el servidor. Funciona detrás de NAT. |
 | **MX (registro)** | Registro DNS que indica el servidor que recibe el correo de un dominio. |
 | **open_basedir** | Directiva de PHP que restringe las carpetas a las que puede acceder el código. |
 | **OpenDKIM** | Servicio que firma y verifica DKIM. |
@@ -53,6 +57,7 @@
 | **SAN** | Campo de un certificado con la lista de nombres que cubre. |
 | **SASL** | Marco de autenticación usado por SMTP para comprobar usuario y contraseña. |
 | **Selector DKIM** | Nombre que identifica una clave DKIM (`mail` en `mail._domainkey`). |
+| **SFTP** | Transferencia de archivos dentro de una conexión SSH (puerto 22). No tiene relación con FTP salvo el propósito. |
 | **SMTP** | Protocolo de envío y transporte de correo electrónico. |
 | **SNI** | Extensión de TLS que indica el nombre del sitio al iniciar la conexión, permitiendo varios certificados en una IP. |
 | **Socket Unix** | Archivo especial para comunicar procesos del mismo equipo sin pasar por la red. |
@@ -68,4 +73,5 @@
 | **Usuario virtual** | Cuenta de correo que no es una cuenta del sistema operativo. |
 | **VirtualHost** | Bloque de configuración de Apache que define un sitio web. |
 | **vmail** | Usuario técnico de Linux propietario de todos los buzones virtuales. |
+| **vsftpd** | Servidor FTP de Linux orientado a la seguridad; en este manual sirve FTPS con usuarios enjaulados en su web. |
 | **XSS** | Ataque que inyecta JavaScript en una página; se evita escapando la salida con `htmlspecialchars`. |

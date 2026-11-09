@@ -1,6 +1,6 @@
 # Administración de Servidores Linux
 
-Manual de formación para montar **desde cero** un servidor Linux (Ubuntu Server 24.04 LTS) que aloja varias webs con Apache y PHP-FPM, bases de datos MariaDB independientes y un servidor de correo completo con Postfix, Dovecot, OpenDKIM, SPF, DMARC y certificados de Let's Encrypt.
+Manual de formación para montar **desde cero** un servidor Linux (Ubuntu Server 24.04 LTS) que aloja varias webs con Apache y PHP-FPM, bases de datos MariaDB independientes y un servidor de correo completo con Postfix, Dovecot, OpenDKIM, SPF, DMARC y certificados de Let's Encrypt, además de un servidor FTP cifrado con vsftpd.
 
 - **Leer en la web:** https://davidzabalaasir-create.github.io/manual-servidores-linux/
 - **Descargar:** [PDF](docs/descargas/Manual_Administracion_Servidores_Linux.pdf) · [Word](docs/descargas/Manual_Administracion_Servidores_Linux.docx)
@@ -23,6 +23,7 @@ Manual de formación para montar **desde cero** un servidor Linux (Ubuntu Server
 | 12 | Seguridad y mantenimiento |
 | 13 | Pruebas y diagnóstico |
 | 14 | Proyecto final |
+| 15 | Servidor FTP cifrado con vsftpd (complementario) |
 
 ## Ver el manual en tu ordenador
 

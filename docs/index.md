@@ -17,10 +17,11 @@ Al terminar, serás capaz de montar, desde un servidor vacío, una infraestructu
 - Firma DKIM, políticas SPF y DMARC, y DNS inverso para que tus correos no acaben en la carpeta de spam.
 - Certificados SSL/TLS gratuitos de Let's Encrypt para la web y el correo, con renovación automática.
 - Cortafuegos UFW, protección contra fuerza bruta con Fail2ban, copias de seguridad automáticas y procedimientos de diagnóstico.
+- Como complemento, un servidor FTP cifrado (FTPS) con vsftpd para que el responsable de cada web suba sus archivos, encerrado en su propia carpeta.
 
 ## Cómo está organizado
 
-El manual tiene 14 módulos que se apoyan unos en otros. Cada módulo empieza con sus objetivos y termina con ejercicios prácticos. Las operaciones están divididas en **PASOS** que siempre siguen la misma estructura:
+El manual tiene 14 módulos que se apoyan unos en otros, más un módulo complementario (el 15) dedicado al servidor FTP. Cada módulo empieza con sus objetivos y termina con ejercicios prácticos. Las operaciones están divididas en **PASOS** que siempre siguen la misma estructura:
 
 | Apartado | Qué contiene |
 |---|---|
@@ -81,6 +82,7 @@ Para que todos los comandos, rutas y archivos sean exactos, el manual usa una ú
 | Certificados | Certbot 2.x (paquete `certbot` + `python3-certbot-apache`) |
 | Cortafuegos | UFW 0.36 |
 | Anti fuerza bruta | Fail2ban 1.0 |
+| FTP (módulo complementario) | vsftpd 3.0.5 |
 
 Ubuntu 24.04 LTS tiene soporte estándar hasta abril de 2029, utiliza Dovecot 2.3 (cuya sintaxis de configuración está muy documentada) y es la plataforma que la mayoría de proveedores de servidores ofrecen como imagen preinstalada.
 
@@ -135,5 +137,6 @@ Durante todo el manual usaremos estos valores. Cuando adaptes el manual a tu cas
 | Usuario de base de datos | web1_user | web2_user |
 | Cuentas de correo | info@, administracion@, postmaster@ (alias) | soporte@, postmaster@ (alias) |
 | Servidor de correo (MX) | mail.ejemplo1.com | mail.ejemplo2.com (misma IP) |
+| Acceso FTP (Módulo 15) | ftp.ejemplo1.com, usuario web1 | ftp.ejemplo2.com, usuario web2 |
 
 El servidor se llamará `mail.ejemplo1.com`. Es su nombre «oficial» (el que aparecerá en el DNS inverso y en los saludos SMTP). El usuario administrador del sistema será `sysadmin`.

@@ -79,5 +79,6 @@ nav:
       - 12. Seguridad y mantenimiento: 12-seguridad.md
       - 13. Pruebas y diagnóstico: 13-pruebas.md
   - 14. Proyecto final: 14-proyecto-final.md
+  - 15. Servidor FTP (vsftpd): 15-ftp-vsftpd.md
   - Glosario: glosario.md
   - Anexos: anexos.md
